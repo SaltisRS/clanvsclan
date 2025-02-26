@@ -1,0 +1,306 @@
+import discord
+import os
+
+from discord import app_commands
+from cachetools import TTLCache
+from typing import Optional
+from pymongo import AsyncMongoClient
+from dotenv import load_dotenv
+
+from .groups.template import TemplateGroup
+
+
+load_dotenv()
+group = TemplateGroup()
+mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
+db = mongo["Frenzy"]
+coll = db["Templates"]
+autocomplete_cache = TTLCache(maxsize=512, ttl=30)
+
+
+async def autocomplete_tier(interaction: discord.Interaction, current: str):
+    if "tiers" not in autocomplete_cache:
+        template = await coll.find_one({})
+        if not template:
+            return []
+        autocomplete_cache["tiers"] = list(template.get("tiers", {}).keys())
+
+    return [
+        discord.app_commands.Choice(name=tier, value=tier)
+        for tier in autocomplete_cache["tiers"]
+        if current.lower() in tier.lower()
+    ][:25]
+
+async def autocomplete_source(interaction: discord.Interaction, current: str):
+    tier = getattr(interaction.namespace, "tier", None)
+    if not tier:
+        return []
+
+    cache_key = f"sources_{tier}"
+    if cache_key not in autocomplete_cache:
+        template = await coll.find_one({})
+        if not template or tier not in template.get("tiers", {}):
+            return []
+
+        sources = template["tiers"][tier].get("sources", [])
+        autocomplete_cache[cache_key] = [source["name"] for source in sources]
+
+    return [
+        discord.app_commands.Choice(name=source, value=source)
+        for source in autocomplete_cache[cache_key]
+        if current.lower() in source.lower()
+    ][:25]
+
+async def autocomplete_multiplier(interaction: discord.Interaction, current: str):
+    tier = getattr(interaction.namespace, "tier", None)
+    source = getattr(interaction.namespace, "source", None)
+    if not tier or not source:
+        return []
+
+    cache_key = f"multipliers_{tier}_{source}"
+    if cache_key not in autocomplete_cache:
+        template = await coll.find_one({})
+        if not template or tier not in template.get("tiers", {}):
+            return []
+
+        sources = template["tiers"][tier].get("sources", [])
+        source_data = next((s for s in sources if s["name"] == source), None)
+        if not source_data:
+            return []
+
+        multipliers = [m["name"] for m in source_data.get("multipliers", [])]
+        autocomplete_cache[cache_key] = multipliers
+
+    return [
+        discord.app_commands.Choice(name=multiplier, value=multiplier)
+        for multiplier in autocomplete_cache[cache_key]
+        if current.lower() in multiplier.lower()
+    ][:25]
+
+
+async def autocomplete_item(interaction: discord.Interaction, current: str):
+    tier = getattr(interaction.namespace, "tier", None)
+    source = getattr(interaction.namespace, "source", None)
+    if not tier or not source:
+        return []
+
+    cache_key = f"items_{tier}_{source}"
+    if cache_key not in autocomplete_cache:
+        template = await coll.find_one({})
+        if not template or tier not in template.get("tiers", {}):
+            return []
+
+        sources = template["tiers"][tier].get("sources", [])
+        source_data = next((s for s in sources if s["name"] == source), None)
+        if not source_data:
+            return []
+
+        items = [item["name"] for item in source_data.get("items", [])]
+        autocomplete_cache[cache_key] = items
+
+    return [
+        discord.app_commands.Choice(name=item, value=item)
+        for item in autocomplete_cache[cache_key]
+        if current.lower() in item.lower()
+    ][:25]
+
+@group.command()
+async def refresh_cache(interaction: discord.Interaction):
+    global autocomplete_cache
+    autocomplete_cache.clear()  # Clear existing cache
+
+    template = await coll.find_one({})
+    if not template:
+        await interaction.response.send_message("Template not found.", ephemeral=True)
+        return
+
+    # Rebuild the cache from scratch
+    autocomplete_cache["tiers"] = list(template.get("tiers", {}).keys())
+
+    for tier_name, tier_data in template.get("tiers", {}).items():
+        sources = tier_data.get("sources", [])
+        autocomplete_cache[f"sources_{tier_name}"] = [source["name"] for source in sources]
+
+        for source in sources:
+            autocomplete_cache[f"items_{tier_name}_{source['name']}"] = [
+                item["name"] for item in source.get("items", [])
+            ]
+
+    await interaction.response.send_message("Autocomplete cache refreshed.", ephemeral=True)
+
+@group.command()
+async def get_tiers(interaction: discord.Interaction):
+    template = await coll.find_one({})
+
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    tiers = template.get("tiers", {})
+    tier_list = "\n".join([f"**{tier}**" for tier in tiers.keys()])
+    await interaction.response.send_message(f"**Tiers**\n{tier_list}")
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier)
+async def get_sources_simple(interaction: discord.Interaction, tier: str):
+    template = await coll.find_one({})
+
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
+    source_list = "\n".join([f"**{source['name']}**" for source in sources])
+    await interaction.response.send_message(f"**Sources**\n{source_list}")
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier)
+async def get_sources_detailed(interaction: discord.Interaction, tier: str):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+    
+    sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
+    embed = discord.Embed(title=f"Sources for {tier}")
+    
+    for source in sources:
+        multipliers = "\n".join([f"{m['name']} (x{m['factor']:.2f})" for m in source.get("multipliers", [])])
+        items = "\n".join([f"{i['name']} ({i['points']})" for i in source.get("items", [])])
+        if len(sources) <= 25:
+            embed.add_field(name=source["name"], value=f">>> __Multipliers__\n{multipliers if multipliers else "None"}\n__Items__\n{items if items else "None"}")
+        else:
+            embed.description += f"**{source['name']}**\n>>> __Multipliers__\n{multipliers if multipliers else "None"}\n__Items__\n{items if items else "None"}\n\n"
+        
+    await interaction.response.send_message(embed=embed)
+
+
+@group.command()
+async def add_tier(interaction: discord.Interaction, name: str):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    tier = {
+        name: {
+            "points_gained": 0,
+            "sources": []
+        }
+    }
+
+    result = await coll.update_one(
+        {"_id": template["_id"]},
+        {"$set": {f"tiers.{name}": tier[name]}}
+    )
+
+    if result.modified_count > 0:
+        await interaction.response.send_message(f"Tier `{name}` added.")
+    else:
+        await interaction.response.send_message("Tier could not be added.")
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier)
+async def add_source(interaction: discord.Interaction, tier: str, source: str):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    source_data = {
+        "name": source,
+        "source_gained": 0,
+        "multipliers": [],
+        "items": []
+    }
+
+    result = await coll.update_one(
+        {"_id": template["_id"]},
+        {"$push": {f"tiers.{tier}.sources": source_data}}
+    )
+
+    if result.modified_count > 0:
+        await interaction.response.send_message(f"Source `{source}` added to `{tier}` tier.")
+    else:
+        await interaction.response.send_message("Tier not found.")
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+async def add_multiplier(interaction: discord.Interaction, tier: str, source: str, name: str, factor: float, required_items: str):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    multiplier = {
+        "name": name,
+        "factor": factor,
+        "required_items": required_items.split(","),
+        "unlocked": False
+    }
+
+    result = await coll.update_one(
+        {"_id": template["_id"], f"tiers.{tier}.sources.name": source},
+        {"$push": {f"tiers.{tier}.sources.$.multipliers": multiplier}}
+    )
+
+    if result.modified_count > 0:
+        await interaction.response.send_message(f"Multiplier `{name}` added to `{source}` in `{tier}` tier.")
+    else:
+        await interaction.response.send_message("Tier or source not found.")
+
+    
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+async def add_item(interaction: discord.Interaction, tier: str, source: str, name: str, points: float, icon_url: Optional[str] = None):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+    item = {
+        "name": name,
+        "points": points,
+        "duplicate_points": points / 2 if points != 0 else 0,
+        "obtained": False,
+        "duplicate_obtained": False,
+        "icon_url": icon_url
+    }
+
+    result = await coll.update_one(
+        {"_id": template["_id"], f"tiers.{tier}.sources.name": source},
+        {"$push": {f"tiers.{tier}.sources.$.items": item}}
+    )
+
+    if result.modified_count > 0:
+        await interaction.response.send_message(f"Item `{name}` added to `{source}` in `{tier}` tier.")
+    else:
+        await interaction.response.send_message("Tier or source not found.")
+        
+@group.command()
+async def mock_submission(interaction: discord.Interaction):
+    view = discord.ui.View()
+    view.add_item(discord.ui.Button(label="Accept", style=discord.ButtonStyle.success))
+    view.add_item(discord.ui.Button(label="Reject", style=discord.ButtonStyle.danger))
+    embed = discord.Embed(title="Hill Giant Club")
+    embed.set_thumbnail(url="https://oldschool.runescape.wiki/images/thumb/Hill_giant_club_detail.png/150px-Hill_giant_club_detail.png?53073")
+    embed.set_footer(text="Submitted by: @User#0000 : Ironfoundry", icon_url="https://i.imgur.com/9aModKk.png")
+    embed.add_field(name="Obor", value="**Points:** 22.50")
+    embed.add_field(name="(1/1) items collected", value="**Unlocks:** 1.50x Multiplier")
+    embed.set_image(url="https://oldschool.runescape.wiki/images/Fighting_Obor.png?5197d")
+    await interaction.response.send_message(embed=embed, view=view)
+    
+        
+
+
+
+
+
+
+def setup(client: discord.Client):
+    client.tree.add_command(group, guild=client.selected_guild)
