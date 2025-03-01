@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    networks:
+      - app-network
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge

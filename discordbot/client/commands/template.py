@@ -1,6 +1,7 @@
 import discord
 import os
 
+from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
 from typing import Optional
@@ -152,28 +153,69 @@ async def get_sources_simple(interaction: discord.Interaction, tier: str):
     sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
     source_list = "\n".join([f"**{source['name']}**" for source in sources])
     await interaction.response.send_message(f"**Sources**\n{source_list}")
+    
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
 async def get_sources_detailed(interaction: discord.Interaction, tier: str):
-    template = await coll.find_one({})
-    
-    if not template:
-        await interaction.response.send_message("Template not found.")
-        return
-    
-    sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
-    embed = discord.Embed(title=f"Sources for {tier}")
-    
-    for source in sources:
-        multipliers = "\n".join([f"{m['name']} (x{m['factor']:.2f})" for m in source.get("multipliers", [])])
-        items = "\n".join([f"{i['name']} ({i['points']})" for i in source.get("items", [])])
-        if len(sources) <= 25:
-            embed.add_field(name=source["name"], value=f">>> __Multipliers__\n{multipliers if multipliers else "None"}\n__Items__\n{items if items else "None"}")
-        else:
-            embed.description += f"**{source['name']}**\n>>> __Multipliers__\n{multipliers if multipliers else "None"}\n__Items__\n{items if items else "None"}\n\n"
-        
-    await interaction.response.send_message(embed=embed)
+    logger.info(f"Command triggered: get_sources_detailed | Tier: {tier}")
+
+    try:
+        template = await coll.find_one({})
+        if not template:
+            logger.warning("Template not found.")
+            await interaction.response.send_message("Template not found.")
+            return
+
+        sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
+        logger.info(f"Found {len(sources)} sources for tier: {tier}")
+
+        embed = discord.Embed(title=f"Sources for {tier}")
+
+        #colors = ["\u001b[0;31m", "\u001b[0;32m", "\u001b[0;33m"]  # Red, Green, Yellow
+        reset = "\u001b[0m"
+
+        for source in sources:
+            logger.debug(f"Processing source: {source['name']}")
+
+            multipliers = "\n".join([f"{m['name']} (x{m['factor']:.2f})" for m in source.get("multipliers", [])])
+            items_list = source.get("items", [])
+
+            logger.debug(f"Multipliers: {multipliers if multipliers else 'None'}")
+            logger.debug(f"Found {len(items_list)} items for {source['name']}")
+
+            # Alternate ANSI colors based on obtained/duplicate_obtained flags
+            items_formatted = "\n".join(
+                f"{get_item_color(item)}{item['name']} ({item['points']}){reset}"
+                for item in items_list
+            ) if items_list else "None"
+
+            embed.add_field(
+                name=source["name"],
+                value=f">>> __Multipliers__\n`{multipliers if multipliers else 'None'}`\n__Items__\n```ansi\n{items_formatted}\n```",
+                inline=False
+            )
+
+        logger.info("Attempting to send embed response...")
+        await interaction.response.send_message(embed=embed)
+        logger.success("Embed sent successfully!")
+
+    except Exception as e:
+        logger.error(f"Failed to send embed: {e}")
+        await interaction.response.send_message("An error occurred while generating the embed.")
+
+
+def get_item_color(item):
+    """Returns the appropriate color based on obtained/duplicate_obtained flags."""
+    if item.get("obtained") and item.get("duplicate_obtained"):
+        return "\u001b[0;32m"  # Green
+    elif item.get("obtained") and not item.get("duplicate_obtained"):
+        return "\u001b[0;33m"  # Yellow
+    else:
+        return "\u001b[0;31m"  # Red
+
+
+
 
 
 @group.command()
