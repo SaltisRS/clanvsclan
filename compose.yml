@@ -1,5 +1,6 @@
 services:
   backend:
+    container_name: cvc-backend
     build: ./backend
     env_file:
       - .env
@@ -7,6 +8,7 @@ services:
       - app-network2
   
   frontend:
+    container_name: cvc-frontend
     build: ./frontend
     ports:
       - "80:80"
