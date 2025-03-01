@@ -7,4 +7,4 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"] # Or flask run
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "80"]
