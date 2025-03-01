@@ -4,18 +4,18 @@ services:
     env_file:
       - .env
     networks:
-      - app-network
+      - app-network2
   
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "3030:3030"
     env_file:
       - .env
     networks:
-      - app-network
+      - app-network2
 
 
 networks:
-  app-network:
+  app-network2:
     driver: bridge

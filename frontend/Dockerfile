@@ -6,6 +6,6 @@ COPY index.html .
 COPY style.css .
 COPY script.js .
 
-EXPOSE 80
+EXPOSE 3030
 
 CMD ["nginx", "-g", "daemon off;"]
