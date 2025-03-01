@@ -9,7 +9,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "80:3030"
+      - "80:80"
     env_file:
       - .env
     networks:
