@@ -52,15 +52,20 @@ const changeTab = (tabId) => {
   document.querySelector(`[onclick="changeTab('${tabId}')"]`).classList.add('active');
 
   // Fetch data for the selected tab if not already loaded
-  if (tabId === 'tab1' && !document.getElementById('tab1-data').hasChildNodes()) {
-    fetchData('http://ironfoundry.cc:8000/api/data1').then(data => renderData('tab1', data));
-  } else if (tabId === 'tab2' && !document.getElementById('tab2-data').hasChildNodes()) {
-    fetchData('http://ironfoundry.cc:8000/api/data2').then(data => renderData('tab2', data));
+  const tabDataDiv = document.getElementById(`${tabId}-data`);
+  if (!tabDataDiv.hasChildNodes()) {
+    if (tabId === 'tab1') {
+      fetchData('http://ironfoundry.cc:8000/api/data1').then(data => renderData('tab1', data));
+    } else if (tabId === 'tab2') {
+      fetchData('http://ironfoundry.cc:8000/api/data2').then(data => renderData('tab2', data));
+    }
   }
 };
 
 // Initialize tabs with default data
 document.addEventListener('DOMContentLoaded', () => {
+  // Fetch data for the default active tab (tab1) and render
   fetchData('http://ironfoundry.cc:8000/api/data1').then(data => renderData('tab1', data));
-  fetchData('http://ironfoundry.cc:8000/api/data2').then(data => renderData('tab2', data));
+  // Fetch data for tab2 but do not render yet
+  fetchData('http://ironfoundry.cc:8000/api/data2');
 });
