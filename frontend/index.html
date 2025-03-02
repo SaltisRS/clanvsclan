@@ -1,32 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JSON Data Viewer</title>
-  <link rel="stylesheet" href="style.css">  <!-- Link to your CSS file -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Data Display</title>
+  <style>
+    /* Style the tabs */
+    .tabs {
+      display: flex;
+      cursor: pointer;
+    }
+    .tab {
+      padding: 10px;
+      margin: 0 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .active {
+      background-color: #007BFF;
+      color: white;
+    }
+    /* Style the content */
+    .tab-content {
+      margin-top: 20px;
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-
-  <h1>JSON Data Viewer</h1>
-
   <div class="tabs">
-    <div class="tab active" data-tab="tab1">Data Set 1</div>
-    <div class="tab" data-tab="tab2">Data Set 2</div>
+    <div class="tab active" onclick="changeTab('tab1')">Tab 1</div>
+    <div class="tab" onclick="changeTab('tab2')">Tab 2</div>
   </div>
 
-  <div id="tab1" class="tab-content active">
-    <h2>Data Set 1</h2>
-    <!-- Accordions for Tiers will be inserted here by JavaScript -->
+  <div class="tab-content active" id="tab1">
+    <h2>Tab 1 Data</h2>
+    <div id="tab1-data"></div>
   </div>
 
-  <div id="tab2" class="tab-content">
-    <h2>Data Set 2</h2>
-    <!-- Accordions for Tiers will be inserted here by JavaScript -->
+  <div class="tab-content" id="tab2">
+    <h2>Tab 2 Data</h2>
+    <div id="tab2-data"></div>
   </div>
 
-  <script src="script.js"></script>  <!-- Link to your JavaScript file -->
-
+  <script src="script.js"></script>
 </body>
 </html>
