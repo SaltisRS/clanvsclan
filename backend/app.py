@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 from typing import List, Dict
 from loguru import logger
@@ -18,6 +19,15 @@ client = MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 collection1 = db[COLLECTION_NAME_1]
 collection2 = db[COLLECTION_NAME_2]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
+
 
 @app.get("/api/data1")
 async def get_data1() -> List[Dict]:
