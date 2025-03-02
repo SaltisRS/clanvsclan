@@ -1,6 +1,6 @@
 services:
   backend:
-    container_name: cvc/backend
+    container_name: cvc-backend
     build: ./backend
     env_file:
       - .env
@@ -8,7 +8,7 @@ services:
       - cvc-network
   
   frontend:
-    container_name: cvc/frontend
+    container_name: cvc-frontend
     build: ./frontend
     ports:
       - "80:80"
