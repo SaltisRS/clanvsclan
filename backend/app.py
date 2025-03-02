@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pymongo import MongoClient
 from typing import List, Dict
-
+from loguru import logger
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -24,7 +24,9 @@ async def get_data1() -> List[Dict]:
     """
     Retrieves data from the first MongoDB collection.
     """
+    logger.info("Retrieving data from the first collection")
     data = list(collection1.find({}))  # Exclude _id
+    logger.info(f"Data retrieved: {data}")
     return data
 
 @app.get("/api/data2")
@@ -32,7 +34,9 @@ async def get_data2() -> List[Dict]:
     """
     Retrieves data from the second MongoDB collection.
     """
+    logger.info("Retrieving data from the second collection")
     data = list(collection2.find({}))  # Exclude _id
+    logger.info(f"Data retrieved: {data}")
     return data
 
 if __name__ == "__main__":

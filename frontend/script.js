@@ -18,9 +18,9 @@ $(document).ready(function () {
   
         // Load data for the selected tab
         if (target === 'tab1' && !document.getElementById('tab1').dataset.loaded) {
-          loadAndPopulateData('tab1', 'backend/api/data1');
+          loadAndPopulateData('tab1', 'backend:8000/api/data1');
         } else if (target === 'tab2' && !document.getElementById('tab2').dataset.loaded) {
-          loadAndPopulateData('tab2', 'backend/api/data2');
+          loadAndPopulateData('tab2', 'backend:8000/api/data2');
         }
       });
     });
