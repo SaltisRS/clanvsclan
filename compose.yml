@@ -5,7 +5,7 @@ services:
     env_file:
       - .env
     networks:
-      - app-network2
+      - cvc-network
   
   frontend:
     container_name: cvc/frontend
