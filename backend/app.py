@@ -22,7 +22,7 @@ collection2 = db[COLLECTION_NAME_2]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://ironfoundry.cc", "https://ironfoundry.cc"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
