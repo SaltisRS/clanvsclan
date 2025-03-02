@@ -27,19 +27,43 @@ $(document).ready(function () {
   
     // Function to load data and populate the tab content
     function loadAndPopulateData(tabId, apiUrl) {
+      const tabContentElement = document.getElementById(tabId);
+      
+      // Show a loading message initially
+      tabContentElement.innerHTML = '<p>Loading...</p>'; 
+    
       fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+        })
         .then(data => {
-          const tabContentElement = document.getElementById(tabId);
           tabContentElement.dataset.loaded = true; // Mark as loaded
-  
+    
+          // Clear loading message
+          tabContentElement.innerHTML = '';
+          
+          // Check if data is being fetched properly
+          console.log('Fetched data:', data);
+    
           // Populate the tab content with tiers, sources, and items
-          for (const tierName in data.tiers) {
-            populateTier(tierName, data.tiers[tierName], tabContentElement);
+          if (data.tiers) {
+            for (const tierName in data.tiers) {
+              console.log(`Populating tier: ${tierName}`);  // Check which tier is being processed
+              populateTier(tierName, data.tiers[tierName], tabContentElement);
+            }
+          } else {
+            tabContentElement.innerHTML = '<p>No tiers available in the fetched data.</p>';
           }
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          tabContentElement.innerHTML = '<p>Error loading data. Please try again later.</p>';
+        });
     }
+    
   
     function populateTier(tierName, tierData, tabContentElement) {
       // Create accordion elements
