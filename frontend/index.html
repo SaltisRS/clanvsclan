@@ -101,7 +101,43 @@
       }
     }
 
-    displayData(); // Call the function to fetch and display the data
+    displayData();
+    function extractData(data) {
+      const results = [];
+    
+      for (const tier in data.tiers) {
+        if (data.tiers.hasOwnProperty(tier)) {
+          const sources = data.tiers[tier].sources;
+    
+          sources.forEach((source) => {
+            const sourceName = source.name;
+            const items = source.items;
+            const multipliers = source.multipliers;
+    
+            results.push({
+              Tier: tier,
+              Source: sourceName,
+              Items: items,
+              Multipliers: multipliers,
+            });
+          });
+        }
+      }
+    
+      return results;
+    } // Call the function to fetch and display the data
+    async function fetchData(table = "/api/data1") {
+      let url = "http://www.ironfoundry.cc" + table;
+      try {
+        const response = await fetch(url); // Replace with your API URL
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        return null; // Or handle the error in a way that makes sense for your app
+      }
+    }
+    
   </script>
 </body>
 </html>
