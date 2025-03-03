@@ -1,51 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Data Display</title>
+  <title>Ironclad VS Iron Foundry</title>
   <style>
-    /* Style the tabs */
-    .tabs {
-      display: flex;
+    .accordion {
+      background-color: #ffffff;
+      color: #444;
       cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      transition: 0.4s;
     }
-    .tab {
-      padding: 10px;
-      margin: 0 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+
+    .active,
+    .accordion:hover {
+      background-color: #ccc;
     }
-    .active {
-      background-color: #007BFF;
-      color: white;
-    }
-    /* Style the content */
-    .tab-content {
-      margin-top: 20px;
+
+    .panel {
+      padding: 0 18px;
+      background-color: white;
       display: none;
+      overflow: hidden;
     }
-    .tab-content.active {
+
+    .panel.show {
       display: block;
     }
   </style>
 </head>
 <body>
-  <div class="tabs">
-    <div class="tab active" onclick="changeTab('tab1')">Tab 1</div>
-    <div class="tab" onclick="changeTab('tab2')">Tab 2</div>
-  </div>
+  <h1>Extracted Data</h1>
+  <div id="accordion-container"></div>
+  <script>
+    // Your fetchData function (from above)
+    // Your extractData function (as before)
 
-  <div class="tab-content active" id="tab1">
-    <h2>Tab 1 Data</h2>
-    <div id="tab1-data"></div>
-  </div>
+    async function displayData() {
+      const apiData = await fetchData();
 
-  <div class="tab-content" id="tab2">
-    <h2>Tab 2 Data</h2>
-    <div id="tab2-data"></div>
-  </div>
+      if (!apiData) {
+        console.log("Failed to fetch data from API.");
+        return;
+      }
 
-  <script src="script.js"></script>
+      const extractedData = extractData(apiData); // Use your extractData function
+
+      const accordionContainer = document.getElementById("accordion-container");
+
+      // Group data by tier
+      const tiers = {};
+      extractedData.forEach((item) => {
+        if (!tiers[item.Tier]) {
+          tiers[item.Tier] = [];
+        }
+        tiers[item.Tier].push(item);
+      });
+
+      // Create accordions for each tier
+      for (const tier in tiers) {
+        if (tiers.hasOwnProperty(tier)) {
+          const accordionButton = document.createElement("button");
+          accordionButton.classList.add("accordion");
+          accordionButton.textContent = tier;
+          accordionContainer.appendChild(accordionButton);
+
+          const panel = document.createElement("div");
+          panel.classList.add("panel");
+          accordionContainer.appendChild(panel);
+
+          // Display sources and items within the panel
+          tiers[tier].forEach((item) => {
+            const sourceElement = document.createElement("h3");
+            sourceElement.textContent = `Source: ${item.Source}`;
+            panel.appendChild(sourceElement);
+
+            const itemsList = document.createElement("ul");
+            item.Items.forEach((itemDetail) => {
+              const itemElement = document.createElement("li");
+              itemElement.textContent = `${itemDetail.name} (Points: ${itemDetail.points})`;
+              itemsList.appendChild(itemElement);
+            });
+            panel.appendChild(itemsList);
+
+            const multipliersElement = document.createElement("p");
+            multipliersElement.textContent = `Multipliers: ${item.Multipliers.join(", ")}`;
+            panel.appendChild(multipliersElement);
+          });
+
+          // Accordion functionality
+          accordionButton.addEventListener("click", () => {
+            accordionButton.classList.toggle("active");
+            panel.classList.toggle("show");
+          });
+        }
+      }
+    }
+
+    displayData(); // Call the function to fetch and display the data
+  </script>
 </body>
 </html>
