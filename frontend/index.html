@@ -42,12 +42,14 @@
     async function displayData() {
       const apiData = await fetchData();
     
-      if (!apiData) {
-        console.log("Failed to fetch data from API.");
+      if (!apiData || typeof apiData !== "object" || !apiData.tiers) {
+        console.log("Invalid API response:", apiData);
         return;
       }
     
       const extractedData = extractData(apiData);
+      console.log("Extracted Data:", extractedData); // Debugging log
+    
       if (!Array.isArray(extractedData) || extractedData.length === 0) {
         console.log("No valid data available.");
         return;
@@ -59,10 +61,8 @@
         return;
       }
     
-      // Clear previous content to prevent duplicate accordions
       accordionContainer.innerHTML = "";
     
-      // Group data by tier
       const tiers = {};
       extractedData.forEach((item) => {
         if (!tiers[item.Tier]) {
@@ -82,7 +82,6 @@
           const panel = document.createElement("div");
           panel.classList.add("panel");
     
-          // Display sources and items within the panel
           tiers[tier].forEach((item) => {
             const sourceElement = document.createElement("h3");
             sourceElement.textContent = `Source: ${item.Source}`;
@@ -104,8 +103,8 @@
             panel.appendChild(multipliersElement);
           });
     
-          // Accordion functionality
           accordionButton.addEventListener("click", () => {
+            console.log(`Toggling accordion for ${tier}`);
             accordionButton.classList.toggle("active");
             panel.classList.toggle("show");
           });
@@ -117,19 +116,30 @@
     
       accordionContainer.appendChild(fragment);
     }
+    
     displayData();
+    
     function extractData(data) {
       const results = [];
-
+    
+      if (!data || typeof data !== "object" || !data.tiers) {
+        console.log("Invalid structure in extractData:", data);
+        return [];
+      }
+    
       for (const tier in data.tiers) {
-        if (data.tiers.hasOwnProperty(tier)) {
+        if (Object.hasOwn(data.tiers, tier)) {
           const sources = data.tiers[tier].sources;
-
+          if (!Array.isArray(sources)) {
+            console.warn(`Unexpected sources format for tier ${tier}:`, sources);
+            continue;
+          }
+    
           sources.forEach((source) => {
             const sourceName = source.name;
-            const items = source.items;
-            const multipliers = source.multipliers;
-
+            const items = source.items || [];
+            const multipliers = source.multipliers || [];
+    
             results.push({
               Tier: tier,
               Source: sourceName,
@@ -139,20 +149,24 @@
           });
         }
       }
-
+    
+      console.log("Extracted Data:", results);
       return results;
-    } // Call the function to fetch and display the data
+    }
+    
     async function fetchData() {
       let url = "http://www.ironfoundry.cc:8000/api/data1";
       try {
-        const response = await fetch(url); // Replace with your API URL
+        const response = await fetch(url);
         const data = await response.json();
+        console.log("Fetched Data:", data);
         return data;
       } catch (error) {
         console.error("Error fetching data:", error);
-        return null; // Or handle the error in a way that makes sense for your app
+        return null;
       }
     }
+    
 
   </script>
 </body>
