@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Ironclad VS Iron Foundry</title>
   <style>
@@ -33,25 +34,34 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Extracted Data</h1>
   <div id="accordion-container"></div>
   <script>
-    // Your fetchData function (from above)
-    // Your extractData function (as before)
-
     async function displayData() {
       const apiData = await fetchData();
-
+    
       if (!apiData) {
         console.log("Failed to fetch data from API.");
         return;
       }
-
-      const extractedData = extractData(apiData); // Use your extractData function
-
+    
+      const extractedData = extractData(apiData);
+      if (!Array.isArray(extractedData) || extractedData.length === 0) {
+        console.log("No valid data available.");
+        return;
+      }
+    
       const accordionContainer = document.getElementById("accordion-container");
-
+      if (!accordionContainer) {
+        console.error("Accordion container not found.");
+        return;
+      }
+    
+      // Clear previous content to prevent duplicate accordions
+      accordionContainer.innerHTML = "";
+    
       // Group data by tier
       const tiers = {};
       extractedData.forEach((item) => {
@@ -60,25 +70,24 @@
         }
         tiers[item.Tier].push(item);
       });
-
-      // Create accordions for each tier
+    
+      const fragment = document.createDocumentFragment();
+    
       for (const tier in tiers) {
-        if (tiers.hasOwnProperty(tier)) {
+        if (Object.hasOwn(tiers, tier)) {
           const accordionButton = document.createElement("button");
           accordionButton.classList.add("accordion");
           accordionButton.textContent = tier;
-          accordionContainer.appendChild(accordionButton);
-
+    
           const panel = document.createElement("div");
           panel.classList.add("panel");
-          accordionContainer.appendChild(panel);
-
+    
           // Display sources and items within the panel
           tiers[tier].forEach((item) => {
             const sourceElement = document.createElement("h3");
             sourceElement.textContent = `Source: ${item.Source}`;
             panel.appendChild(sourceElement);
-
+    
             const itemsList = document.createElement("ul");
             item.Items.forEach((itemDetail) => {
               const itemElement = document.createElement("li");
@@ -86,34 +95,41 @@
               itemsList.appendChild(itemElement);
             });
             panel.appendChild(itemsList);
-
+    
+            const multipliers = Array.isArray(item.Multipliers) && item.Multipliers.length
+              ? item.Multipliers.join(", ")
+              : "None";
             const multipliersElement = document.createElement("p");
-            multipliersElement.textContent = `Multipliers: ${item.Multipliers.join(", ")}`;
+            multipliersElement.textContent = `Multipliers: ${multipliers}`;
             panel.appendChild(multipliersElement);
           });
-
+    
           // Accordion functionality
           accordionButton.addEventListener("click", () => {
             accordionButton.classList.toggle("active");
             panel.classList.toggle("show");
           });
+    
+          fragment.appendChild(accordionButton);
+          fragment.appendChild(panel);
         }
       }
+    
+      accordionContainer.appendChild(fragment);
     }
-
     displayData();
     function extractData(data) {
       const results = [];
-    
+
       for (const tier in data.tiers) {
         if (data.tiers.hasOwnProperty(tier)) {
           const sources = data.tiers[tier].sources;
-    
+
           sources.forEach((source) => {
             const sourceName = source.name;
             const items = source.items;
             const multipliers = source.multipliers;
-    
+
             results.push({
               Tier: tier,
               Source: sourceName,
@@ -123,7 +139,7 @@
           });
         }
       }
-    
+
       return results;
     } // Call the function to fetch and display the data
     async function fetchData() {
@@ -137,7 +153,8 @@
         return null; // Or handle the error in a way that makes sense for your app
       }
     }
-    
+
   </script>
 </body>
+
 </html>
