@@ -1,0 +1,982 @@
+[{
+  "_id": "BASE_TEMPLATE",
+  "associated_team": "",
+  "total_gained": 0,
+  "tiers": {
+    "Easy": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Obor",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Hill Giant Club",
+              "points": 22.5,
+              "duplicate_points": 11.25,
+              "obtained": false,
+              "duplicate_obtained": false
+            }
+          ]
+        },
+        {
+          "name": "Bryophyta",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Bryophyta's Essence",
+              "points": 22.5,
+              "duplicate_points": 11.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Hespori",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Bottomless Compost Bucket",
+              "points": 12,
+              "duplicate_points": 6,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Chaos Fanatic",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Odium Shard 1",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Malediction Shard 1",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Pet Chaos Elemental",
+              "points": 15,
+              "duplicate_points": 7.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Crazy Archaeologist",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Odium Shard 2",
+              "points": 4,
+              "duplicate_points": 2,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Malediction Shard 2",
+              "points": 4,
+              "duplicate_points": 2,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Scurrius",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Scurrius Spine",
+              "points": 2,
+              "duplicate_points": 1,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Scurry",
+              "points": 15,
+              "duplicate_points": 7.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Scorpia",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Odium Shard 3",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Malediction Shard 3",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Scorpia's Offspring",
+              "points": 10,
+              "duplicate_points": 5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "King Black Dragon",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Kbd Heads",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Draconic Visage",
+              "points": 10,
+              "duplicate_points": 5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dragon Pickaxe",
+              "points": 5,
+              "duplicate_points": 2.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Prince Black Dragon",
+              "points": 10,
+              "duplicate_points": 5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Wintertodt",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Pyromancer Hood",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Pyromancer Garb",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Pyromancer Robe",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Pyromancer Boots",
+              "points": 3,
+              "duplicate_points": 1.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Tome of Fire",
+              "points": 11,
+              "duplicate_points": 5.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dragon Axe",
+              "points": 32,
+              "duplicate_points": 16,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Phoenix",
+              "points": 16,
+              "duplicate_points": 8,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Guardians of the Rift",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Elemental Talisman",
+              "points": 8,
+              "duplicate_points": 4,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Catalytic Talisman",
+              "points": 7,
+              "duplicate_points": 3.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Abyssal Lantern",
+              "points": 11,
+              "duplicate_points": 5.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Blue Dye",
+              "points": 12,
+              "duplicate_points": 6,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Red Due",
+              "points": 12,
+              "duplicate_points": 6,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Green Dye",
+              "points": 12,
+              "duplicate_points": 6,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Abyssal Protector",
+              "points": 40,
+              "duplicate_points": 20,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Tempoross",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Big Harpoonfish",
+              "points": 8,
+              "duplicate_points": 4,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Tome of Water",
+              "points": 8,
+              "duplicate_points": 4,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dragon Harpoon",
+              "points": 26,
+              "duplicate_points": 13,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Tiny Tempor",
+              "points": 26,
+              "duplicate_points": 13,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Barrows",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Ahrim's Hood",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Ahrim's Robe Top",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Ahrim's Robeskirt",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Ahrim's Staff",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dharok's Helm",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dharok's Platebody",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dharok's Platelegs",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Dharok's Greataxe",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Guthan's Helm",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Guthan's Platebody",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Guthan's Plateskirt",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Guthan's Warspear",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Karil's Coif",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Karil's Leathertop",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Karil's Leatherskirt",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Karil's Crossbow",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Torag's Helm",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Torag's Platebody",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Torag's Platelegs",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Torag's Hammers",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Verac's Helm",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Verac's Brassard",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Verac's Plateskirt",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Verac's Flail",
+              "points": 1,
+              "duplicate_points": 0.5,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "Tzhaar",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": [
+            {
+              "name": "Tzhaar-ket-om",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Toktz-ket-xil",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Toktz-xil-ul",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Toktz-xil-ak",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Toktz-xil-ek",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Obsidian Cape",
+              "points": 2.5,
+              "duplicate_points": 1.25,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Toktz-mej-tal",
+              "points": 11.25,
+              "duplicate_points": 5.625,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Obsidian Helmet",
+              "points": 7.5,
+              "duplicate_points": 3.75,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Obsidian Platebody",
+              "points": 7.5,
+              "duplicate_points": 3.75,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            },
+            {
+              "name": "Obsidian Platelegs",
+              "points": 7.5,
+              "duplicate_points": 3.75,
+              "obtained": false,
+              "duplicate_obtained": false,
+              "icon_url": null
+            }
+          ]
+        },
+        {
+          "name": "The Royal Titans",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Amoxliatl",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Medium": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Zulrah",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Dagannoth Kings",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Moons of Peril",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Chaos Elemental",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Sarachnis",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Skotizo",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Grotesque Guardians",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Vorkath",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Demonic Gorillas",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Hueycoatl",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Hard": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Cerberus",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Kalphite Queen",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Thermonuclear Smoke Devil",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Abyssal Sire",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Vet'ion | Calvar'ion",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Tormented Demons",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Venenatis | Spindel",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Callisto | Artio",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Kree'arra",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Zilyana",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Graardor",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Phantom Muspah",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Kraken",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "K'ril Tsutsaroth",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Gauntlet",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Giant Mole",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Zalcano",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Revenants",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Elite": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Araxxor",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Corporeal Beast",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Fortis Colosseum",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Chambers of Xeric",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Desert Treasure 2",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Theatre of Blood",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Nightmare",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Nex",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Alchemical Hydra",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Tombs of Amascut",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Minigames": {
+      "points_gained": 0,
+      "sources": []
+    },
+    "Slayer": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Slayer",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Clues": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "All Clues",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Beginner",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Easy",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Medium",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Hard",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Elite",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        },
+        {
+          "name": "Master",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    },
+    "Miscellaneous": {
+      "points_gained": 0,
+      "sources": [
+        {
+          "name": "Miscellaneous",
+          "source_gained": 0,
+          "multipliers": [],
+          "items": []
+        }
+      ]
+    }
+  }
+}]
