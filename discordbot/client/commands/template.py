@@ -242,6 +242,10 @@ async def add_tier(interaction: discord.Interaction, name: str):
         await interaction.response.send_message(f"Tier `{name}` added.")
     else:
         await interaction.response.send_message("Tier could not be added.")
+        
+@group.command()
+async def add_additonal_information():
+    pass
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
