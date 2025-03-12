@@ -3,22 +3,12 @@ services:
     container_name: cvc-backend
     build: ./backend
     ports:
-      - 8000:8000
+      - 8001:80
     env_file:
       - .env
     networks:
       - cvc-network
-  
-  frontend:
-    container_name: cvc-frontend
-    build: ./frontend
-    ports:
-      - "80:80"
-    env_file:
-      - .env
-    networks:
-      - cvc-network
-    restart: always
+
 
 
 networks:
