@@ -26,7 +26,7 @@ ic_coll = db[COLLECTION_NAME_2]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://www.ironfoundry.cc", "https://www.ironfoundry.cc"],
+    allow_origins=["*"],
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
     allow_credentials=True,
