@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted} from "vue"
+import {onMounted, ref} from "vue"
 import { Loading, Navbar, Refresh, PointBox } from "#components"
 
 
@@ -18,12 +18,12 @@ const fetchTable = async (table: string) => {
   const startTime = Date.now()
 
   try {
-    const response = await fetch(`http://frenzy.ironfoundry.cc:8000/${table}`);
+    const response = await fetch(`http://frenzy.ironfoundry.cc/${table}`);
     if (!response.ok) throw new Error("Failed to fetch data");
 
     const _data = await response.json();
     activeData.value = _data[0];
-    selectedTier.value = Object.keys(activeData.value.tiers)[0]; // Default to first tier
+    selectedTier.value = Object.keys(activeData.value.tiers)[0];
   } catch (error) {
     console.error("Error fetching table data:", error);
   } finally {
@@ -31,7 +31,7 @@ const fetchTable = async (table: string) => {
     const remainingTime = minLoadingTime - elapsedTime;
     setTimeout(() => {
         loading.value = false
-    }, remainingTime * 1000)
+    }, remainingTime)
   }
 }
 
@@ -56,13 +56,13 @@ const showDetails = (event: MouseEvent) => {
         <Loading/>
     </div>
 
-    <div vif="!loading">
+    <div v-if="!loading">
         <Navbar/>
     </div>
 
     <!-- Image Buttons -->
     <div v-if="!loading && activeData" class="flex gap-40">
-      <img v-for="table in team_uris" :key="table" :src="'/${table}.png'"
+      <img v-for="table in team_uris" :key="table" :src="'public/${table}.png'"
         @click="() => { selectedTable = table; fetchTable(table); }"
         class="size-40 rounded-full border-4 cursor-pointer transition-all duration-200"
         :class="selectedTable === table ? 'border-white shadow-lg scale-110' : 'border-black opacity-70 hover:opacity-100'" />
@@ -70,7 +70,7 @@ const showDetails = (event: MouseEvent) => {
 
 
     <!-- Tier Buttons -->
-    <div class="flex gap-4">
+    <div v-if="!loading && activeData" class="flex gap-4">
       <button
         v-for="(_, key) in activeData.tiers"
         :key="key"
@@ -82,7 +82,7 @@ const showDetails = (event: MouseEvent) => {
       </button>
     </div>
 
-    <table class="bg-osrs-dark-gray w-4/5 rounded-3xl">
+    <table v-if="!loading && activeData" class="bg-osrs-dark-gray w-4/5 rounded-3xl">
       <thead>
         <tr>
           <th class="p-2 w-1/5">Name</th>
