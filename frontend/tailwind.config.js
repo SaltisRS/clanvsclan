@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'osrs-dark-gray': '#232323'
+        'osrs-dark-gray': '#232323',
       }
     },
   },
