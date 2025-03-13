@@ -2,7 +2,7 @@
 
 <template>
   <div
-    class="absolute top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white p-2 rounded shadow-lg transition-opacity duration-300"
+    class=" text-blurple p-2 rounded-full transition-opacity duration-300 text-2xl"
   >
     Loading new data...
   </div>
