@@ -7,4 +7,4 @@ RUN pip install --upgrade pip && \
 
 COPY . .
 
-RUN python main.py
+CMD ["python", "main.py"]
