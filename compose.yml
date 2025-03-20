@@ -9,6 +9,13 @@ services:
     networks:
       - cvc-network
 
+  discord:
+    container_name: cvc-discord
+    build: ./discordbot
+    env_file:
+      - .env
+    networks:
+      - cvc-network
 
 
 networks:

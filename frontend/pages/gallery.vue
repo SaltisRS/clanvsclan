@@ -56,7 +56,7 @@ function shuffleArray(arr: any[]) {
 
 onMounted(async () => {
   try {
-    const response = await fetch('http://frenzy.ironfoundry.cc/gallery');
+    const response = await fetch("http://frenzy.ironfoundry.cc/gallery");
     const data = await response.json();
     
     if (Array.isArray(data)) {
