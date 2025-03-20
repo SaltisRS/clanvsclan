@@ -96,7 +96,7 @@ async def get_ic_data() -> List[Dict]:
     logger.info(f"Data retrieved: {data}")
     return data
 
-@app.get("gallery")
+@app.get("/gallery")
 async def get_gallery() -> List[Dict]:
     """
     Returns an array of image objects
