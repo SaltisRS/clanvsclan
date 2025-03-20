@@ -25,4 +25,3 @@ logs
 
 # Docker files
 docker-compose.yml
-Dockerfile
