@@ -22,17 +22,34 @@
  RUN npm run build
  
 
- # Use a lightweight web server to serve the static files
- FROM nginx:alpine
+ # Use a base image with Nginx Unit
+ FROM nginx/unit:1.33.0-alpine
  
 
  # Copy the built Nuxt.js application from the builder stage
- COPY --from=builder /app/.output/public /usr/share/nginx/html
+ COPY --from=builder /app/.output/public /www/nuxt
  
 
- # Expose port 80 for the web server
+ # Define the Nginx Unit configuration
+ RUN echo '{ \
+  "listeners": { \
+  "*:80": { \
+  "pass": "routes" \
+  } \
+  }, \
+  "routes": { \
+  "share": { \
+  "root": "/www/nuxt", \
+  "index": "index.html" \
+  } \
+  } \
+ }' > /tmp/config.json && \
+  unitd --control unix:/run/control.unitd.sock < /tmp/config.json
+ 
+
+ # Expose port 80
  EXPOSE 80
  
 
- # Start Nginx
- CMD ["nginx", "-g", "daemon off;"]
+ # Run Nginx Unit
+ CMD ["unitd", "--no-daemon"]
