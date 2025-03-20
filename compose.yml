@@ -17,6 +17,15 @@ services:
     networks:
       - cvc-network
 
+  web:
+    container_name: cvc-web
+    build:
+    context: ./web  # Assuming your Nuxt.js app is in a 'website' directory
+    dockerfile: Dockerfile  # Explicitly specify the Dockerfile name
+    ports:
+    - "8000:80"  # Map host port 8000 to container port 80
+    networks:
+    - cvc-network
 
 networks:
   cvc-network:

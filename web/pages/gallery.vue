@@ -36,7 +36,7 @@
       <!-- Lightbox -->
       <div 
         v-if="lightboxImage" 
-        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 z-50 overflow-hidden"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 transition-opacity duration-300 z-50 overflow-hidden"
         @click="closeLightbox"
       >
         <img :src="lightboxImage" class="rounded-xl border-4 border-dc-accent overflow-hidden">
