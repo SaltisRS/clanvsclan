@@ -1,9 +1,13 @@
 <script lang="ts"></script>
 
 <template>
-  <div
-    class=" text-blurple p-2 rounded-full transition-opacity duration-300 text-2xl"
-  >
-    Loading new data...
-  </div>
+  <main class="justify-items-center">
+    
+    <div
+      class="text-blurple rounded-full transition-opacity duration-300 text-2xl"
+    >
+      Loading new data...
+    </div>
+
+  </main>
 </template>

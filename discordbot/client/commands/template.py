@@ -16,6 +16,7 @@ group = TemplateGroup()
 mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
 db = mongo["Frenzy"]
 coll = db["Templates"]
+gallery = db["Gallery"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
 
 
@@ -243,9 +244,6 @@ async def add_tier(interaction: discord.Interaction, name: str):
     else:
         await interaction.response.send_message("Tier could not be added.")
         
-@group.command()
-async def add_additonal_information():
-    pass
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
@@ -340,11 +338,24 @@ async def mock_submission(interaction: discord.Interaction):
     embed.add_field(name="(1/1) items collected", value="**Unlocks:** 1.50x Multiplier")
     embed.set_image(url="https://oldschool.runescape.wiki/images/Fighting_Obor.png?5197d")
     await interaction.response.send_message(embed=embed, view=view)
+
+async def get_clan(interaction: discord.Interaction):
+    for role in interaction.user.roles:
+        if role.id == 1343921208948953128:
+            return "Ironclad"
+        if role.id == 1343921101687750716:
+            return "Iron Foundry"
+
+@group.command()
+async def gallery_upload(interaction: discord.Interaction, attachment: discord.Attachment):
+    obj = {"image": attachment.url, "uploaded_by": interaction.user.id, "clan": await get_clan(interaction)}
+    try:
+        await gallery.insert_one(obj)
+    except Exception as e:
+        await interaction.response.send_message(f"Failed Upload: {e}")
     
-        
-
-
-
+    if not interaction.response.is_done():
+        await interaction.followup.send("Image uploaded to Gallery.")
 
 
 
