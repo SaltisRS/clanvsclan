@@ -352,6 +352,7 @@ async def gallery_upload(interaction: discord.Interaction, attachment: discord.A
     try:
         await gallery.insert_one(obj)
     except Exception as e:
+        logger.error(e)
         await interaction.response.send_message(f"Failed Upload: {e}")
     
     if not interaction.response.is_done():
