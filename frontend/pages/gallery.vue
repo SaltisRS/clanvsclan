@@ -1,32 +1,37 @@
 <template>
-    <main class="min-h-screen flex flex-col justify-center items-center bg-dc-bg overflow-hidden">
-      <div>
-        <Navbar/>
-        <Refresh class="z-50"/>
-      </div>
-      
-  
-      <div class="w-full space-y-6">
-        <div 
-          v-for="(row, rowIndex) in galleryRows" 
-          :key="'row-' + rowIndex"
-          class="relative w-full overflow-hidden"
+  <main class="min-h-screen flex flex-col justify-center items-center bg-dc-bg overflow-hidden">
+    <div>
+      <Navbar />
+      <Refresh class="z-50" />
+    </div>
+
+    <div class="w-full space-y-6">
+      <div 
+        v-for="(row, rowIndex) in galleryRows" 
+        :key="'row-' + rowIndex"
+        class="relative w-full overflow-hidden"
+      >
+        <div
+          class="flex gap-2 py-2"
+          :class="rowIndex % 2 === 0 ? 'animate-scroll' : 'animate-scroll-reverse'"
         >
-          <div
-            class="flex gap-2 py-2"
-            :class="rowIndex % 2 === 0 ? 'animate-scroll' : 'animate-scroll-reverse'"
+          <div 
+            v-for="(image, imageIndex) in shuffledRows[rowIndex]" 
+            :key="'image-' + imageIndex"
+            class="slide relative"
+            @click="openLightbox(image.image)"
           >
-            <div 
-              v-for="(image, imageIndex) in shuffledRows[rowIndex]" 
-              :key="'image-' + imageIndex"
-              class="slide relative"
-              @click="openLightbox(image.image)"
-            >
-              <img :src="image.image" class="rounded-lg border border-dc-accent w-48 h-32 object-cover cursor-pointer overflow-hidden" />
+            <img 
+              :src="image.image" 
+              class="rounded-lg border border-dc-accent w-48 h-32 object-cover cursor-pointer overflow-hidden"
+            />
+            <div v-if="getClanImage(image.clan)" class="absolute rounded-full top-2 left-2 size-6 opacity-60">
+              <img :src="getClanImage(image.clan)"/>
             </div>
           </div>
         </div>
       </div>
+    </div>
   
       <!-- Lightbox -->
       <div 
@@ -54,6 +59,15 @@ function shuffleArray(arr: any[]) {
   }
 }
 
+const getClanImage = (clan: "Iron Foundry" | "Ironclad") => {
+  const clanImages = {
+    "Iron Foundry": "/ironfoundry.png",
+    "Ironclad": "/ironclad.png",
+  };
+  return clanImages[clan] || "/ironfoundry.png";
+};
+
+
 onMounted(async () => {
   try {
     const response = await fetch("http://frenzy.ironfoundry.cc/gallery");
@@ -71,7 +85,7 @@ onMounted(async () => {
   
       // Ensure each row has enough slides to fill the screen without gaps
       shuffledRows.value = rows.map((row) => {
-        const requiredSlides = Math.ceil(window.innerWidth / 200); // Adjust based on slide width
+        const requiredSlides = Math.ceil(window.innerWidth); // Adjust based on slide width
         const repeatedSlides = [...row];
 
         // Keep appending the images until we fill the screen width

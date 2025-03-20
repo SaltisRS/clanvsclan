@@ -13,6 +13,9 @@ load_dotenv()
 @dataclass
 class Image():
     url: str
+    clan: str
+    submitter: str | None = None
+    
 
 @dataclass
 class Gallery:
@@ -39,7 +42,7 @@ class Gallery:
     def to_api(self) -> list[Dict]:
         gallery = []
         for image in self.collection:
-            gallery.append({"image": image.url})
+            gallery.append({"image": image.url, "clan": image.clan, "submitter": image.submitter})
         return gallery
             
 app = FastAPI()
@@ -72,7 +75,7 @@ async def construct_gallery():
     images = []
     data = gallery_coll.find({})
     for img in data:
-        images.append(Image(url=img["image"]))
+        images.append(Image(url=img["image"], submitter=img["uploaded_by"], clan=img["clan"]))
     gallery = Gallery(images)
     return gallery.to_api()
 
