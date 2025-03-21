@@ -23,7 +23,7 @@
  
 
  # Use a base image with Nginx Unit
- FROM nginx/unit:1.33.0-alpine
+ FROM unit:latest
  
 
  # Copy the built Nuxt.js application from the builder stage
