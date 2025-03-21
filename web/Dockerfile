@@ -10,8 +10,8 @@
  
  COPY . .
  
- RUN npm run generate
+ RUN npm run build
 
  EXPOSE 3000
  
- CMD ["npx", "serve", ".output/public"]
+ CMD ["node", ".output/server/index.mjs"]
