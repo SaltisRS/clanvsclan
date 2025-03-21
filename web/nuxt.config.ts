@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      port: 3000,
+      port: 80,
       host: "0.0.0.0"
     }
   }
