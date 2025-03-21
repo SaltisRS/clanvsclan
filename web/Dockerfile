@@ -1,17 +1,14 @@
 
- FROM node:22.14.0-alpine
+FROM node:22.14.0-alpine
 
- WORKDIR /app
+WORKDIR /app
 
- COPY package*.json ./
- 
- # Install dependencies
- RUN npm install
- 
- COPY . .
- 
- RUN npm run build
+COPY package*.json ./
+RUN npm ci --production
 
- EXPOSE 3000
- 
- CMD ["node", ".output/server/index.mjs"]
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+CMD ["node", ".output/server/index.mjs"]
+

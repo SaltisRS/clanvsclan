@@ -4,6 +4,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@nuxt/icon'],
   css: ['~/assets/css/main.css'],
-  ssr: false
+  runtimeConfig: {
+    public: {
+      port: 3000,
+      host: "0.0.0.0"
+    }
   }
+}
 )
