@@ -19,7 +19,7 @@
  
 
  # Build the Nuxt.js application
- RUN npm run build
+ RUN npm run generate
 
  # Expose port 3000
  EXPOSE 3000
