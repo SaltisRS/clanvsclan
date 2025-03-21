@@ -1,5 +1,5 @@
  # Use an official Node.js runtime as the base image
- FROM node:22.14.0-alpine AS builder
+ FROM node:22.14.0-alpine
  
 
  # Set the working directory inside the container
@@ -20,23 +20,10 @@
 
  # Build the Nuxt.js application
  RUN npm run build
- 
-
- # Use a Node.js runtime as the base image (for running the server)
- FROM node:22.14.0-alpine
- 
-
- # Set the working directory
- WORKDIR /app
- 
-
- # Copy the entire .output directory from the builder stage
- COPY --from=builder /app/.output ./.output
- 
 
  # Expose port 3000
  EXPOSE 3000
  
 
  # Start the Nuxt.js server
- CMD ["node", "./.output/server/index.mjs"]
+ CMD ["node", ".output/server/index.mjs"]
