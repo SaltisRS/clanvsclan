@@ -16,6 +16,8 @@ COPY . .
 # Build the Nuxt.js application
 RUN npm run build
 
+RUN ls -la /app/.output/public
+
 # Use a base image with Nginx Unit
 FROM unit:1.34.2-node22
 
