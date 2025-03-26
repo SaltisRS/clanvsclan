@@ -70,7 +70,7 @@ const getClanImage = (clan: "Iron Foundry" | "Ironclad") => {
 
 onMounted(async () => {
   try {
-    const response = await fetch("https://frenzy.ironfoundry.cc/gallery");
+    const response = await fetch("https://cvc-backend:8001/gallery");
     const data = await response.json();
     
     if (Array.isArray(data)) {

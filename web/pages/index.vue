@@ -61,7 +61,7 @@ const fetchTable = async (table: string) => {
   const startTime = Date.now();
 
   try {
-    const response = await fetch(`https://frenzy.ironfoundry.cc/${table}`);
+    const response = await fetch(`https://cvc-backend:8001/${table}`);
     if (!response.ok) throw new Error("Failed to fetch data");
 
     const _data = await response.json();
