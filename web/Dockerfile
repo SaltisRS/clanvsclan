@@ -9,6 +9,6 @@ RUN npm ci --production
 COPY . .
 RUN npm run build
 
-EXPOSE 80
+EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
 

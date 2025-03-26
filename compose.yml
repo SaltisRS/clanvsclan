@@ -23,7 +23,7 @@ services:
     container_name: cvc-web
     build: ./web
     ports:
-    - "8000:80"
+    - "8000:3000"
     networks:
     - cvc-network
     - vps
