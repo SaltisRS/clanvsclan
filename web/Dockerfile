@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm ci --production
 
 COPY . .
-RUN npm run build
+RUN npm run generate
 
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
