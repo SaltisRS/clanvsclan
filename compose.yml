@@ -8,6 +8,7 @@ services:
       - .env
     networks:
       - cvc-network
+      - vps
 
   discord:
     container_name: cvc-discord
@@ -16,6 +17,7 @@ services:
       - .env
     networks:
       - cvc-network
+      - vps
 
   web:
     container_name: cvc-web
@@ -24,7 +26,12 @@ services:
     - "8000:80"
     networks:
     - cvc-network
+    - vps
 
 networks:
   cvc-network:
     driver: bridge
+  vps:
+    name: vps
+    driver: bridge
+    external: true
