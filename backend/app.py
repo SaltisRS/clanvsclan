@@ -65,7 +65,7 @@ gallery_coll = db[COLLECTION_NAME_4]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ironfoundry.cc", "http://ironfoundry.cc"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
