@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from typing import List, Dict
 from loguru import logger
 import os
+import httpx
 from dotenv import load_dotenv
 from dataclasses import dataclass
 
@@ -58,8 +59,8 @@ COLLECTION_NAME_4 = "Gallery"
 
 client = MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
-if_coll = db[COLLECTION_NAME_1]
-ic_coll = db[COLLECTION_NAME_2]
+if_coll = db[COLLECTION_NAME_3]
+ic_coll = db[COLLECTION_NAME_3]
 gallery_coll = db[COLLECTION_NAME_4]
 
 
@@ -99,7 +100,14 @@ async def get_gallery() -> List[Dict]:
     response = await construct_gallery()
     return response
 
-
+@app.get("/leaderboard")
+async def get_leaderboard() -> Dict[str, str | int]:
+    """Fetches Competition from WOM and formats it."""
+    competition_url = "https://wiseoldman.com/api/v2/competitions..."
+    response = httpx.get(competition_url)
+    if response.status_code == 200:
+        return {}
+    return {}
 
 if __name__ == "__main__":
     import uvicorn
