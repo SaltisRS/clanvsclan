@@ -135,7 +135,7 @@ const hideTooltip = () => {
 
 <template>
   <main
-    class="flex flex-col justify-center items-center p-20 gap-8 select-none"
+    class="flex flex-col justify-center items-center w-full max-w-screen-lg mx-auto sm:px-4 md:px-8 lg:p-20 gap-8 select-none"
   >
     <div v-if="loading">
       <Loading />
