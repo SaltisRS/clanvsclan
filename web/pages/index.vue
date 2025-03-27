@@ -152,11 +152,11 @@ const hideTooltip = () => {
       v-if="!loading"
       class="fixed top-16 left-2 opacity-50 z-50 flex flex-col items-start space-y-2"
     >
-      <div class="flex items-center">
+      <div class="flex items-center sm:scale-75">
         <Icon name="nrk:radio-active" class="text-green-500" />
         <span class="ml-2 text-sm text-green-500">Full Completion</span>
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center sm:scale-75">
         <Icon name="nrk:radio-active" class="text-yellow-500" />
         <span class="ml-2 text-sm text-yellow-500">Partial Completion</span>
       </div>
@@ -169,7 +169,7 @@ const hideTooltip = () => {
     </div>
 
     <!-- Image Buttons -->
-    <div v-if="!loading && activeData" class="flex gap-40">
+    <div v-if="!loading && activeData" class="flex gap-40 sm:scale-75">
       <img
         v-for="table in team_uris"
         :key="table"
@@ -190,7 +190,7 @@ const hideTooltip = () => {
     </div>
 
     <!-- Tier Buttons -->
-    <div v-if="!loading && activeData" class="flex gap-4">
+    <div v-if="!loading && activeData" class="flex gap-4 sm:scale-75">
       <button
         v-for="(_, key) in activeData.tiers"
         :key="key"
@@ -215,7 +215,7 @@ const hideTooltip = () => {
     <!-- Main Table -->
     <table
       v-if="!loading && activeData"
-      class="bg-dc-accent w-full rounded-xl overflow-hidden"
+      class="bg-dc-accent w-full rounded-xl overflow-hidden sm:scale-75"
     >
       <thead>
         <tr>
@@ -315,7 +315,7 @@ const hideTooltip = () => {
     </div>
 
     <!-- Multipliers Table -->
-    <table v-if="!loading && activeData" class="w-full bg-dc-accent rounded-xl">
+    <table v-if="!loading && activeData" class="w-full bg-dc-accent rounded-xl sm:scale-75">
       <thead>
         <tr class="text-center">
           <th class="w-1/5 py-1">Source</th>
@@ -401,7 +401,7 @@ const hideTooltip = () => {
     <!-- Tooltip Display -->
     <div
       v-if="tooltip"
-      class="fixed bg-blurple text-white text-sm px-2 py-1 rounded shadow-lg pointer-events-none"
+      class="fixed bg-blurple text-white text-sm px-2 py-1 rounded shadow-lg pointer-events-none sm:scale-90"
       :style="{ top: `${tooltip.y - 15}px`, left: `${tooltip.x}px` }"
     >
       {{ tooltip.text }}
