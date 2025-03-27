@@ -74,6 +74,11 @@ const helpRows = [
         first_line: "Run: /help Admin for a list of commands you have access to.",
         text:"The one you might have to use at some point is: /admin submit [ @user ] [ item ] [ attachment ] This submits the item as if the person who received the drop ran the normal command, this is just a backup in case something isn't working for any individuals.",
         img_url: "https://placehold.co/600x400.png"
+    },
+    {
+        title: "The website looks weird!",
+        first_line: "The website is natively built for typical PC and Tablet screens.",
+        text: "If you still want to use the website on a phone, for iphone simply use landscape mode and it should align okay. For android click 'Desktop View' and zoom out and it should look okay!"
     }
 ];
 </script>
