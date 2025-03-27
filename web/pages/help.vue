@@ -1,5 +1,5 @@
 <template>
-    <main class="flex flex-col justify-center items-center p-20 gap-8 select-none">
+    <main class="flex flex-col justify-center items-center md:p-20 sm:p-2 gap-8 select-none">
         <div>
             <Navbar />
         </div>
@@ -18,7 +18,7 @@
                     >{{ tab.first_line }}</td>
                 </tr>
                 <tr>
-                    <td class="p-4 text-center font-sans px-20">{{ tab.text }}</td>
+                    <td class="p-4 text-center font-sans md:px-20 sm:px-2">{{ tab.text }}</td>
                 </tr>
                 <tr v-if="tab.img_url">
                     <td class="flex justify-center items-center w-full p-6">
