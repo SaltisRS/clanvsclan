@@ -401,7 +401,7 @@ class DBmodal(discord.ui.Modal, title="Add new item"):
     
     async def on_submit(self, interaction: discord.Interaction) -> None:
         await submit_to_db(interaction, self.source, self.item_name.value, int(self.point_value.value))
-        await interaction.response.send_message(f"{self.source, self.tier, self.item_name, self.point_value}")
+        await interaction.response.send_message(f"{self.source, self.tier, self.item_name.value, self.point_value.value}")
 
 class TierSelect(discord.ui.Select):
     def __init__(self, options: list[discord.SelectOption]):
