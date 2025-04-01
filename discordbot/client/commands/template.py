@@ -373,11 +373,9 @@ async def parse_tier(source: str) -> str: # type: ignore
         return ""
     
     for tier_name, tier_data in template["tiers"].items():  # Correctly unpack tier name and data
-        logger.info(tier_name)
         for idx in tier_data["sources"]:  # Access the correct dictionary level
-            logger.info(idx["name"])
             if source in idx["name"]:
-                logger.info(source)
+                logger.info(f"Tier found: {tier_name}")
                 return tier_name  # Return the tier name instead of the whole tier object
 
     
