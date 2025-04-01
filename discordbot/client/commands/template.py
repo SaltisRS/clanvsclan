@@ -372,8 +372,11 @@ async def parse_tier(source: str) -> str: # type: ignore
     if not template: return ""
     
     for tier in template["tiers"]:
+        logger.info(tier)
         for idx in tier["sources"]:
-            if source in idx:
+            logger.info(idx)
+            if source in idx["name"]:
+                logger.info(source)
                 return str(tier)
     
 
