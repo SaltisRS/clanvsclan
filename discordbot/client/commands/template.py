@@ -362,7 +362,6 @@ async def create_source_options(tier: str) -> list[discord.SelectOption]:
     if not template: return [discord.SelectOption(label="No Data Matched")]
     
     for source in template["tiers"][tier]["sources"]:
-        logger.info(source)
         options.append(discord.SelectOption(label=source["name"], value=source["name"]))
         logger.info(f"Adding '{source["name"]}' to options.")
     
@@ -373,10 +372,9 @@ async def parse_tier(source: str) -> str: # type: ignore
     if not template: return ""
     
     for tier in template["tiers"]:
-        if source in tier["sources"]:
-            return str(tier)
-        logger.info(f"Source not in: {tier}")
-    
+        for idx in tier["sources"]:
+            if source in idx:
+                return str(tier)
     
 
 async def submit_to_db(interaction: discord.Interaction, source: str, item: str, points: int):
