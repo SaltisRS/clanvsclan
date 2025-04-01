@@ -369,15 +369,17 @@ async def create_source_options(tier: str) -> list[discord.SelectOption]:
 
 async def parse_tier(source: str) -> str: # type: ignore
     template: dict | None = await coll.find_one({})
-    if not template: return ""
+    if not template:
+        return ""
     
-    for tier in template["tiers"]:
-        logger.info(tier)
-        for idx in tier["sources"]:
-            logger.info(idx)
+    for tier_name, tier_data in template["tiers"].items():  # Correctly unpack tier name and data
+        logger.info(tier_name)
+        for idx in tier_data["sources"]:  # Access the correct dictionary level
+            logger.info(idx["name"])
             if source in idx["name"]:
                 logger.info(source)
-                return str(tier)
+                return tier_name  # Return the tier name instead of the whole tier object
+
     
 
 async def submit_to_db(interaction: discord.Interaction, source: str, item: str, points: int):
