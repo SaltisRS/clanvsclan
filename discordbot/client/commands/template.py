@@ -430,7 +430,7 @@ class TierSelect(discord.ui.Select):
                                                     ephemeral=True, 
                                                     view=SourceView(
                                                         options=await create_source_options(self.values[0]),
-                                                        tier=await parse_tier(self.values[0])))
+                                                        tier=self.values[0]))
         except Exception as e:
             logger.error(e)
             
