@@ -401,6 +401,9 @@ async def submit_to_db(interaction: discord.Interaction,tier: str, source: str, 
         {"_id": template["_id"], f"tiers.{tier}.sources.name": source},
         {"$push": {f"tiers.{tier}.sources.$.items": _item}}
     )
+    logger.info(_item)
+    logger.info(source)
+    logger.info(tier)
     if result.modified_count > 0:
         await interaction.response.send_message(f"Item `{item}` added to `{source}` in `{tier}` tier.", ephemeral=True, delete_after=30)
     else:
