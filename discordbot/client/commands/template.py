@@ -437,8 +437,10 @@ class SourceView(discord.ui.View):
     @discord.ui.button(label="Add", style=discord.ButtonStyle.success)
     async def add_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         if self.source == None: await interaction.response.send_message("Please Select a Source first.")
-        await interaction.response.send_modal(DBmodal(tier=self.tier, source=self.source))
-        
+        try:
+            await interaction.response.send_modal(DBmodal(tier=self.tier, source=self.source))
+        except Exception as e:
+            logger.info(e)
         
 @group.command()
 async def helpsalt(interaction: discord.Interaction):
