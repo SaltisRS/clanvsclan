@@ -395,6 +395,7 @@ class DBmodal(discord.ui.Modal, title="Add new item"):
     item_name = discord.ui.TextInput(label="Item Name")
     point_value = discord.ui.TextInput(label="Assign Points")
     def __init__(self, tier, source):
+        super().__init__(timeout=None)
         self.tier = tier
         self.source = source
     
