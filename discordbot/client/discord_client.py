@@ -25,7 +25,7 @@ class DiscordClient(discord.Client):
     
     async def set_guild(self):
         try:
-            self.selected_guild = await self.fetch_guild(self.preset_guild_id)
+            self.selected_guild = await self.fetch_guild(self.preset_guild_id) # type: ignore
         except discord.errors.Forbidden:
             logger.error("Bot does not have access to the guild")
             return
@@ -35,13 +35,13 @@ class DiscordClient(discord.Client):
         logger.info(f"Guild set to {self.selected_guild}")
         
     async def load_modules(self):
-        self.invite_tracker = InviteTracker(self, self.selected_guild)
+        self.invite_tracker = InviteTracker(self, self.selected_guild) # type: ignore
         await self.invite_tracker.startup_cache()
         
     async def load_commands(self):
         TemplateTools(self)
         commands = await self.tree.sync(guild=self.selected_guild)
-        logger.info(f"Loaded {len(commands)} commands")
+        logger.info(f"Loading commands: {commands}")
         
     async def setup_hook(self):
         await self.set_guild()

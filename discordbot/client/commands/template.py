@@ -340,26 +340,104 @@ async def mock_submission(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed, view=view)
 
 async def get_clan(interaction: discord.Interaction):
-    for role in interaction.user.roles:
+    for role in interaction.user.roles: # type: ignore
         if role.id == 1343921208948953128:
             return "Ironclad"
         if role.id == 1343921101687750716:
             return "Iron Foundry"
 
-@group.command()
-async def gallery_upload(interaction: discord.Interaction, attachment: discord.Attachment):
-    obj = {"image": attachment.url, "uploaded_by": interaction.user.id, "clan": await get_clan(interaction)}
-    try:
-        await gallery.insert_one(obj)
-    except Exception as e:
-        logger.error(e)
-        await interaction.response.send_message(f"Failed Upload: {e}")
+async def create_tier_options() -> list[discord.SelectOption]:
+    options = []
+    template: dict | None = await coll.find_one({})
+    if not template: return [discord.SelectOption(label="No Data Matched")]
     
-    try:
-        await interaction.response.send_message("Image Uploaded to Gallery.")
-    except discord.InteractionResponded as e:
-        logger.error(e)
+    for tier in template["tiers"]:
+        options.append(discord.SelectOption(label=str(tier), value=str(tier)))
+        logger.info(f"Adding '{tier}' to options.")
+    return options
 
+async def create_source_options(tier: str) -> list[discord.SelectOption]:
+    options = []
+    template: dict | None = await coll.find_one({})
+    if not template: return [discord.SelectOption(label="No Data Matched")]
+    
+    for source in template["tiers"][tier]["sources"]:
+        options.append(discord.SelectOption(label=source, value=source))
+        logger.info(f"Adding '{source}' to options.")
+    
+    return options
+
+async def parse_tier(source: str) -> str: # type: ignore
+    template: dict | None = await coll.find_one({})
+    if not template: return ""
+    
+    for tier in template["tiers"]:
+        if source in tier["sources"]:
+            return str(tier)
+        logger.info(f"Source not in: {tier}")
+    
+    
+
+async def submit_to_db(interaction: discord.Interaction, source: str, item: str, points: int):
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+    
+    await interaction.channel.send("DEBUG! SUBMIT_TO_DB()") # type: ignore
+    
+class DBmodal(discord.ui.Modal, title="Add new item"):
+    item_name = discord.ui.TextInput(label="Item Name")
+    point_value = discord.ui.TextInput(label="Assign Points")
+    def __init__(self, tier, source):
+        self.tier = tier
+        self.source = source
+    
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        await submit_to_db(interaction, self.source, self.item_name.value, int(self.point_value.value))
+        await interaction.response.send_message(f"{self.source, self.tier, self.item_name, self.point_value}")
+
+class TierSelect(discord.ui.Select):
+    def __init__(self, options: list[discord.SelectOption]):
+        super().__init__(placeholder="Select a tier", options=options)
+    
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(content="Select a source and click 'Add'", view=SourceView(options=await create_source_options(self.values[0]), tier=await parse_tier(self.values[0])))
+
+class SourceSelect(discord.ui.Select):
+    def __init__(self, options: list[discord.SelectOption]):
+        super().__init__(placeholder="Select a source", options=options)
+
+    async def callback(self, interaction: discord.Interaction):
+        source = self.values[0]
+        self.view.source = source # type: ignore
+        await interaction.response.send_message(f"Selected: {source.capitalize()}")
+        
+
+class InitialView(discord.ui.View):
+    def __init__(self, options: list[discord.SelectOption]):
+        super().__init__(timeout=None)
+        self.add_item(TierSelect(options))
+        
+class SourceView(discord.ui.View):
+    def __init__(self, options: list[discord.SelectOption], tier: str):
+        super().__init__(timeout=None)
+        self.tier = tier
+        self.source = None
+        self.add_item(SourceSelect(options))
+    
+    @discord.ui.button(label="Add", style=discord.ButtonStyle.success)
+    async def add_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if self.source == None: await interaction.response.send_message("Please Select a Source first.")
+        await interaction.response.send_modal(DBmodal(tier=self.tier, source=self.source))
+        
+        
+@group.command()
+async def helpsalt(interaction: discord.Interaction):
+    view = InitialView(options=await create_tier_options())
+    await interaction.response.send_message("DEBUG!", view=view)
+    
 
 def setup(client: discord.Client):
-    client.tree.add_command(group, guild=client.selected_guild)
+    client.tree.add_command(group, guild=client.selected_guild) # type: ignore

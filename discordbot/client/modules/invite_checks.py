@@ -16,9 +16,9 @@ class InviteTracker:
         self.guild = guild
         self.invite_cache = {}
         self.invite_roles = {
-            "if": {"role": self.guild.get_role(int(self.IF_ROLE)),
+            "if": {"role": self.guild.get_role(int(self.IF_ROLE) if self.IF_ROLE else 0),
                    "code": self.IF_INVITE},
-            "ic": {"role": self.guild.get_role(int(self.IC_ROLE)),
+            "ic": {"role": self.guild.get_role(int(self.IC_ROLE if self.IC_ROLE else 0)),
                    "code": self.IC_INVITE}
         }
     
@@ -29,7 +29,7 @@ class InviteTracker:
     async def add_role(self, member: discord.Member, invite: discord.Invite):
         for _, v in self.invite_roles.items():
             if invite.code == v["code"]:
-                await member.add_roles(*[v["role"]])
+                await member.add_roles(*[v["role"]]) # type: ignore
                 return
             
     async def new_member(self, member: discord.Member):
