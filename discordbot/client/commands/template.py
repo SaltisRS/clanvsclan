@@ -382,26 +382,42 @@ async def parse_tier(source: str) -> str: # type: ignore
 
     
 
-async def submit_to_db(interaction: discord.Interaction, source: str, item: str, points: int):
+async def submit_to_db(interaction: discord.Interaction,tier: str, source: str, item: str, points: float):
     template = await coll.find_one({})
     
     if not template:
-        await interaction.response.send_message("Template not found.")
+        await interaction.response.send_message("Template not found.", ephemeral=True)
         return
     
-    await interaction.channel.send("DEBUG! SUBMIT_TO_DB()") # type: ignore
+    _item = {
+        "name": item,
+        "points": points,
+        "duplicate_points": points / 2 if points != 0 else 0,
+        "obtained": False,
+        "duplicate_obtained": False,
+        "icon_url": None
+    }
+    result = await coll.update_one(
+        {"_id": template["_id"], f"tiers.{tier}.sources.name": source},
+        {"$push": {f"tiers.{tier}.sources.$.items": _item}}
+    )
+    if result.modified_count > 0:
+        await interaction.response.send_message(f"Item `{item}` added to `{source}` in `{tier}` tier.", ephemeral=True, delete_after=30)
+    else:
+        await interaction.response.send_message("```Tier or source not found.```", ephemeral=True, delete_after=30)
+    
     
 class DBmodal(discord.ui.Modal, title="Add new item"):
     item_name = discord.ui.TextInput(label="Item Name")
-    point_value = discord.ui.TextInput(label="Assign Points")
+    point_value = discord.ui.TextInput(label="Assigned Points")
     def __init__(self, tier, source):
         super().__init__(timeout=None)
         self.tier = tier
         self.source = source
     
     async def on_submit(self, interaction: discord.Interaction) -> None:
-        await submit_to_db(interaction, self.source, self.item_name.value, int(self.point_value.value))
-        await interaction.response.send_message(f"{self.source, self.tier, self.item_name.value, self.point_value.value}")
+        await submit_to_db(interaction, self.tier, self.source, self.item_name.value, float(self.point_value.value))
+        
 
 class TierSelect(discord.ui.Select):
     def __init__(self, options: list[discord.SelectOption]):
@@ -409,7 +425,11 @@ class TierSelect(discord.ui.Select):
     
     async def callback(self, interaction: discord.Interaction):
         try:
-            await interaction.response.send_message(content="Select a source and click 'Add'", view=SourceView(options=await create_source_options(self.values[0]), tier=await parse_tier(self.values[0])))
+            await interaction.response.send_message(content="```Select a source and click 'Add'```",
+                                                    ephemeral=True, 
+                                                    view=SourceView(
+                                                        options=await create_source_options(self.values[0]),
+                                                        tier=await parse_tier(self.values[0])))
         except Exception as e:
             logger.error(e)
             
@@ -420,7 +440,7 @@ class SourceSelect(discord.ui.Select):
     async def callback(self, interaction: discord.Interaction):
         source = self.values[0]
         self.view.source = source # type: ignore
-        await interaction.response.send_message(f"Selected: {source.capitalize()}")
+        await interaction.response.send_message(f"```Selected: {source.capitalize()}```", ephemeral=True, delete_after=2)
         
 
 class InitialView(discord.ui.View):
@@ -435,9 +455,9 @@ class SourceView(discord.ui.View):
         self.source = None
         self.add_item(SourceSelect(options))
     
-    @discord.ui.button(label="Add", style=discord.ButtonStyle.success)
+    @discord.ui.button(label="Add", style=discord.ButtonStyle.success, row=2)
     async def add_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if self.source == None: await interaction.response.send_message("Please Select a Source first.")
+        if self.source == None: await interaction.response.send_message("```Please Select a Source first.```")
         try:
             await interaction.response.send_modal(DBmodal(tier=self.tier, source=self.source))
         except Exception as e:
@@ -446,7 +466,7 @@ class SourceView(discord.ui.View):
 @group.command()
 async def helpsalt(interaction: discord.Interaction):
     view = InitialView(options=await create_tier_options())
-    await interaction.response.send_message("DEBUG!", view=view)
+    await interaction.response.send_message("```Select a tier to continue```", view=view)
     
 
 def setup(client: discord.Client):
