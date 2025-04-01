@@ -403,8 +403,11 @@ class TierSelect(discord.ui.Select):
         super().__init__(placeholder="Select a tier", options=options)
     
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message(content="Select a source and click 'Add'", view=SourceView(options=await create_source_options(self.values[0]), tier=await parse_tier(self.values[0])))
-
+        try:
+            await interaction.response.send_message(content="Select a source and click 'Add'", view=SourceView(options=await create_source_options(self.values[0]), tier=await parse_tier(self.values[0])))
+        except Exception as e:
+            logger.error(e)
+            
 class SourceSelect(discord.ui.Select):
     def __init__(self, options: list[discord.SelectOption]):
         super().__init__(placeholder="Select a source", options=options)
