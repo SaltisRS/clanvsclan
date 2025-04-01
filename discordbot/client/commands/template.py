@@ -361,11 +361,10 @@ async def create_source_options(tier: str) -> list[discord.SelectOption]:
     template: dict | None = await coll.find_one({})
     if not template: return [discord.SelectOption(label="No Data Matched")]
     
-    for idx in template["tiers"][tier]["sources"]:
-        for source in idx:
-            logger.info(source)
-            options.append(discord.SelectOption(label=source["name"], value=source["name"]))
-            logger.info(f"Adding '{source["name"]}' to options.")
+    for source in template["tiers"][tier]["sources"]:
+        logger.info(source)
+        options.append(discord.SelectOption(label=source["name"], value=source["name"]))
+        logger.info(f"Adding '{source["name"]}' to options.")
     
     return options
 
