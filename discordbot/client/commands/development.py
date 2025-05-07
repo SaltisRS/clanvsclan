@@ -34,12 +34,12 @@ async def populate_verify_set():
             response.raise_for_status()
             df = pd.read_csv(io.StringIO(response.text))
 
-            if 'Players' in df.columns:
+            if 'Player' in df.columns:
                 lowercase_players = [player.lower() for player in df['Player'].tolist()]
                 verify_set.update(lowercase_players)
                 logger.info(f"Added players from {url} to verify_set.")
             else:
-                logger.warning(f"URL {url} did not contain a 'Players' column.")
+                logger.warning(f"URL {url} did not contain a 'Player' column.")
 
         logger.info(f"verify_set populated with {len(verify_set)} players.")
 
