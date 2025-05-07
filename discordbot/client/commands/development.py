@@ -25,6 +25,8 @@ db = mongo["Frenzy"]
 players = db["Players"]
 verify_set = set()
 
+linked_role_id = 1369434992714842205
+
 async def populate_verify_set():
     logger.info("Starting to populate verify_set...")
     verify_set.clear()
@@ -71,6 +73,7 @@ class LinkModal(discord.ui.Modal, title="Link RSN"):
 
         if submitted_rsn_lower in verify_set:
             await interaction.followup.send(f"RSN `{self.rsn.value}` found, you are now linked!", ephemeral=True)
+            await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])# type: ignore
             logger.info(f"User {interaction.user.id} submitted valid RSN: {self.rsn.value}")
             await update_db(interaction.user.id, self.rsn.value)
         else:
@@ -79,6 +82,7 @@ class LinkModal(discord.ui.Modal, title="Link RSN"):
 
             if submitted_rsn_lower in verify_set:
                 await interaction.followup.send(f"RSN `{self.rsn.value}` found after re-checking, you are now linked!", ephemeral=True)
+                await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])# type: ignore
                 logger.info(f"User {interaction.user.id} submitted valid RSN after re-check: {self.rsn.value}")
                 await update_db(interaction.user.id, self.rsn.value)
             else:
