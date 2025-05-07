@@ -2,5 +2,6 @@
     "python.analysis.typeCheckingMode": "standard",
     "yaml.schemas": {
         "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///c%3A/Users/emilr/OneDrive/Dokumente/Github/clanvsclan/compose1.yml"
-    }
+    },
+    "python.analysis.autoImportCompletions": true
 }
