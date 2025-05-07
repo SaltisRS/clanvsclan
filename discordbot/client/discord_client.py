@@ -41,7 +41,7 @@ class DiscordClient(discord.Client):
         
     async def load_commands(self):
         TemplateTools(self)
-        DevSetup(self)
+        await DevSetup(self)
         commands = await self.tree.sync(guild=self.selected_guild)
         logger.info(f"Loading commands: {commands}")
         

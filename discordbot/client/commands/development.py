@@ -35,7 +35,8 @@ async def populate_verify_set():
             df = pd.read_csv(io.StringIO(response.text))
 
             if 'Players' in df.columns:
-                verify_set.update(df['Players'].tolist())
+                lowercase_players = [player.lower() for player in df['Player'].tolist()]
+                verify_set.update(lowercase_players)
                 logger.info(f"Added players from {url} to verify_set.")
             else:
                 logger.warning(f"URL {url} did not contain a 'Players' column.")
@@ -49,10 +50,10 @@ async def populate_verify_set():
 async def update_db(discord_id: int, rsn: str):
     await players.update_one(
         {"discord_id": discord_id},
-        {"$set": {"rsn": rsn}},
+        {"$set": {"rsn": rsn.lower()}},
         upsert=True
     )
-    logger.info(f"Database updated for Discord ID {discord_id} with RSN: {rsn}")
+    logger.info(f"Database updated for Discord ID {discord_id} with RSN: {rsn.lower()}")
 
 
 class LinkModal(discord.ui.Modal, title="Link RSN"):
@@ -66,8 +67,9 @@ class LinkModal(discord.ui.Modal, title="Link RSN"):
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message("Checking RSN against clan accounts...", ephemeral=True, delete_after=15)
+        submitted_rsn_lower = self.rsn.value.lower()
 
-        if self.rsn.value in verify_set:
+        if submitted_rsn_lower in verify_set:
             await interaction.followup.send(f"RSN `{self.rsn.value}` found, you are now linked!", ephemeral=True)
             logger.info(f"User {interaction.user.id} submitted valid RSN: {self.rsn.value}")
             await update_db(interaction.user.id, self.rsn.value)
@@ -75,7 +77,7 @@ class LinkModal(discord.ui.Modal, title="Link RSN"):
             logger.info(f"RSN `{self.rsn.value}` not found initially. Re-populating verify_set...")
             await populate_verify_set()
 
-            if self.rsn.value in verify_set:
+            if submitted_rsn_lower in verify_set:
                 await interaction.followup.send(f"RSN `{self.rsn.value}` found after re-checking, you are now linked!", ephemeral=True)
                 logger.info(f"User {interaction.user.id} submitted valid RSN after re-check: {self.rsn.value}")
                 await update_db(interaction.user.id, self.rsn.value)
@@ -104,7 +106,7 @@ async def send_link_message(interaction: discord.Interaction):
     await interaction.channel.send(embed=embed, view=LinkView()) # type: ignore
 
 
-
-def setup(client: discord.Client):
+async def setup(client: discord.Client):
+    await populate_verify_set()
     client.tree.add_command(group, guild=client.selected_guild) # type: ignore
     client.add_view(LinkView())
