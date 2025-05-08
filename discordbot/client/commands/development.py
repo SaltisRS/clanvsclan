@@ -113,6 +113,7 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
         logger.info(member)
         members.update(member)
     logger.debug(members)
+    await interaction.followup.send(str(members))
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
