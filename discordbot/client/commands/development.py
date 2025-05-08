@@ -105,15 +105,19 @@ class LinkView(discord.ui.View):
 
 @group.command()
 async def force_rename_all(interaction: discord.Interaction, strict: bool = False):
-    await interaction.response.defer(thinking=True)
-    members = {}
+    members = {
+        "users": {}
+    }
     docs = players.find({})
     async for doc in docs:
-        member = {str(doc["discord_id"]) : doc["rsn"]}
+        member = {
+            "rsn": doc["rsn"],
+            "id": doc["discord_id"]
+        }
         logger.info(member)
-        members.update(member)
+        members["users"].update(member)
+    await interaction.response.send_message(str(members))
     logger.debug(members)
-    await interaction.followup.send(str(members))
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
