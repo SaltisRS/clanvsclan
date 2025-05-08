@@ -108,8 +108,8 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
     await interaction.response.defer(thinking=True)
     members = {}
     docs = players.find({})
-    for doc in docs:
-        member = {doc["discord_id"]: doc["rsn"]}
+    async for doc in docs:
+        member = {str(doc["discord_id"]) : doc["rsn"]}
         logger.info(member)
         members.update(member)
     logger.debug(members)
