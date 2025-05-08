@@ -73,18 +73,20 @@ class LinkModal(discord.ui.Modal, title="Link RSN"):
 
         if submitted_rsn_lower in verify_set:
             await interaction.followup.send(f"RSN `{self.rsn.value}` found, you are now linked!", ephemeral=True)
-            await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])# type: ignore
+            await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])
             logger.info(f"User {interaction.user.id} submitted valid RSN: {self.rsn.value}")
             await update_db(interaction.user.id, self.rsn.value)
+            await interaction.user.edit(nick=self.rsn.value)
         else:
             logger.info(f"RSN `{self.rsn.value}` not found initially. Re-populating verify_set...")
             await populate_verify_set()
 
             if submitted_rsn_lower in verify_set:
                 await interaction.followup.send(f"RSN `{self.rsn.value}` found after re-checking, you are now linked!", ephemeral=True)
-                await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])# type: ignore
+                await interaction.user.add_roles(*[discord.Object(id=1369434992714842205)])
                 logger.info(f"User {interaction.user.id} submitted valid RSN after re-check: {self.rsn.value}")
                 await update_db(interaction.user.id, self.rsn.value)
+                await interaction.user.edit(nick=self.rsn.value)
             else:
                 await interaction.followup.send(
                     f"RSN `{self.rsn.value}` not found in either clan's groups.\nPlease double check your spelling and ensure you are added onto your clan's WiseOldMan page before retrying."
@@ -101,16 +103,26 @@ class LinkView(discord.ui.View):
     async def link_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(LinkModal())
 
+@group.command()
+async def force_rename_all(interaction: discord.Interaction, strict: bool = False):
+    await interaction.response.defer(thinking=True)
+    members = {}
+    docs = players.find({})
+    for doc in docs:
+        member = {doc["discord_id"]: doc["rsn"]}
+        logger.info(member)
+        members.update(member)
+    logger.debug(members)
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
     embed = discord.Embed(title="Link Your RSN", color=discord.Color.teal())
     embed.description = "Link your RSN of the active account to be used in the event.\nThis is a requirement to participate and is checked against WiseOldMan."
     await interaction.response.send_message("Sending...", ephemeral=True)
-    await interaction.channel.send(embed=embed, view=LinkView()) # type: ignore
+    await interaction.channel.send(embed=embed, view=LinkView())#type: ignore
 
 
 async def setup(client: discord.Client):
     await populate_verify_set()
-    client.tree.add_command(group, guild=client.selected_guild) # type: ignore
+    client.tree.add_command(group, guild=client.selected_guild) 
     client.add_view(LinkView())
