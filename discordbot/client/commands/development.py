@@ -2,6 +2,7 @@ import discord
 import os
 import io
 import pandas as pd
+import asyncio
 
 from loguru import logger
 from pymongo import AsyncMongoClient
@@ -105,8 +106,12 @@ class LinkView(discord.ui.View):
 
 @group.command()
 async def force_rename_all(interaction: discord.Interaction, strict: bool = False):
-    await interaction.response.send_message("Fetching Users...")
-    members = {
+    await interaction.response.defer(thinking=True)
+    guild = interaction.guild
+    if guild is None:
+        await interaction.followup.send("This command can only be used in a server.")
+        return
+    db_players_data = {
         "users": []
     }
     docs = players.find({})
@@ -116,8 +121,51 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
             "id": doc["discord_id"]
         }
         logger.info(member)
-        members["users"].append(member)
-    logger.debug(members)
+        db_players_data["users"].append(member)
+
+    db_player_lookup = {user["id"]: user["rsn"] for user in db_players_data["users"]}
+
+    renamed_count = 0
+    failed_to_rename = 0
+    
+    if interaction.client.user is None:
+        return
+
+    for member in guild.members:
+        if member.id == interaction.client.user.id:
+            continue
+
+        try:
+            if member.id in db_player_lookup:
+                rsn = db_player_lookup[member.id]
+                if member.display_name != rsn:
+                    await member.edit(nick=rsn)
+                    renamed_count += 1
+                    logger.info(f"Renamed {member.display_name} ({member.id}) to {rsn}")
+            else:
+                # 5. If not present, set their server name to "link to join"
+                link_name = "link to join"
+                 # Check if the current nickname is already "link to join"
+                if member.display_name != link_name:
+                    await member.edit(nick=link_name)
+                    renamed_count += 1 # Count as renamed even though it's a placeholder
+                    logger.info(f"Renamed {member.display_name} ({member.id}) to '{link_name}'")
+            await asyncio.sleep(1.5)
+
+        except discord.Forbidden:
+            # The bot doesn't have permissions to change nicknames for this member
+            logger.warning(f"Missing permissions to rename member: {member.display_name} ({member.id})")
+            failed_to_rename += 1
+        except Exception as e:
+            # Catch other potential errors during renaming
+            logger.error(f"Error renaming member {member.display_name} ({member.id}): {e}")
+            failed_to_rename += 1
+
+    await interaction.followup.send(
+        f"Finished renaming members.\n"
+        f"Successfully processed members: {renamed_count}\n"
+        f"Failed to rename members (likely due to permissions): {failed_to_rename}"
+    )
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
