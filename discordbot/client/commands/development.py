@@ -150,7 +150,7 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
                     await member.edit(nick=link_name)
                     renamed_count += 1 # Count as renamed even though it's a placeholder
                     logger.info(f"Renamed {member.display_name} ({member.id}) to '{link_name}'")
-            await asyncio.sleep(1.5)
+            await asyncio.sleep(3)
 
         except discord.Forbidden:
             # The bot doesn't have permissions to change nicknames for this member
