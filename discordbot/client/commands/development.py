@@ -117,7 +117,6 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
         }
         logger.info(member)
         members["users"].append(member)
-    await interaction.edit_original_response(content=members.__repr__())
     logger.debug(members)
 
 @group.command()
