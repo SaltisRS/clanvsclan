@@ -105,7 +105,7 @@ class LinkView(discord.ui.View):
 
 @group.command()
 async def force_rename_all(interaction: discord.Interaction, strict: bool = False):
-    await interaction.response.send_message("Fetching Users...", delete_after=5)
+    await interaction.response.send_message("Fetching Users...")
     members = {
         "users": []
     }
@@ -117,7 +117,7 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
         }
         logger.info(member)
         members["users"].append(member)
-    await interaction.followup.send(members.__repr__())
+    await interaction.edit_original_response(content=members.__repr__())
     logger.debug(members)
 
 @group.command()
