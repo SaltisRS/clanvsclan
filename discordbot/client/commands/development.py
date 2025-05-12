@@ -8,6 +8,7 @@ from loguru import logger
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 from httpx import AsyncClient
+from discord import Embed, Object
 
 from .groups.dev import DevGroup
 
@@ -25,8 +26,78 @@ mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
 db = mongo["Frenzy"]
 players = db["Players"]
 verify_set = set()
-
 linked_role_id = 1369434992714842205
+
+notif_roles: dict[str, dict] = {
+    "toa": {"role": Object(id=1370919773256421480), "icon": "<:toa_e:1371626690869985360>"},
+    "cox": {"role": Object(id=1370919825915777074), "icon": "<:cox:1371626699304997005>"},
+    "tob": {"role": Object(id=1370919886515081376), "icon": "<:tob:1371626695261421588>"},
+    "yama": {"role": Object(id=1370919920879276113), "icon": "<:obor:1371626696780021800>"},
+    "nightmare": {"role": Object(id=1370919940911267930), "icon": "<:nightmare:1371626709714993192>"},
+    "nex": {"role": Object(id=1370919965825437846), "icon": "<:nex:1371626708310036480>"},
+    "royal titans": {"role": Object(id=1370920827435880590), "icon": "<:the_royal_titans:1371626688848592978>"},
+    "zalcano": {"role": Object(id=1371106993208823928), "icon": "<:zalcano:1371626691922759681>"},
+    "hueycoatl": {"role": Object(id=1371266895281393717), "icon": "<:hueycoatl:1371626687258824824>"},
+    "wilderness": {"role": Object(id=1371265502302830683), "icon": "<:callisto:1371626697967009855>"},
+    "minigames": {"role": Object(id=1370919995609190400), "icon": "<:gotr:1371626703238991943>"}
+}
+
+class RoleView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+        self.create_buttons()
+
+    def create_buttons(self):
+        for key, data in notif_roles.items():
+            button = discord.ui.Button(
+                label=key.title(),
+                custom_id=f"role_toggle_{key}",
+                style=discord.ButtonStyle.green,
+                emoji=data.get("icon")
+            )
+            button.callback = self.role_button_callback
+            self.add_item(button)
+
+    async def role_button_callback(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        custom_id = interaction.data["custom_id"]#type: ignore
+        role_key = custom_id.replace("role_toggle_", "")
+
+        role_data = notif_roles.get(role_key)
+
+        if not role_data:
+            await interaction.followup.send("Error: Invalid button clicked.", ephemeral=True)
+            return
+
+        role_id = role_data["role"].id
+        guild = interaction.guild
+
+        if not guild:
+            await interaction.followup.send("Error: Could not determine the guild.", ephemeral=True)
+            return
+
+        role = guild.get_role(role_id)
+        member = interaction.user
+
+        if not role:
+            await interaction.followup.send(f"Error: Could not find the '{role_key.title()}' role in this server.", ephemeral=True)
+            return
+
+        try:
+            if role in member.roles:
+                await member.remove_roles(role)
+                await interaction.followup.send(f"Removed the **{role.name}** role.", ephemeral=True)
+            else:
+                await member.add_roles(role)
+                await interaction.followup.send(f"Added the **{role.name}** role.", ephemeral=True)
+        except discord.Forbidden:
+            await interaction.followup.send("Error: I don't have permission to manage roles.", ephemeral=True)
+        except Exception as e:
+            await interaction.followup.send(f"An error occurred: {e}", ephemeral=True)
+        
+        
+        
 
 async def populate_verify_set():
     logger.info("Starting to populate verify_set...")
@@ -174,6 +245,12 @@ async def send_link_message(interaction: discord.Interaction):
     await interaction.response.send_message("Sending...", ephemeral=True)
     await interaction.channel.send(embed=embed, view=LinkView())#type: ignore
 
+@group.command()
+async def send_role_select(interaction: discord.Interaction):
+    embed = Embed(title="Notification Roles")
+    embed.description = "Click any button below to toggle between recieving notifications for the related content!"
+    await interaction.response.send_message("sending...", ephemeral=True)
+    await interaction.channel.send(embed=embed, view=RoleView())#type: ignore
 
 async def setup(client: discord.Client):
     await populate_verify_set()
