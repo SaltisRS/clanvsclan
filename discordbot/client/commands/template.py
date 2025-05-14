@@ -325,7 +325,45 @@ async def add_item(interaction: discord.Interaction, tier: str, source: str, nam
         await interaction.response.send_message(f"Item `{name}` added to `{source}` in `{tier}` tier.")
     else:
         await interaction.response.send_message("Tier or source not found.")
-        
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item)
+async def upload_item_icon(interaction: discord.Interaction, tier: str, source: str, item: str, icon_link: str):
+    template = await coll.find_one({})
+
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+
+
+    result = await coll.update_one(
+        {
+            "_id": template["_id"],
+            f"tiers.{tier}.sources": {"$elemMatch": {"name": source}},
+        },
+        {
+            "$set": {
+                f"tiers.{tier}.sources.$[source_elem].items.$[item_elem].icon_url": icon_link
+            }
+        },
+        array_filters=[
+            {"source_elem.name": source},
+            {"item_elem.name": item},
+        ],
+    )
+
+    if result.modified_count > 0:
+        await interaction.response.send_message(
+            f"Icon for item `{item}` in `{source}` ({tier}) updated/added successfully."
+        )
+    else:
+        # This still implies the tier, source, or item was not found.
+        await interaction.response.send_message(
+            "Could not find the specified tier, source, or item."
+        )
+
+
+
 @group.command()
 async def mock_submission(interaction: discord.Interaction):
     view = discord.ui.View()
@@ -380,7 +418,7 @@ async def parse_tier(source: str) -> str: # type: ignore
 
     
 
-async def submit_to_db(interaction: discord.Interaction,tier: str, source: str, item: str, points: float):
+async def submit_to_db(interaction: discord.Interaction, tier: str, source: str, item: str, points: float):
     template = await coll.find_one({})
     
     if not template:
