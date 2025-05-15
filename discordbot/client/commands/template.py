@@ -341,50 +341,75 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
         return
 
     try:
-        result = await coll.update_one(
-            {
-                "_id": template["_id"],
-                # Use $elemMatch to find the document AND the specific source within the tier
-                f"tiers.{tier}.sources": {"$elemMatch": {"name": source}},
-                # Also filter for the item name within that source's items array
-                f"tiers.{tier}.sources.items.name": item,
-            },
-            {
-                "$set": {
-                    # Use the positional operator $ after sources to refer to the matched source
-                    # Then use $[] with an array filter to find the specific item within that source's items array
-                    f"tiers.{tier}.sources.$.items.$[item_elem].icon_url": icon_link
-                }
-            },
-            array_filters=[
-                # Filter for the item name within the items array
-                {"item_elem.name": item},
-            ],
-        )
+        tier_data = template.get("tiers", {}).get(tier)
 
-        if result.modified_count > 0:
-            logger.info(
-                f"Successfully updated/added icon for item '{item}' in source '{source}' ({tier}). Modified count: {result.modified_count}"
-            )
-            await interaction.response.send_message(
-                f"Icon for item `{item}` in `{source}` ({tier}) updated/added successfully."
-            )
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template.")
+            await interaction.response.send_message(f"Tier `{tier}` not found.")
+            return
+
+        source_found = False
+        item_found = False
+
+        for source_data in tier_data.get("sources", []):
+            if source_data.get("name") == source:
+                source_found = True
+                for item_data in source_data.get("items", []):
+                    if item_data.get("name") == item:
+                        item_found = True
+                        item_data["icon_url"] = icon_link
+                        logger.info(f"Modified item '{item}' in memory.")
+                        break  # Item found and modified, no need to check other items
+
+                if source_found and item_found:
+                    break  # Source and item found, no need to check other sources
+
+        if source_found and item_found:
+            replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+            if replace_result.modified_count > 0:
+                logger.info(
+                    f"Successfully replaced document with updated item icon for '{item}'."
+                )
+                await interaction.response.send_message(
+                    f"Icon for item `{item}` in `{source}` ({tier}) updated/added successfully."
+                )
+            else:
+                logger.warning(
+                    "Replace operation did not modify the document. Document might have changed or been deleted."
+                )
+                await interaction.response.send_message(
+                    "Could not update the item icon (replace failed)."
+                )
         else:
-            logger.warning(
-                f"Could not find specified tier ('{tier}'), source ('{source}'), or item ('{item}') to update icon. Modified count: {result.modified_count}"
-            )
-            await interaction.response.send_message(
-                "Could not find the specified tier, source, or item."
-            )
-        logger.info(result)
+            if not source_found:
+                logger.warning(
+                    f"Source '{source}' not found within tier '{tier}'."
+                )
+                await interaction.response.send_message(
+                    f"Source `{source}` not found within tier `{tier}`."
+                )
+            elif not item_found:
+                 logger.warning(
+                    f"Item '{item}' not found within source '{source}' in tier '{tier}'."
+                )
+                 await interaction.response.send_message(
+                    f"Item `{item}` not found within source `{source}` in tier `{tier}`."
+                )
+            else:
+                # Should not reach here if logic is correct, but as a fallback
+                 logger.warning("Could not find the specified tier, source, or item (general failure).")
+                 await interaction.response.send_message("Could not find the specified tier, source, or item.")
+
+
     except Exception as e:
         logger.error(
-            f"An error occurred while updating the item icon for '{item}': {e}",
+            f"An error occurred while attempting to update item icon in memory or replace the document for '{item}': {e}",
             exc_info=True,
         )
         await interaction.response.send_message(
-            "An error occurred while trying to update the item icon.")
-
+            "An error occurred while trying to update the item icon."
+        )
 
 
 @group.command()
