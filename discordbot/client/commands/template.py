@@ -333,8 +333,7 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
         f"Attempting to upload icon for item '{item}' in source '{source}' ({tier}) with URL: {icon_link}"
     )
 
-    template = await coll.find_one({"_id": "BASE_TEMPLATE"})
-    logger.info(f"Find one result: {template}")
+    template = await coll.find_one({})
 
     if not template:
         logger.warning("Template document not found in the collection.")
@@ -345,19 +344,24 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
         result = await coll.update_one(
             {
                 "_id": template["_id"],
+                # Use $elemMatch to find the document AND the specific source within the tier
                 f"tiers.{tier}.sources": {"$elemMatch": {"name": source}},
+                # Also filter for the item name within that source's items array
+                f"tiers.{tier}.sources.items.name": item,
             },
             {
                 "$set": {
-                    f"tiers.{tier}.sources.$[source_elem].items.$[item_elem].icon_url": icon_link
+                    # Use the positional operator $ after sources to refer to the matched source
+                    # Then use $[] with an array filter to find the specific item within that source's items array
+                    f"tiers.{tier}.sources.$.items.$[item_elem].icon_url": icon_link
                 }
             },
             array_filters=[
-                {"source_elem.name": source},
+                # Filter for the item name within the items array
                 {"item_elem.name": item},
             ],
         )
-        logger.info(1)
+
         if result.modified_count > 0:
             logger.info(
                 f"Successfully updated/added icon for item '{item}' in source '{source}' ({tier}). Modified count: {result.modified_count}"
@@ -367,7 +371,7 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
             )
         else:
             logger.warning(
-                f"Could not find specified tier ('{tier}'), source ('{source}'), or item ('{item}') to update icon."
+                f"Could not find specified tier ('{tier}'), source ('{source}'), or item ('{item}') to update icon. Modified count: {result.modified_count}"
             )
             await interaction.response.send_message(
                 "Could not find the specified tier, source, or item."
@@ -380,7 +384,6 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
         )
         await interaction.response.send_message(
             "An error occurred while trying to update the item icon."
-        )
 
 
 
