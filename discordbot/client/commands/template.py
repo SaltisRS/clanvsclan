@@ -329,37 +329,56 @@ async def add_item(interaction: discord.Interaction, tier: str, source: str, nam
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item)
 async def upload_item_icon(interaction: discord.Interaction, tier: str, source: str, item: str, icon_link: str):
+    logger.info(
+        f"Attempting to upload icon for item '{item}' in source '{source}' ({tier}) with URL: {icon_link}"
+    )
+
     template = await coll.find_one({})
 
     if not template:
+        logger.warning("Template document not found in the collection.")
         await interaction.response.send_message("Template not found.")
         return
 
-
-    result = await coll.update_one(
-        {
-            "_id": template["_id"],
-            f"tiers.{tier}.sources": {"$elemMatch": {"name": source}},
-        },
-        {
-            "$set": {
-                f"tiers.{tier}.sources.$[source_elem].items.$[item_elem].icon_url": icon_link
-            }
-        },
-        array_filters=[
-            {"source_elem.name": source},
-            {"item_elem.name": item},
-        ],
-    )
-
-    if result.modified_count > 0:
-        await interaction.response.send_message(
-            f"Icon for item `{item}` in `{source}` ({tier}) updated/added successfully."
+    try:
+        result = await coll.update_one(
+            {
+                "_id": template["_id"],
+                f"tiers.{tier}.sources": {"$elemMatch": {"name": source}},
+            },
+            {
+                "$set": {
+                    f"tiers.{tier}.sources.$[source_elem].items.$[item_elem].icon_url": icon_link
+                }
+            },
+            array_filters=[
+                {"source_elem.name": source},
+                {"item_elem.name": item},
+            ],
         )
-    else:
-        # This still implies the tier, source, or item was not found.
+
+        if result.modified_count > 0:
+            logger.info(
+                f"Successfully updated/added icon for item '{item}' in source '{source}' ({tier}). Modified count: {result.modified_count}"
+            )
+            await interaction.response.send_message(
+                f"Icon for item `{item}` in `{source}` ({tier}) updated/added successfully."
+            )
+        else:
+            logger.warning(
+                f"Could not find specified tier ('{tier}'), source ('{source}'), or item ('{item}') to update icon."
+            )
+            await interaction.response.send_message(
+                "Could not find the specified tier, source, or item."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while updating the item icon for '{item}': {e}",
+            exc_info=True,
+        )
         await interaction.response.send_message(
-            "Could not find the specified tier, source, or item."
+            "An error occurred while trying to update the item icon."
         )
 
 
