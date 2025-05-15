@@ -383,7 +383,7 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
             exc_info=True,
         )
         await interaction.response.send_message(
-            "An error occurred while trying to update the item icon."
+            "An error occurred while trying to update the item icon.")
 
 
 
