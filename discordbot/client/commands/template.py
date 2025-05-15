@@ -411,6 +411,109 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
             "An error occurred while trying to update the item icon."
         )
 
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item)
+async def update_item_points(
+    interaction: discord.Interaction,
+    tier: str,
+    source: str,
+    item: str,
+    new_points: float,
+):
+    """Updates the points value for a specific item."""
+    logger.info(
+        f"Attempting to update points for item '{item}' in source '{source}' ({tier}) to {new_points}"
+    )
+
+    # Fetch the entire document
+    template = await coll.find_one({})
+
+    if not template:
+        logger.warning("Template document not found in the collection.")
+        await interaction.response.send_message("Template not found.")
+        return
+
+    try:
+        # Navigate through the document structure to find the target item
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template.")
+            await interaction.response.send_message(f"Tier `{tier}` not found.")
+            return
+
+        source_found = False
+        item_found = False
+
+        # Iterate through sources in the tier
+        for source_data in tier_data.get("sources", []):
+            if source_data.get("name") == source:
+                source_found = True
+                # Iterate through items in the source
+                for item_data in source_data.get("items", []):
+                    if item_data.get("name") == item:
+                        item_found = True
+                        # Modify the points data in memory
+                        item_data["points"] = new_points
+                        # Also update duplicate_points if it exists and is half of points
+                        # This handles cases where duplicate_points might not have been added yet
+                        if "duplicate_points" in item_data or item_data.get("duplicate_points") == item_data.get("points", 0) / 2:
+                             item_data["duplicate_points"] = new_points / 2 if new_points != 0 else 0
+
+                        logger.info(f"Modified points for item '{item}' to {new_points} in memory.")
+                        break  # Item found and modified, no need to check other items
+
+                if source_found and item_found:
+                    break  # Source and item found, no need to check other sources
+
+        if source_found and item_found:
+            # If the item was found and modified in memory, replace the entire document
+            replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+            if replace_result.modified_count > 0:
+                logger.info(
+                    f"Successfully replaced document with updated points for item '{item}'."
+                )
+                await interaction.response.send_message(
+                    f"Points for item `{item}` in `{source}` ({tier}) updated to `{new_points}`."
+                )
+            else:
+                 logger.warning(
+                    "Replace operation did not modify the document for points update. Document might have changed or been deleted."
+                )
+                 await interaction.response.send_message(
+                    "Could not update the item points (replace failed)."
+                )
+        else:
+            # If we iterated through all sources/items and didn't find the target
+            if not source_found:
+                logger.warning(
+                    f"Source '{source}' not found within tier '{tier}' for points update."
+                )
+                await interaction.response.send_message(
+                    f"Source `{source}` not found within tier `{tier}`."
+                )
+            elif not item_found:
+                 logger.warning(
+                    f"Item '{item}' not found within source '{source}' in tier '{tier}' for points update."
+                )
+                 await interaction.response.send_message(
+                    f"Item `{item}` not found within source `{source}` in tier `{tier}`."
+                )
+            else:
+                 logger.warning("Could not find the specified tier, source, or item for points update (general failure).")
+                 await interaction.response.send_message("Could not find the specified tier, source, or item.")
+
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to update item points in memory or replace the document for '{item}': {e}",
+            exc_info=True,
+        )
+        await interaction.response.send_message(
+            "An error occurred while trying to update the item points."
+        )
+
 
 @group.command()
 async def mock_submission(interaction: discord.Interaction):
