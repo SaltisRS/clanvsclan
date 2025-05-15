@@ -376,7 +376,7 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
             await interaction.response.send_message(
                 "Could not find the specified tier, source, or item."
             )
-
+        logger.info(result)
     except Exception as e:
         logger.error(
             f"An error occurred while updating the item icon for '{item}': {e}",
