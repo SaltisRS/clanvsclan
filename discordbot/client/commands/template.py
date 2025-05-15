@@ -333,7 +333,8 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
         f"Attempting to upload icon for item '{item}' in source '{source}' ({tier}) with URL: {icon_link}"
     )
 
-    template = await coll.find_one({})
+    template = await coll.find_one({"_id": "BASE_TEMPLATE"})
+    logger.info(f"Find one result: {template}")
 
     if not template:
         logger.warning("Template document not found in the collection.")
@@ -356,7 +357,7 @@ async def upload_item_icon(interaction: discord.Interaction, tier: str, source: 
                 {"item_elem.name": item},
             ],
         )
-
+        logger.info(1)
         if result.modified_count > 0:
             logger.info(
                 f"Successfully updated/added icon for item '{item}' in source '{source}' ({tier}). Modified count: {result.modified_count}"
