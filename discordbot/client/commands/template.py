@@ -325,6 +325,127 @@ async def add_item(interaction: discord.Interaction, tier: str, source: str, nam
         await interaction.response.send_message(f"Item `{name}` added to `{source}` in `{tier}` tier.")
     else:
         await interaction.response.send_message("Tier or source not found.")
+from loguru import logger
+
+
+@group.command()
+@app_commands.autocomplete(
+    tier=autocomplete_tier,
+    target_tier=autocomplete_tier,
+    source=autocomplete_source,
+)
+async def move_source(
+    interaction: discord.Interaction,
+    tier: str,
+    target_tier: str,
+    source: str,
+):
+    """Moves a Source from one tier to another."""
+    logger.info(
+        f"Attempting to move source '{source}' from tier '{tier}' to tier '{target_tier}'"
+    )
+
+    if tier == target_tier:
+        await interaction.response.send_message(
+            "Original tier and target tier cannot be the same."
+        )
+        return
+
+    # Fetch the entire document
+    template = await coll.find_one({})
+
+    if not template:
+        logger.warning("Template document not found in the collection.")
+        await interaction.response.send_message("Template not found.")
+        return
+
+    try:
+        tier_data = template.get("tiers", {}).get(tier)
+        target_tier_data = template.get("tiers", {}).get(target_tier)
+
+        if not tier_data:
+            logger.warning(f"Original tier '{tier}' not found in the template.")
+            await interaction.response.send_message(
+                f"Original tier `{tier}` not found."
+            )
+            return
+
+        if not target_tier_data:
+            logger.warning(f"Target tier '{target_tier}' not found in the template.")
+            await interaction.response.send_message(
+                f"Target tier `{target_tier}` not found."
+            )
+            return
+
+        original_sources = tier_data.get("sources", [])
+        target_sources = target_tier_data.get("sources", [])
+
+        source_to_move = None
+        source_index_to_remove = -1
+
+        # Find the source in the original tier
+        for i, source_data in enumerate(original_sources):
+            if source_data.get("name") == source:
+                source_to_move = source_data
+                source_index_to_remove = i
+                break
+
+        if source_to_move is None:
+            logger.warning(
+                f"Source '{source}' not found in original tier '{tier}'."
+            )
+            await interaction.response.send_message(
+                f"Source `{source}` not found in original tier `{tier}`."
+            )
+            return
+
+        # Check if a source with the same name already exists in the target tier
+        for source_data in target_sources:
+            if source_data.get("name") == source:
+                logger.warning(
+                    f"Source '{source}' already exists in target tier '{target_tier}'."
+                )
+                await interaction.response.send_message(
+                    f"Source `{source}` already exists in target tier `{target_tier}`."
+                )
+                return
+
+        # Remove the source from the original tier's sources list in memory
+        original_sources.pop(source_index_to_remove)
+        logger.info(f"Removed source '{source}' from original tier in memory.")
+
+        # Add the source to the target tier's sources list in memory
+        target_sources.append(source_to_move)
+        logger.info(f"Added source '{source}' to target tier in memory.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully moved source '{source}' from '{tier}' to '{target_tier}'."
+            )
+            await interaction.response.send_message(
+                f"Source `{source}` moved from `{tier}` to `{target_tier}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during source move. Document might have changed or been deleted."
+            )
+            await interaction.response.send_message(
+                "Could not move the source (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to move source '{source}': {e}",
+            exc_info=True,
+        )
+        await interaction.response.send_message(
+            "An error occurred while trying to move the source."
+        )
+        
+
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item)
