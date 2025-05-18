@@ -474,7 +474,7 @@ async def missing_icons(interaction: discord.Interaction, tier: str):
         await interaction.response.send_message("Template not found")
         
     try:
-        tier_data = template.get("tiers", {}).get(tier)
+        tier_data = await template.get("tiers", {}).get(tier)
         source_data = tier_data.get("sources", [])
         
     except Exception as e:
