@@ -468,13 +468,13 @@ async def add_pet(interaction: discord.Interaction, pet: str, points: float):
 async def missing_icons(interaction: discord.Interaction, tier: str):
     
     item_list = list()
-    template = coll.find({})
+    template = await coll.find_one({})
     
     if not template:
         await interaction.response.send_message("Template not found")
         
     try:
-        tier_data = await template.get("tiers", {}).get(tier)
+        tier_data = template.get("tiers", {}).get(tier)
         source_data = tier_data.get("sources", [])
         
     except Exception as e:
