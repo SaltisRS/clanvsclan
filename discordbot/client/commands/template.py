@@ -481,7 +481,7 @@ async def missing_icons(interaction: discord.Interaction, tier: str):
         await interaction.response.send_message(e)
     try:
         for source in source_data:
-            for item in source["Items"]:
+            for item in source["items"]:
                 if item["icon_url"] is None or "":
                     item_list.append(f"{item["name"]}: Missing IconURL\n")
                 else:
