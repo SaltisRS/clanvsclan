@@ -444,9 +444,53 @@ async def move_source(
         await interaction.response.send_message(
             "An error occurred while trying to move the source."
         )
+
+@group.command()
+async def molebor(interaction: discord.Interaction):
+    await interaction.response.send_message("https://tenor.com/view/gnomed-gnome-glow-effect-shaking-gif-17863812")
+
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+async def add(interaction: discord.Interaction, identifier: str,
+              t1_value: int, t1_points: float,
+              t2_value: int, t2_points: float,
+              t3_value: int, t3_points: float,
+              t4_value: int, t4_points: float):
+    await interaction.response.send_message("NOT IMPLEMENTED")
+    
+@group.command()
+async def add_pet(interaction: discord.Interaction, pet: str, points: float):
+    await interaction.response.send_message("NOT IMPLEMENTED")
+    
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier)
+async def find_missing_icons(interaction: discord.Interaction, tier: str):
+    
+    item_list = list()
+    template = coll.find({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found")
         
-
-
+    try:
+        tier_data = template.get("tiers", {}).get(tier)
+        source_data = tier_data.get("sources", [])
+        
+    except Exception as e:
+        await interaction.response.send_message(e)
+    
+    for source in source_data:
+        for item in source["Items"]:
+            if item["icon_url"] is None or "":
+                item_list.append(f"{item["name"]}: Missing IconURL\n")
+            else:
+                continue
+    
+    await interaction.response.send_message(item_list)
+    
+    
+    
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item)
 async def upload_item_icon(interaction: discord.Interaction, tier: str, source: str, item: str, icon_link: str):

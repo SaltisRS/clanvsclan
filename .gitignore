@@ -177,3 +177,5 @@ venv*
 
 #vscode
 .vscode
+
+backup.json
