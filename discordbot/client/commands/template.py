@@ -451,7 +451,7 @@ async def molebor(interaction: discord.Interaction):
 
 
 @group.command()
-@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+#@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
 async def add(interaction: discord.Interaction, identifier: str,
               t1_value: int, t1_points: float,
               t2_value: int, t2_points: float,
@@ -465,7 +465,7 @@ async def add_pet(interaction: discord.Interaction, pet: str, points: float):
     
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
-async def find_missing_icons(interaction: discord.Interaction, tier: str):
+async def missing_icons(interaction: discord.Interaction, tier: str):
     
     item_list = list()
     template = coll.find({})
