@@ -462,27 +462,30 @@ async def add(interaction: discord.Interaction, identifier: str,
 @group.command()
 async def add_pet(interaction: discord.Interaction, pet: str, points: float):
     await interaction.response.send_message("NOT IMPLEMENTED")
-    
-from loguru import logger
+
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
 async def missing_icons(interaction: discord.Interaction, tier: str):
+    """Lists items in a tier that are missing an icon URL, splitting into multiple messages if necessary."""
     logger.info(f"Checking for missing icons in tier: {tier}")
+
+    # Defer the interaction response since sending multiple messages might take time
+    await interaction.response.defer()
 
     try:
         template = await coll.find_one({})
 
         if not template:
             logger.warning("Template document not found for missing icons check.")
-            await interaction.response.send_message("Template not found.")
+            await interaction.followup.send("Template not found.")
             return
 
         tier_data = template.get("tiers", {}).get(tier)
 
         if not tier_data:
             logger.warning(f"Tier '{tier}' not found in the template for missing icons check.")
-            await interaction.response.send_message(f"Tier `{tier}` not found.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
             return
 
         missing_icon_items = []
@@ -491,21 +494,16 @@ async def missing_icons(interaction: discord.Interaction, tier: str):
         sources = tier_data.get("sources", [])
         if not sources:
              logger.info(f"No sources found in tier '{tier}'.")
-             await interaction.response.send_message(f"No sources found in tier `{tier}`.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
              return
 
-
         for source in sources:
-            # Ensure 'items' key exists and is a list
             items = source.get("items", [])
             if not items:
                  logger.debug(f"No items found in source '{source.get('name', 'Unknown Source')}' in tier '{tier}'.")
-                 continue # Skip to the next source if no items
-
+                 continue
 
             for item in items:
-                # Check if 'icon_url' is None or an empty string
-                # Using item.get("icon_url") is safer in case the key doesn't exist
                 icon_url = item.get("icon_url")
                 if icon_url is None or icon_url == "":
                     missing_icon_items.append(
@@ -513,34 +511,45 @@ async def missing_icons(interaction: discord.Interaction, tier: str):
                     )
 
         if not missing_icon_items:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"All items in tier `{tier}` have an icon URL!"
             )
         else:
-            # Format the list of missing items for the Discord message
-            message_parts = [f"Items in tier `{tier}` missing an icon URL:"]
-            message_parts.extend(missing_icon_items)
-            message_content = "\n".join(message_parts)
+            # Split the list of missing items into chunks that fit within Discord's limit
+            header = f"Items in tier `{tier}` missing an icon URL:"
+            message_parts = [header]
+            current_message = header
 
-            # Check message length and handle if too long
-            if len(message_content) > 2000: # Discord message character limit
-                await interaction.response.send_message(
-                    f"Found {len(missing_icon_items)} items missing icons in tier `{tier}`. The list is too long to display here, please check logs or a smaller tier."
-                )
-                logger.warning(
-                    f"Too many missing icons in tier '{tier}' to send in a single message ({len(missing_icon_items)} items). Full list: {missing_icon_items}"
-                )
-            else:
-                await interaction.response.send_message(message_content)
+            for item_line in missing_icon_items:
+                # Check if adding the next item would exceed the limit (with a little buffer)
+                if len(current_message) + len(item_line) + 1 > 1950: # Use a buffer less than 2000
+                    # Send the current message
+                    await interaction.followup.send(current_message)
+                    # Start a new message with the header
+                    current_message = header
+                    message_parts = [header] # Reset message parts for the new message
+
+                # Add the item line to the current message and message parts
+                current_message += "\n" + item_line
+                message_parts.append(item_line)
+
+            # Send the last accumulated message (if any items were added after the last split)
+            if current_message != header: # Only send if something was added after the last header
+                 await interaction.followup.send(current_message)
+
+            logger.info(f"Sent {len(missing_icon_items)} missing icon items across {len(message_parts)} messages for tier '{tier}'.")
+
 
     except Exception as e:
         logger.error(
             f"An error occurred while checking for missing icons in tier '{tier}': {e}",
             exc_info=True,
         )
-        await interaction.response.send_message(
-            "An error occurred while checking for missing icons."
+        # Use followup.send after deferring
+        await interaction.followup.send(
+            "An error occurred while trying to check for missing icons."
         )
+
 
     
     
