@@ -667,6 +667,141 @@ async def rename_source(
             "An error occurred while trying to rename the source."
         )
 
+
+
+@group.command()
+@app_commands.autocomplete(
+    tier=autocomplete_tier, source=autocomplete_source
+)
+async def reorder_source(
+    interaction: discord.Interaction,
+    tier: str,
+    source: str,
+    direction: Literal["up", "down", "top", "bottom"],
+    positions: int = 1,  # Number of positions to move for 'up' or 'down'
+):
+    """Reorders a Source within its Tier's list."""
+    logger.info(
+        f"Attempting to reorder source '{source}' in tier '{tier}' - Direction: {direction}, Positions: {positions}"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for reordering source.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for reordering source.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for reordering.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        if len(sources) <= 1:
+             await interaction.followup.send(f"Tier `{tier}` only has one source, cannot reorder.")
+             return
+
+        source_to_reorder = None
+        current_index = -1
+
+        # Find the source to reorder within the tier and its current index
+        for i, source_data in enumerate(sources):
+            if source_data.get("name") == source:
+                source_to_reorder = source_data
+                current_index = i
+                break
+
+        if source_to_reorder is None:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for reordering.")
+            await interaction.followup.send(
+                f"Source `{source}` not found in tier `{tier}`."
+            )
+            return
+
+        # Remove the source from its current position in memory
+        sources.pop(current_index)
+        logger.info(f"Removed source '{source}' from its current position ({current_index}) in memory.")
+
+        new_index = -1
+        num_sources = len(sources) # Length of the list *after* removing the source
+
+        # Calculate the new index based on direction and positions
+        if direction == "top":
+            new_index = 0
+        elif direction == "bottom":
+            new_index = num_sources # Append to the end
+        elif direction == "up":
+            # Calculate the new index, handling looping around
+            move_by = min(positions, num_sources) # Don't move more than there are sources to jump over
+            new_index = (current_index - move_by) % (num_sources + 1) # +1 accounts for the original position
+
+            # Handle looping around for "up"
+            if new_index == num_sources: # If it wrapped around to the end after removing the source
+                 new_index = 0 # Move to the actual top (index 0)
+            elif new_index > current_index: # If it wrapped around but isn't at the very end
+                 pass # It will be inserted before the current index in the modified list
+
+
+        elif direction == "down":
+            # Calculate the new index, handling looping around
+            move_by = min(positions, num_sources)
+            new_index = (current_index + move_by) % (num_sources + 1) # +1 accounts for the original position
+
+            # Handle looping around for "down"
+            if new_index <= current_index and num_sources > 0: # If it wrapped around and isn't at the original end
+                 new_index = num_sources # Move to the actual bottom
+
+
+        # Ensure the new index is within the bounds of the list after removal
+        new_index = max(0, min(new_index, num_sources))
+
+
+        # Insert the source at the new position in memory
+        sources.insert(new_index, source_to_reorder)
+        logger.info(f"Inserted source '{source}' at new position ({new_index}) in memory.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully reordered source '{source}' in tier '{tier}'."
+            )
+            await interaction.followup.send(
+                f"Source `{source}` in tier `{tier}` moved to position `{new_index}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during source reorder. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not reorder the source (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to reorder source '{source}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to reorder the source."
+        )
+
+
+
+
 @group.command()
 @app_commands.autocomplete(
     tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item
