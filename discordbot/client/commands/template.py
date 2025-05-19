@@ -327,7 +327,7 @@ async def add_item(interaction: discord.Interaction, tier: str, source: str, nam
         await interaction.response.send_message(f"Item `{name}` added to `{source}` in `{tier}` tier.")
     else:
         await interaction.response.send_message("Tier or source not found.")
-from loguru import logger
+
 
 
 @group.command()
@@ -670,7 +670,7 @@ async def rename_source(
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
-async def update_source_items_from_json(
+async def from_json(
     interaction: discord.Interaction, tier: str, json_string: str
 ):
     """Updates or adds items to a source using a JSON string."""
