@@ -4,9 +4,10 @@ import os
 from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
-from typing import Optional
+from typing import Optional, Literal
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
+
 
 from .groups.template import TemplateGroup
 
@@ -462,6 +463,119 @@ async def add(interaction: discord.Interaction, identifier: str,
 @group.command()
 async def add_pet(interaction: discord.Interaction, pet: str, points: float):
     await interaction.response.send_message("NOT IMPLEMENTED")
+
+
+@group.command()
+async def sort_all_items(
+    interaction: discord.Interaction,
+    sort_by: Literal["name", "points", "duplicate_points"] = "points",
+    sort_direction: Literal["asc", "desc"] = "asc"
+):
+    """Sorts all items across all tiers and sources in the database."""
+    logger.info(f"Attempting to sort all items by: {sort_by} in {sort_direction} order")
+
+    valid_sort_keys = ["name", "points", "duplicate_points"]
+    valid_sort_directions = ["asc", "desc"]
+
+    if sort_by not in valid_sort_keys or sort_direction not in valid_sort_directions:
+         logger.warning(f"Invalid sort parameters: sort_by='{sort_by}', sort_direction='{sort_direction}'")
+         await interaction.response.send_message("Invalid sort parameters.")
+         return
+
+
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for sorting items.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tiers = template.get("tiers", {})
+
+        if not tiers:
+            logger.info("No tiers found in the template for sorting.")
+            await interaction.followup.send("No tiers found to sort items.")
+            return
+
+        items_to_sort = []
+        # Collect all items from all sources and tiers
+        for tier_name, tier_data in tiers.items():
+            sources = tier_data.get("sources", [])
+            for source in sources:
+                items = source.get("items", [])
+                for item in items:
+                    # Store item data along with its original tier and source for re-insertion
+                    items_to_sort.append(
+                        {"tier": tier_name, "source": source.get("name"), "item": item}
+                    )
+
+        if not items_to_sort:
+             logger.info("No items found across all tiers and sources to sort.")
+             await interaction.followup.send("No items found across all tiers and sources to sort.")
+             return
+
+        # Determine the reverse value based on sort_direction
+        is_reverse = True if sort_direction == "desc" else False
+
+        # Sort the collected items
+        items_to_sort.sort(
+            key=lambda x: x["item"].get(sort_by, 0 if sort_by.endswith("points") else ""),
+            reverse=is_reverse # Use the determined reverse value
+        )
+
+        # Reconstruct the tiers and sources with sorted items
+        sorted_template = {"_id": template["_id"], "associated_team": template.get("associated_team", ""), "total_gained": template.get("total_gained", 0), "tiers": {}}
+
+        for tier_name in tiers.keys():
+             sorted_template["tiers"][tier_name] = {"points_gained": tiers[tier_name].get("points_gained", 0), "sources": []}
+             for source_data in tiers[tier_name].get("sources", []):
+                  sorted_template["tiers"][tier_name]["sources"].append({
+                      "name": source_data.get("name"),
+                      "source_gained": source_data.get("source_gained", 0),
+                      "multipliers": source_data.get("multipliers", []),
+                      "items": []
+                  })
+
+
+        # Distribute the sorted items back into the reconstructed structure
+        for item_data in items_to_sort:
+            tier_name = item_data["tier"]
+            source_name = item_data["source"]
+            item = item_data["item"]
+
+            for source in sorted_template["tiers"][tier_name]["sources"]:
+                 if source["name"] == source_name:
+                      source["items"].append(item)
+                      break
+
+
+        # Replace the entire document in the database with the sorted one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, sorted_template)
+
+        if replace_result.modified_count > 0:
+            logger.info(f"Successfully sorted all items by '{sort_by}' in {sort_direction} order.")
+            await interaction.followup.send(
+                f"All items have been sorted by `{sort_by}` in `{sort_direction}` order."
+            )
+        else:
+             logger.warning(
+                "Replace operation did not modify the document during sorting. Document might have changed or been deleted."
+            )
+             await interaction.followup.send(
+                "Could not sort all items (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while sorting all items by '{sort_by}' in {sort_direction} order: {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to sort all items."
+        )
 
 
 @group.command()
