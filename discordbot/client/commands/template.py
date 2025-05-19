@@ -667,6 +667,155 @@ async def rename_source(
             "An error occurred while trying to rename the source."
         )
 
+@group.command()
+@app_commands.autocomplete(
+    tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item
+)
+async def reorder_item(
+    interaction: discord.Interaction,
+    tier: str,
+    source: str,
+    item: str,
+    direction: Literal["up", "down", "top", "bottom"],
+    positions: int = 1,  # Number of positions to move for 'up' or 'down'
+):
+    """Reorders an Item within its Source's list."""
+    logger.info(
+        f"Attempting to reorder item '{item}' in source '{source}' ({tier}) - Direction: {direction}, Positions: {positions}"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for reordering item.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for reordering item.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for reordering item.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        target_source = None
+
+        # Find the source containing the item
+        for source_data in sources:
+            if source_data.get("name") == source:
+                target_source = source_data
+                break
+
+        if not target_source:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for reordering item.")
+            await interaction.followup.send(f"Source `{source}` not found in tier `{tier}`.")
+            return
+
+        items = target_source.get("items", [])
+        if not items:
+            logger.debug(f"No items found in source '{source}' for reordering item.")
+            await interaction.followup.send(f"No items found in source `{source}`.")
+            return
+
+        if len(items) <= 1:
+             await interaction.followup.send(f"Source `{source}` only has one item, cannot reorder.")
+             return
+
+        item_to_reorder = None
+        current_index = -1
+
+        # Find the item to reorder within the target source and its current index
+        for i, item_data in enumerate(items):
+            if item_data.get("name") == item:
+                item_to_reorder = item_data
+                current_index = i
+                break
+
+        if item_to_reorder is None:
+            logger.warning(f"Item '{item}' not found in source '{source}' ({tier}) for reordering.")
+            await interaction.followup.send(
+                f"Item `{item}` not found in source `{source}` ({tier})."
+            )
+            return
+
+        # Remove the item from its current position in memory
+        items.pop(current_index)
+        logger.info(f"Removed item '{item}' from its current position ({current_index}) in memory.")
+
+        new_index = -1
+        num_items = len(items) # Length of the list *after* removing the item
+
+        # Calculate the new index based on direction and positions
+        if direction == "top":
+            new_index = 0
+        elif direction == "bottom":
+            new_index = num_items # Append to the end
+        elif direction == "up":
+            # Calculate the new index, handling looping around
+            move_by = min(positions, num_items) # Don't move more than there are items to jump over
+            new_index = (current_index - move_by) % (num_items + 1) # +1 accounts for the original position
+
+            # Handle looping around for "up"
+            if new_index == num_items: # If it wrapped around to the end after removing the item
+                 new_index = 0 # Move to the actual top (index 0)
+            elif new_index > current_index: # If it wrapped around but isn't at the very end
+                 pass # It will be inserted before the current index in the modified list
+
+
+        elif direction == "down":
+            # Calculate the new index, handling looping around
+            move_by = min(positions, num_items)
+            new_index = (current_index + move_by) % (num_items + 1) # +1 accounts for the original position
+
+            # Handle looping around for "down"
+            if new_index <= current_index and num_items > 0: # If it wrapped around and isn't at the original end
+                 new_index = num_items # Move to the actual bottom
+
+        # Ensure the new index is within the bounds of the list after removal
+        new_index = max(0, min(new_index, num_items))
+
+
+        # Insert the item at the new position in memory
+        items.insert(new_index, item_to_reorder)
+        logger.info(f"Inserted item '{item}' at new position ({new_index}) in memory.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully reordered item '{item}' in source '{source}' ({tier})."
+            )
+            await interaction.followup.send(
+                f"Item `{item}` in source `{source}` ({tier}) moved to position `{new_index}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during item reorder. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not reorder the item (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to reorder item '{item}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to reorder the item."
+        )
+
 
 @group.command()
 @app_commands.autocomplete(
