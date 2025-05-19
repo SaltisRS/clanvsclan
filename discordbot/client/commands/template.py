@@ -579,6 +579,391 @@ async def sort_all_items(
 
 
 @group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+async def rename_source(
+    interaction: discord.Interaction, tier: str, source: str, new_name: str
+):
+    """Renames a Source within a specific tier."""
+    logger.info(
+        f"Attempting to rename source '{source}' in tier '{tier}' to '{new_name}'"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for renaming source.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for renaming source.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for renaming.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        source_to_rename = None
+
+        # Find the source to rename
+        for source_data in sources:
+            if source_data.get("name") == source:
+                source_to_rename = source_data
+                break
+
+        if source_to_rename is None:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for renaming.")
+            await interaction.followup.send(f"Source `{source}` not found in tier `{tier}`.")
+            return
+
+        # Check if a source with the new name already exists in the same tier
+        for source_data in sources:
+            if source_data.get("name") == new_name and source_data is not source_to_rename:
+                logger.warning(
+                    f"A source with the new name '{new_name}' already exists in tier '{tier}'."
+                )
+                await interaction.followup.send(
+                    f"A source with the name `{new_name}` already exists in tier `{tier}`."
+                )
+                return
+
+        # Rename the source in memory
+        source_to_rename["name"] = new_name
+        logger.info(f"Renamed source in memory from '{source}' to '{new_name}'.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully renamed source from '{source}' to '{new_name}' in tier '{tier}'."
+            )
+            await interaction.followup.send(
+                f"Source `{source}` in tier `{tier}` renamed to `{new_name}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during source rename. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not rename the source (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to rename source '{source}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to rename the source."
+        )
+
+
+@group.command()
+@app_commands.autocomplete(
+    tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item
+)
+async def remove_item(
+    interaction: discord.Interaction, tier: str, source: str, item: str
+):
+    """Removes an Item from a specific Source and Tier."""
+    logger.info(
+        f"Attempting to remove item '{item}' from source '{source}' ({tier})"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for removing item.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for removing item.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for removing item.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        target_source = None
+
+        # Find the source containing the item
+        for source_data in sources:
+            if source_data.get("name") == source:
+                target_source = source_data
+                break
+
+        if not target_source:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for removing item.")
+            await interaction.followup.send(f"Source `{source}` not found in tier `{tier}`.")
+            return
+
+        items = target_source.get("items", [])
+        if not items:
+            logger.debug(f"No items found in source '{source}' for removing item.")
+            await interaction.followup.send(f"No items found in source `{source}`.")
+            return
+
+        item_to_remove_index = -1
+
+        # Find the index of the item to remove
+        for i, item_data in enumerate(items):
+            if item_data.get("name") == item:
+                item_to_remove_index = i
+                break
+
+        if item_to_remove_index == -1:
+            logger.warning(f"Item '{item}' not found in source '{source}' ({tier}) for removal.")
+            await interaction.followup.send(
+                f"Item `{item}` not found in source `{source}` ({tier})."
+            )
+            return
+
+        # Remove the item from the list in memory
+        removed_item = items.pop(item_to_remove_index)
+        logger.info(f"Removed item '{item}' from source '{source}' ({tier}) in memory.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully removed item '{item}' from source '{source}' ({tier})."
+            )
+            await interaction.followup.send(
+                f"Item `{item}` removed from source `{source}` ({tier})."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during item removal. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not remove the item (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to remove item '{item}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to remove the item."
+        )
+
+
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+async def remove_source(
+    interaction: discord.Interaction, tier: str, source: str
+):
+    """Removes a Source from a specific tier."""
+    logger.info(f"Attempting to remove source '{source}' from tier '{tier}'")
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for removing source.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for removing source.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for removal.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        source_to_remove_index = -1
+
+        # Find the index of the source to remove
+        for i, source_data in enumerate(sources):
+            if source_data.get("name") == source:
+                source_to_remove_index = i
+                break
+
+        if source_to_remove_index == -1:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for removal.")
+            await interaction.followup.send(f"Source `{source}` not found in tier `{tier}`.")
+            return
+
+        # Remove the source from the list in memory
+        removed_source = sources.pop(source_to_remove_index)
+        logger.info(f"Removed source '{source}' from tier '{tier}' in memory.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully removed source '{source}' from tier '{tier}'."
+            )
+            await interaction.followup.send(
+                f"Source `{source}` removed from tier `{tier}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during source removal. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not remove the source (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to remove source '{source}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to remove the source."
+        )
+
+
+@group.command()
+@app_commands.autocomplete(
+    tier=autocomplete_tier, source=autocomplete_source, item=autocomplete_item
+)
+async def rename_item(
+    interaction: discord.Interaction,
+    tier: str,
+    source: str,
+    item: str,
+    new_name: str,
+):
+    """Renames an Item within a specific Source and Tier."""
+    logger.info(
+        f"Attempting to rename item '{item}' in source '{source}' ({tier}) to '{new_name}'"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for renaming item.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for renaming item.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}' for renaming item.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        target_source = None
+        item_to_rename = None
+
+        # Find the source containing the item
+        for source_data in sources:
+            if source_data.get("name") == source:
+                target_source = source_data
+                break
+
+        if not target_source:
+            logger.warning(f"Source '{source}' not found in tier '{tier}' for renaming item.")
+            await interaction.followup.send(f"Source `{source}` not found in tier `{tier}`.")
+            return
+
+        items = target_source.get("items", [])
+        if not items:
+            logger.debug(f"No items found in source '{source}' for renaming item.")
+            await interaction.followup.send(f"No items found in source `{source}`.")
+            return
+
+        # Find the item to rename within the target source
+        for item_data in items:
+            if item_data.get("name") == item:
+                item_to_rename = item_data
+                break
+
+        if not item_to_rename:
+            logger.warning(f"Item '{item}' not found in source '{source}' ({tier}) for renaming.")
+            await interaction.followup.send(
+                f"Item `{item}` not found in source `{source}` ({tier})."
+            )
+            return
+
+        # Check if an item with the new name already exists in the same source
+        for item_data in items:
+            if item_data.get("name") == new_name and item_data is not item_to_rename:
+                logger.warning(
+                    f"An item with the new name '{new_name}' already exists in source '{source}' ({tier})."
+                )
+                await interaction.followup.send(
+                    f"An item with the name `{new_name}` already exists in source `{source}` ({tier})."
+                )
+                return
+
+        # Rename the item in memory
+        item_to_rename["name"] = new_name
+        logger.info(f"Renamed item in memory from '{item}' to '{new_name}'.")
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully renamed item from '{item}' to '{new_name}' in source '{source}' ({tier})."
+            )
+            await interaction.followup.send(
+                f"Item `{item}` in source `{source}` ({tier}) renamed to `{new_name}`."
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during item rename. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not rename the item (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to rename item '{item}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to rename the item."
+        )
+
+
+@group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
 async def missing_icons(interaction: discord.Interaction, tier: str):
     """Lists items in a tier that are missing an icon URL, splitting into multiple messages if necessary."""
