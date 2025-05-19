@@ -463,32 +463,85 @@ async def add(interaction: discord.Interaction, identifier: str,
 async def add_pet(interaction: discord.Interaction, pet: str, points: float):
     await interaction.response.send_message("NOT IMPLEMENTED")
     
+from loguru import logger
+
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier)
 async def missing_icons(interaction: discord.Interaction, tier: str):
-    
-    item_list = list()
-    template = await coll.find_one({})
-    
-    if not template:
-        await interaction.response.send_message("Template not found")
-        
+    logger.info(f"Checking for missing icons in tier: {tier}")
+
     try:
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for missing icons check.")
+            await interaction.response.send_message("Template not found.")
+            return
+
         tier_data = template.get("tiers", {}).get(tier)
-        source_data = tier_data.get("sources", [])
-        
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for missing icons check.")
+            await interaction.response.send_message(f"Tier `{tier}` not found.")
+            return
+
+        missing_icon_items = []
+
+        # Iterate through sources and items to find missing icons
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}'.")
+             await interaction.response.send_message(f"No sources found in tier `{tier}`.")
+             return
+
+
+        for source in sources:
+            # Ensure 'items' key exists and is a list
+            items = source.get("items", [])
+            if not items:
+                 logger.debug(f"No items found in source '{source.get('name', 'Unknown Source')}' in tier '{tier}'.")
+                 continue # Skip to the next source if no items
+
+
+            for item in items:
+                # Check if 'icon_url' is None or an empty string
+                # Using item.get("icon_url") is safer in case the key doesn't exist
+                icon_url = item.get("icon_url")
+                if icon_url is None or icon_url == "":
+                    missing_icon_items.append(
+                        f"- **{item.get('name', 'Unnamed Item')}** in `{source.get('name', 'Unnamed Source')}`"
+                    )
+
+        if not missing_icon_items:
+            await interaction.response.send_message(
+                f"All items in tier `{tier}` have an icon URL!"
+            )
+        else:
+            # Format the list of missing items for the Discord message
+            message_parts = [f"Items in tier `{tier}` missing an icon URL:"]
+            message_parts.extend(missing_icon_items)
+            message_content = "\n".join(message_parts)
+
+            # Check message length and handle if too long
+            if len(message_content) > 2000: # Discord message character limit
+                await interaction.response.send_message(
+                    f"Found {len(missing_icon_items)} items missing icons in tier `{tier}`. The list is too long to display here, please check logs or a smaller tier."
+                )
+                logger.warning(
+                    f"Too many missing icons in tier '{tier}' to send in a single message ({len(missing_icon_items)} items). Full list: {missing_icon_items}"
+                )
+            else:
+                await interaction.response.send_message(message_content)
+
     except Exception as e:
-        await interaction.response.send_message(e)
-    try:
-        for source in source_data:
-            for item in source["items"]:
-                if item["icon_url"] is None or "":
-                    item_list.append(f"{item["name"]}: Missing IconURL\n")
-                else:
-                    continue
-    except Exception as e:
-        await interaction.response.send_message(e)
-    await interaction.response.send_message(item_list)
+        logger.error(
+            f"An error occurred while checking for missing icons in tier '{tier}': {e}",
+            exc_info=True,
+        )
+        await interaction.response.send_message(
+            "An error occurred while checking for missing icons."
+        )
+
     
     
     
