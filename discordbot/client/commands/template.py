@@ -1,5 +1,6 @@
 import discord
 import os
+import json
 
 from loguru import logger
 from discord import app_commands
@@ -667,6 +668,156 @@ async def rename_source(
             "An error occurred while trying to rename the source."
         )
 
+@group.command()
+@app_commands.autocomplete(tier=autocomplete_tier)
+async def update_source_items_from_json(
+    interaction: discord.Interaction, tier: str, json_string: str
+):
+    """Updates or adds items to a source using a JSON string."""
+    logger.info(
+        f"Attempting to update/add items to tier '{tier}' from JSON string: {json_string}"
+    )
+
+    # Defer the interaction response
+    await interaction.response.defer()
+
+    try:
+        # Parse the JSON string
+        try:
+            source_data_from_json = json.loads(json_string)
+        except json.JSONDecodeError:
+            await interaction.followup.send("Invalid JSON string provided.")
+            logger.warning(f"Invalid JSON string received: {json_string}")
+            return
+
+        # Ensure the JSON has the expected structure (a single key representing the source name)
+        if not isinstance(source_data_from_json, dict) or len(source_data_from_json) != 1:
+            await interaction.followup.send(
+                "Invalid JSON format. Expected a single key representing the source name."
+            )
+            logger.warning(f"Invalid JSON format: {source_data_from_json}")
+            return
+
+        # Extract source name and items from the JSON
+        source_name = list(source_data_from_json.keys())[0]
+        items_from_json = source_data_from_json.get(source_name)
+
+        if not isinstance(items_from_json, list):
+             await interaction.followup.send(
+                 "Invalid JSON format. The value for the source key should be a list of items."
+             )
+             logger.warning(f"Invalid JSON format (items not a list): {source_data_from_json}")
+             return
+
+        logger.info(f"Updating source '{source_name}' in tier '{tier}' with {len(items_from_json)} items from JSON.")
+
+        # Fetch the entire document
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for updating source items from JSON.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tier_data = template.get("tiers", {}).get(tier)
+
+        if not tier_data:
+            logger.warning(f"Tier '{tier}' not found in the template for updating source items from JSON.")
+            await interaction.followup.send(f"Tier `{tier}` not found.")
+            return
+
+        sources = tier_data.get("sources", [])
+        if not sources:
+             logger.info(f"No sources found in tier '{tier}'. Cannot update items from JSON.")
+             await interaction.followup.send(f"No sources found in tier `{tier}`.")
+             return
+
+        target_source = None
+
+        # Find the target source in the database document
+        for source_data in sources:
+            if source_data.get("name") == source_name:
+                target_source = source_data
+                break
+
+        if not target_source:
+            logger.warning(f"Source '{source_name}' not found in tier '{tier}' for updating items from JSON.")
+            await interaction.followup.send(
+                f"Source `{source_name}` not found in tier `{tier}`. Cannot update items."
+            )
+            return
+
+        # Get the current items list from the target source
+        current_items = target_source.get("items", [])
+
+        updated_count = 0
+        added_count = 0
+
+        # Iterate through items from the JSON and update/add
+        for item_from_json in items_from_json:
+            if not isinstance(item_from_json, dict) or "name" not in item_from_json or "points" not in item_from_json:
+                 logger.warning(f"Skipping invalid item format in JSON: {item_from_json}")
+                 continue # Skip items that don't have the required format
+
+            item_name = item_from_json["name"]
+            item_points = item_from_json["points"]
+
+            # Find if the item already exists in the current items list
+            existing_item = None
+            for item_data in current_items:
+                if item_data.get("name") == item_name:
+                    existing_item = item_data
+                    break
+
+            if existing_item:
+                # Item exists, update points and duplicate_points
+                existing_item["points"] = item_points
+                existing_item["duplicate_points"] = item_points / 2 if item_points != 0 else 0
+                logger.debug(f"Updated points for existing item '{item_name}'.")
+                updated_count += 1
+            else:
+                # Item doesn't exist, add it
+                new_item = {
+                    "name": item_name,
+                    "points": item_points,
+                    "duplicate_points": item_points / 2 if item_points != 0 else 0,
+                    "obtained": False,
+                    "duplicate_obtained": False,
+                    "icon_url": "", # Default empty string for icon_url
+                }
+                current_items.append(new_item)
+                logger.debug(f"Added new item '{item_name}'.")
+                added_count += 1
+
+        # Update the items list in the target source with the modified list
+        target_source["items"] = current_items
+
+        # Replace the entire document in the database with the modified one
+        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+        if replace_result.modified_count > 0:
+            logger.info(
+                f"Successfully updated source '{source_name}' in tier '{tier}'. Updated: {updated_count}, Added: {added_count}"
+            )
+            await interaction.followup.send(
+                f"Source `{source_name}` in tier `{tier}` updated successfully.\nUpdated items: {updated_count}\nAdded items: {added_count}"
+            )
+        else:
+            logger.warning(
+                "Replace operation did not modify the document during source item update from JSON. Document might have changed or been deleted."
+            )
+            await interaction.followup.send(
+                "Could not update source items from JSON (replace failed)."
+            )
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while updating source items from JSON for tier '{tier}': {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to update source items from JSON."
+        )
 
 
 @group.command()
