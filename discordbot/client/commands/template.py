@@ -5,7 +5,7 @@ import json
 from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
-from typing import Optional, Literal
+from typing import Optional, Literal, Dict, List, Any
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 
@@ -669,13 +669,12 @@ async def rename_source(
         )
 
 @group.command()
-@app_commands.autocomplete(tier=autocomplete_tier)
 async def from_json(
-    interaction: discord.Interaction, tier: str, json_string: str
+    interaction: discord.Interaction, json_string: str
 ):
-    """Updates or adds items to a source using a JSON string."""
+    """Updates or adds items to a source using a JSON string, automatically finding the tier."""
     logger.info(
-        f"Attempting to update/add items to tier '{tier}' from JSON string: {json_string}"
+        f"Attempting to update/add items from JSON string: {json_string}"
     )
 
     # Defer the interaction response
@@ -684,7 +683,7 @@ async def from_json(
     try:
         # Parse the JSON string
         try:
-            source_data_from_json = json.loads(json_string)
+            source_data_from_json: Dict[str, List[Dict[str, Any]]] = json.loads(json_string)
         except json.JSONDecodeError:
             await interaction.followup.send("Invalid JSON string provided.")
             logger.warning(f"Invalid JSON string received: {json_string}")
@@ -709,7 +708,7 @@ async def from_json(
              logger.warning(f"Invalid JSON format (items not a list): {source_data_from_json}")
              return
 
-        logger.info(f"Updating source '{source_name}' in tier '{tier}' with {len(items_from_json)} items from JSON.")
+        logger.info(f"Attempting to find source '{source_name}' to update items from JSON.")
 
         # Fetch the entire document
         template = await coll.find_one({})
@@ -719,36 +718,34 @@ async def from_json(
             await interaction.followup.send("Template not found.")
             return
 
-        tier_data = template.get("tiers", {}).get(tier)
+        tiers = template.get("tiers", {})
 
-        if not tier_data:
-            logger.warning(f"Tier '{tier}' not found in the template for updating source items from JSON.")
-            await interaction.followup.send(f"Tier `{tier}` not found.")
-            return
+        target_tier_name = None
+        target_source_data = None
 
-        sources = tier_data.get("sources", [])
-        if not sources:
-             logger.info(f"No sources found in tier '{tier}'. Cannot update items from JSON.")
-             await interaction.followup.send(f"No sources found in tier `{tier}`.")
-             return
+        # Iterate through all tiers and sources to find the target source
+        for tier_name, tier_data in tiers.items():
+            sources = tier_data.get("sources", [])
+            for source_data in sources:
+                if source_data.get("name") == source_name:
+                    target_tier_name = tier_name
+                    target_source_data = source_data
+                    break # Source found, no need to check other sources in this tier
 
-        target_source = None
+            if target_source_data:
+                break # Source found in a tier, no need to check other tiers
 
-        # Find the target source in the database document
-        for source_data in sources:
-            if source_data.get("name") == source_name:
-                target_source = source_data
-                break
-
-        if not target_source:
-            logger.warning(f"Source '{source_name}' not found in tier '{tier}' for updating items from JSON.")
+        if not target_source_data:
+            logger.warning(f"Source '{source_name}' not found in any tier for updating items from JSON.")
             await interaction.followup.send(
-                f"Source `{source_name}` not found in tier `{tier}`. Cannot update items."
+                f"Source `{source_name}` not found in any tier. Cannot update items."
             )
             return
 
+        logger.info(f"Source '{source_name}' found in tier '{target_tier_name}'. Updating items.")
+
         # Get the current items list from the target source
-        current_items = target_source.get("items", [])
+        current_items = target_source_data.get("items", [])
 
         updated_count = 0
         added_count = 0
@@ -757,7 +754,7 @@ async def from_json(
         for item_from_json in items_from_json:
             if not isinstance(item_from_json, dict) or "name" not in item_from_json or "points" not in item_from_json:
                  logger.warning(f"Skipping invalid item format in JSON: {item_from_json}")
-                 continue # Skip items that don't have the required format
+                 continue
 
             item_name = item_from_json["name"]
             item_points = item_from_json["points"]
@@ -783,24 +780,24 @@ async def from_json(
                     "duplicate_points": item_points / 2 if item_points != 0 else 0,
                     "obtained": False,
                     "duplicate_obtained": False,
-                    "icon_url": "", # Default empty string for icon_url
+                    "icon_url": "",
                 }
                 current_items.append(new_item)
                 logger.debug(f"Added new item '{item_name}'.")
                 added_count += 1
 
         # Update the items list in the target source with the modified list
-        target_source["items"] = current_items
+        target_source_data["items"] = current_items
 
         # Replace the entire document in the database with the modified one
         replace_result = await coll.replace_one({"_id": template["_id"]}, template)
 
         if replace_result.modified_count > 0:
             logger.info(
-                f"Successfully updated source '{source_name}' in tier '{tier}'. Updated: {updated_count}, Added: {added_count}"
+                f"Successfully updated source '{source_name}' in tier '{target_tier_name}'. Updated: {updated_count}, Added: {added_count}"
             )
             await interaction.followup.send(
-                f"Source `{source_name}` in tier `{tier}` updated successfully.\nUpdated items: {updated_count}\nAdded items: {added_count}"
+                f"Source `{source_name}` in tier `{target_tier_name}` updated successfully.\nUpdated items: {updated_count}\nAdded items: {added_count}"
             )
         else:
             logger.warning(
@@ -812,12 +809,13 @@ async def from_json(
 
     except Exception as e:
         logger.error(
-            f"An error occurred while updating source items from JSON for tier '{tier}': {e}",
+            f"An error occurred while updating source items from JSON for source '{source_name}': {e}",
             exc_info=True,
         )
         await interaction.followup.send(
             "An error occurred while trying to update source items from JSON."
         )
+
 
 
 @group.command()
