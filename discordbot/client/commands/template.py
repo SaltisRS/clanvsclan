@@ -760,9 +760,7 @@ async def from_json_file(
                 logger.info(
                     f"Overall successful update from JSON file. Total Updated Items: {overall_updated_count}"
                 )
-                response_message = "Overall update from JSON file successful. Items Updated:\n"
-                for source_name, tier_name, count in sources_updated_successfully:
-                     response_message += f"- `{source_name}` ({tier_name}): {count} items updated\n"
+                response_message = f"Overall update from JSON file successful. Items Updated: {overall_updated_count}\n"
 
                 if sources_not_found:
                     response_message += "\nSources not found: " + ", ".join(sources_not_found)
@@ -781,8 +779,6 @@ async def from_json_file(
                           response_message += f"- In `{source}` ({tier}): " + ", ".join(items) + "\n"
 
 
-                # Handle message splitting if it's too long (similar to missing_icons)
-                # ... (Implement message splitting logic here if needed) ...
                 await interaction.followup.send(response_message)
 
 
