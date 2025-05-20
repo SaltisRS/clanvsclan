@@ -589,7 +589,7 @@ async def rename_source(
 async def from_json(
     interaction: discord.Interaction,
     json_string: str,
-    format: Literal["LIST", "SINGLE"],
+    format: Literal["LIST", "SINGLE"]
 ):
     """Updates existing items in sources using a JSON string, automatically finding tiers."""
     logger.info(
