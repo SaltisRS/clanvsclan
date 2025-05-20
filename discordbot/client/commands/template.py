@@ -55,7 +55,7 @@ async def autocomplete_source(interaction: discord.Interaction, current: str):
         if current.lower() in source.lower()
     ][:25]
 
-async def autocomplete_multiplier(interaction: discord.Interaction, current: str):
+""" async def autocomplete_multiplier(interaction: discord.Interaction, current: str):
     tier = getattr(interaction.namespace, "tier", None)
     source = getattr(interaction.namespace, "source", None)
     if not tier or not source:
@@ -80,7 +80,7 @@ async def autocomplete_multiplier(interaction: discord.Interaction, current: str
         for multiplier in autocomplete_cache[cache_key]
         if current.lower() in multiplier.lower()
     ][:25]
-
+ """
 
 async def autocomplete_item(interaction: discord.Interaction, current: str):
     tier = getattr(interaction.namespace, "tier", None)
@@ -259,7 +259,6 @@ async def add_source(interaction: discord.Interaction, tier: str, source: str):
     source_data = {
         "name": source,
         "source_gained": 0,
-        "multipliers": [],
         "items": []
     }
 
@@ -276,28 +275,7 @@ async def add_source(interaction: discord.Interaction, tier: str, source: str):
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
 async def add_multiplier(interaction: discord.Interaction, tier: str, source: str, name: str, factor: float, required_items: str):
-    template = await coll.find_one({})
-    
-    if not template:
-        await interaction.response.send_message("Template not found.")
-        return
-
-    multiplier = {
-        "name": name,
-        "factor": factor,
-        "required_items": required_items.split(","),
-        "unlocked": False
-    }
-
-    result = await coll.update_one(
-        {"_id": template["_id"], f"tiers.{tier}.sources.name": source},
-        {"$push": {f"tiers.{tier}.sources.$.multipliers": multiplier}}
-    )
-
-    if result.modified_count > 0:
-        await interaction.response.send_message(f"Multiplier `{name}` added to `{source}` in `{tier}` tier.")
-    else:
-        await interaction.response.send_message("Tier or source not found.")
+    await interaction.response.send_message("Removed Temporarily")
 
     
 @group.command()
@@ -532,7 +510,6 @@ async def sort_all_items(
                   sorted_template["tiers"][tier_name]["sources"].append({
                       "name": source_data.get("name"),
                       "source_gained": source_data.get("source_gained", 0),
-                      "multipliers": source_data.get("multipliers", []),
                       "items": []
                   })
 
