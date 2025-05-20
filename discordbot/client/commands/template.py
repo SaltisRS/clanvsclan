@@ -5,7 +5,7 @@ import json
 from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
-from typing import Optional, Literal, Dict, List, Any
+from typing import Optional, Literal, Dict, List, Any, Union, Tuple
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 
@@ -156,56 +156,6 @@ async def get_sources_simple(interaction: discord.Interaction, tier: str):
     sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
     source_list = "\n".join([f"**{source['name']}**" for source in sources])
     await interaction.response.send_message(f"**Sources**\n{source_list}")
-    
-
-@group.command()
-@app_commands.autocomplete(tier=autocomplete_tier)
-async def get_sources_detailed(interaction: discord.Interaction, tier: str):
-    logger.info(f"Command triggered: get_sources_detailed | Tier: {tier}")
-
-    try:
-        template = await coll.find_one({})
-        if not template:
-            logger.warning("Template not found.")
-            await interaction.response.send_message("Template not found.")
-            return
-
-        sources = template.get("tiers", {}).get(tier, {}).get("sources", [])
-        logger.info(f"Found {len(sources)} sources for tier: {tier}")
-
-        embed = discord.Embed(title=f"Sources for {tier}")
-
-        #colors = ["\u001b[0;31m", "\u001b[0;32m", "\u001b[0;33m"]  # Red, Green, Yellow
-        reset = "\u001b[0m"
-
-        for source in sources:
-            logger.debug(f"Processing source: {source['name']}")
-
-            multipliers = "\n".join([f"{m['name']} (x{m['factor']:.2f})" for m in source.get("multipliers", [])])
-            items_list = source.get("items", [])
-
-            logger.debug(f"Multipliers: {multipliers if multipliers else 'None'}")
-            logger.debug(f"Found {len(items_list)} items for {source['name']}")
-
-            # Alternate ANSI colors based on obtained/duplicate_obtained flags
-            items_formatted = "\n".join(
-                f"{get_item_color(item)}{item['name']} ({item['points']}){reset}"
-                for item in items_list
-            ) if items_list else "None"
-
-            embed.add_field(
-                name=source["name"],
-                value=f">>> __Multipliers__\n`{multipliers if multipliers else 'None'}`\n__Items__\n```ansi\n{items_formatted}\n```",
-                inline=False
-            )
-
-        logger.info("Attempting to send embed response...")
-        await interaction.response.send_message(embed=embed)
-        logger.success("Embed sent successfully!")
-
-    except Exception as e:
-        logger.error(f"Failed to send embed: {e}")
-        await interaction.response.send_message("An error occurred while generating the embed.")
 
 
 def get_item_color(item):
@@ -274,8 +224,11 @@ async def add_source(interaction: discord.Interaction, tier: str, source: str):
 
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
-async def add_multiplier(interaction: discord.Interaction, tier: str, source: str, name: str, factor: float, required_items: str):
+async def add_multiplier(interaction: discord.Interaction,):
     await interaction.response.send_message("Removed Temporarily")
+    
+    
+    multi = {}
 
     
 @group.command()
@@ -429,15 +382,6 @@ async def move_source(
 async def molebor(interaction: discord.Interaction):
     await interaction.response.send_message("https://tenor.com/view/gnomed-gnome-glow-effect-shaking-gif-17863812")
 
-
-@group.command()
-#@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
-async def add_tierbased(interaction: discord.Interaction, identifier: str,
-              t1_value: int, t1_points: float,
-              t2_value: int, t2_points: float,
-              t3_value: int, t3_points: float,
-              t4_value: int, t4_points: float):
-    await interaction.response.send_message("NOT IMPLEMENTED")
 
 
 @group.command()
@@ -643,11 +587,13 @@ async def rename_source(
 
 @group.command()
 async def from_json(
-    interaction: discord.Interaction, json_string: str
+    interaction: discord.Interaction,
+    json_string: str,
+    format: Literal["LIST", "SINGLE"],
 ):
-    """Updates or adds items to a source using a JSON string, automatically finding the tier."""
+    """Updates existing items in sources using a JSON string, automatically finding tiers."""
     logger.info(
-        f"Attempting to update/add items from JSON string: {json_string}"
+        f"Attempting to update existing items from JSON string (format: {format}): {json_string}"
     )
 
     # Defer the interaction response
@@ -656,137 +602,220 @@ async def from_json(
     try:
         # Parse the JSON string
         try:
-            source_data_from_json: Dict[str, List[Dict[str, Any]]] = json.loads(json_string)
+            parsed_data: Union[Dict[str, List[Dict[str, Any]]], List[Dict[str, List[Dict[str, Any]]]]] = json.loads(json_string)
         except json.JSONDecodeError:
             await interaction.followup.send("Invalid JSON string provided.")
             logger.warning(f"Invalid JSON string received: {json_string}")
             return
 
-        # Ensure the JSON has the expected structure (a single key representing the source name)
-        if not isinstance(source_data_from_json, dict) or len(source_data_from_json) != 1:
-            await interaction.followup.send(
-                "Invalid JSON format. Expected a single key representing the source name."
-            )
-            logger.warning(f"Invalid JSON format: {source_data_from_json}")
-            return
+        sources_to_process: List[Dict[str, List[Dict[str, Any]]]] = []
 
-        # Extract source name and items from the JSON
-        source_name = list(source_data_from_json.keys())[0]
-        items_from_json = source_data_from_json.get(source_name)
+        # Validate the parsed data structure based on the format parameter
+        if format == "SINGLE":
+            if not isinstance(parsed_data, dict) or len(parsed_data) != 1:
+                 await interaction.followup.send(
+                    "Invalid JSON format for 'SINGLE'. Expected a single key representing the source name."
+                )
+                 logger.warning(f"Invalid JSON format for SINGLE: {parsed_data}")
+                 return
+            sources_to_process.append(parsed_data) # Wrap the single dict in a list
 
-        if not isinstance(items_from_json, list):
-             await interaction.followup.send(
-                 "Invalid JSON format. The value for the source key should be a list of items."
-             )
-             logger.warning(f"Invalid JSON format (items not a list): {source_data_from_json}")
-             return
+        elif format == "LIST":
+            if not isinstance(parsed_data, list):
+                 await interaction.followup.send(
+                    "Invalid JSON format for 'LIST'. Expected a list of source objects."
+                 )
+                 logger.warning(f"Invalid JSON format for LIST (not a list): {parsed_data}")
+                 return
+            sources_to_process = parsed_data # The parsed data is already a list
 
-        logger.info(f"Attempting to find source '{source_name}' to update items from JSON.")
+            for source_obj in sources_to_update: # Should be sources_to_process here
+                if not isinstance(source_obj, dict) or len(source_obj) != 1 or not isinstance(list(source_obj.values())[0], list):
+                    await interaction.followup.send(
+                        "Invalid JSON format for 'LIST'. Each item in the list should be a single source object (e.g., {\"SourceName\": [...]})."
+                    )
+                    logger.warning(f"Invalid item format in LIST: {source_obj}")
+                    return
+
+
+        logger.info(f"Received data for {len(sources_to_process)} sources to process for updates.")
 
         # Fetch the entire document
         template = await coll.find_one({})
 
         if not template:
-            logger.warning("Template document not found for updating source items from JSON.")
+            logger.warning("Template document not found for updating existing source items from JSON.")
             await interaction.followup.send("Template not found.")
             return
 
         tiers = template.get("tiers", {})
 
-        target_tier_name = None
-        target_source_data = None
+        overall_updated_count = 0
+        sources_updated_successfully: List[Tuple[str, str, int]] = [] # (source_name, tier_name, updated_count)
+        sources_not_found = []
+        skipped_sources = [] # For sources with invalid item lists
+        items_not_found_in_db: List[Tuple[str, str, str]] = [] # (tier, source, item_name)
 
-        # Iterate through all tiers and sources to find the target source
-        for tier_name, tier_data in tiers.items():
-            sources = tier_data.get("sources", [])
-            for source_data in sources:
-                if source_data.get("name") == source_name:
-                    target_tier_name = tier_name
-                    target_source_data = source_data
-                    break # Source found, no need to check other sources in this tier
 
-            if target_source_data:
-                break # Source found in a tier, no need to check other tiers
+        # Process each source object from the input list
+        for source_data_item in sources_to_process:
+            source_name = list(source_data_item.keys())[0]
+            items_from_json = source_data_item.get(source_name)
 
-        if not target_source_data:
-            logger.warning(f"Source '{source_name}' not found in any tier for updating items from JSON.")
-            await interaction.followup.send(
-                f"Source `{source_name}` not found in any tier. Cannot update items."
-            )
-            return
-
-        logger.info(f"Source '{source_name}' found in tier '{target_tier_name}'. Updating items.")
-
-        # Get the current items list from the target source
-        current_items = target_source_data.get("items", [])
-
-        updated_count = 0
-        added_count = 0
-
-        # Iterate through items from the JSON and update/add
-        for item_from_json in items_from_json:
-            if not isinstance(item_from_json, dict) or "name" not in item_from_json or "points" not in item_from_json:
-                 logger.warning(f"Skipping invalid item format in JSON: {item_from_json}")
+            if not isinstance(items_from_json, list):
+                 logger.warning(f"Skipping source '{source_name}' due to invalid items list format.")
+                 skipped_sources.append(source_name)
                  continue
 
-            item_name = item_from_json["name"]
-            item_points = item_from_json["points"]
+            logger.info(f"Processing source '{source_name}' with {len(items_from_json)} items from JSON for updates.")
 
-            # Find if the item already exists in the current items list
-            existing_item = None
-            for item_data in current_items:
-                if item_data.get("name") == item_name:
-                    existing_item = item_data
+
+            target_tier_name = None
+            target_source_data = None
+
+            # Iterate through all tiers and sources to find the target source
+            for tier_name, tier_data in tiers.items():
+                sources = tier_data.get("sources", [])
+                for source_data in sources:
+                    if source_data.get("name") == source_name:
+                        target_tier_name = tier_name
+                        target_source_data = source_data
+                        break
+
+                if target_source_data:
                     break
 
-            if existing_item:
-                # Item exists, update points and duplicate_points
-                existing_item["points"] = item_points
-                existing_item["duplicate_points"] = item_points / 2 if item_points != 0 else 0
-                logger.debug(f"Updated points for existing item '{item_name}'.")
-                updated_count += 1
+            if not target_source_data:
+                logger.warning(f"Source '{source_name}' not found in any tier.")
+                sources_not_found.append(source_name)
+                continue
+
+            logger.info(f"Source '{source_name}' found in tier '{target_tier_name}'. Updating items.")
+
+            current_items = target_source_data.get("items", [])
+            updated_count_for_source = 0
+
+            # Iterate through items from the JSON and update existing ones
+            for item_from_json in items_from_json:
+                if not isinstance(item_from_json, dict) or "name" not in item_from_json or "points" not in item_from_json:
+                     logger.warning(f"Skipping invalid item format in JSON data for source '{source_name}': {item_from_json}")
+                     continue
+
+                item_name = item_from_json["name"]
+                item_points = item_from_json["points"]
+
+                existing_item = None
+                for item_data in current_items:
+                    if item_data.get("name") == item_name:
+                        existing_item = item_data
+                        break
+
+                if existing_item:
+                    # Item exists, update points and duplicate_points
+                    if existing_item.get("points") != item_points: # Only update if points are changing
+                         existing_item["points"] = item_points
+                         existing_item["duplicate_points"] = item_points / 2 if item_points != 0 else 0
+                         logger.debug(f"Updated points for existing item '{item_name}' in '{source_name}'.")
+                         updated_count_for_source += 1
+                    else:
+                        logger.debug(f"Item '{item_name}' in '{source_name}' points match, no update needed.")
+                else:
+                    # Item doesn't exist in the database, record it but DO NOT ADD
+                    items_not_found_in_db.append((target_tier_name, source_name, item_name))
+                    logger.debug(f"Item '{item_name}' from JSON not found in database for source '{source_name}'.")
+
+
+            # If any items were updated in this source, record it
+            if updated_count_for_source > 0:
+                 sources_updated_successfully.append((source_name, target_tier_name, updated_count_for_source))
+                 overall_updated_count += updated_count_for_source
+
+
+        # After processing all sources, replace the entire document if any updates occurred
+        if overall_updated_count > 0:
+            replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+            if replace_result.modified_count > 0:
+                logger.info(
+                    f"Overall successful update from JSON. Total Updated Items: {overall_updated_count}"
+                )
+                response_message = "Overall update from JSON successful. Items Updated:\n"
+                for source_name, tier_name, count in sources_updated_successfully:
+                     response_message += f"- `{source_name}` ({tier_name}): {count} items updated\n"
+
+                if sources_not_found:
+                    response_message += "\nSources not found: " + ", ".join(sources_not_found)
+                if skipped_sources:
+                     response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+                if items_not_found_in_db:
+                     response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
+                     # Group items not found by source/tier for cleaner output
+                     items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
+                     for tier, source, item_name in items_not_found_in_db:
+                         location = (tier, source)
+                         if location not in items_not_found_by_location:
+                             items_not_found_by_location[location] = []
+                         items_not_found_by_location[location].append(item_name)
+
+                     for (tier, source), items in items_not_found_by_location.items():
+                          response_message += f"- In `{source}` ({tier}): " + ", ".join(items) + "\n"
+
+
             else:
-                # Item doesn't exist, add it
-                new_item = {
-                    "name": item_name,
-                    "points": item_points,
-                    "duplicate_points": item_points / 2 if item_points != 0 else 0,
-                    "obtained": False,
-                    "duplicate_obtained": False,
-                    "icon_url": "",
-                }
-                current_items.append(new_item)
-                logger.debug(f"Added new item '{item_name}'.")
-                added_count += 1
+                logger.warning(
+                    "Replace operation did not modify the document during overall source item update from JSON. Document might have changed or been deleted."
+                )
+                response_message = "Could not update source items from JSON (replace failed)."
+                if sources_not_found:
+                    response_message += "\nSources not found: " + ", ".join(sources_not_found)
+                if skipped_sources:
+                     response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+                if items_not_found_in_db:
+                     response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
+                     # Group items not found by source/tier
+                     items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
+                     for tier, source, item_name in items_not_found_in_db:
+                         location = (tier, source)
+                         if location not in items_not_found_by_location:
+                             items_not_found_by_location[location] = []
+                         items_not_found_by_location[location].append(item_name)
 
-        # Update the items list in the target source with the modified list
-        target_source_data["items"] = current_items
+                     for (tier, source), items in items_not_found_by_location.items():
+                          response_message += f"- In `{source}` ({tier}): " + ", ".join(items) + "\n"
 
-        # Replace the entire document in the database with the modified one
-        replace_result = await coll.replace_one({"_id": template["_id"]}, template)
 
-        if replace_result.modified_count > 0:
-            logger.info(
-                f"Successfully updated source '{source_name}' in tier '{target_tier_name}'. Updated: {updated_count}, Added: {added_count}"
-            )
-            await interaction.followup.send(
-                f"Source `{source_name}` in tier `{target_tier_name}` updated successfully.\nUpdated items: {updated_count}\nAdded items: {added_count}"
-            )
-        else:
-            logger.warning(
-                "Replace operation did not modify the document during source item update from JSON. Document might have changed or been deleted."
-            )
-            await interaction.followup.send(
-                "Could not update source items from JSON (replace failed)."
-            )
+                await interaction.followup.send(response_message)
+
+        else: # No items were updated across all sources
+             response_message = "No existing items were updated from the provided JSON data."
+             if sources_not_found:
+                 response_message += "\nSources not found: " + ", ".join(sources_not_found)
+             if skipped_sources:
+                 response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+             if items_not_found_in_db:
+                 response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
+                 # Group items not found by source/tier
+                 items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
+                 for tier, source, item_name in items_not_found_in_db:
+                     location = (tier, source)
+                     if location not in items_not_found_by_location:
+                         items_not_found_by_location[location] = []
+                     items_not_found_by_location[location].append(item_name)
+
+                 for (tier, source), items in items_not_found_by_location.items():
+                      response_message += f"- In `{source}` ({tier}): " + ", ".join(items) + "\n"
+
+
+             await interaction.followup.send(response_message)
+
 
     except Exception as e:
         logger.error(
-            f"An error occurred while updating source items from JSON for source '{source_name}': {e}",
+            f"An unexpected error occurred while processing JSON update for existing items: {e}",
             exc_info=True,
         )
         await interaction.followup.send(
-            "An error occurred while trying to update source items from JSON."
+            "An unexpected error occurred while trying to process the JSON data."
         )
 
 
