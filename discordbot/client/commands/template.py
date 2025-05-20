@@ -454,15 +454,11 @@ async def molebor(interaction: discord.Interaction):
 
 @group.command()
 #@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
-async def add(interaction: discord.Interaction, identifier: str,
+async def add_tierbased(interaction: discord.Interaction, identifier: str,
               t1_value: int, t1_points: float,
               t2_value: int, t2_points: float,
               t3_value: int, t3_points: float,
               t4_value: int, t4_points: float):
-    await interaction.response.send_message("NOT IMPLEMENTED")
-    
-@group.command()
-async def add_pet(interaction: discord.Interaction, pet: str, points: float):
     await interaction.response.send_message("NOT IMPLEMENTED")
 
 
