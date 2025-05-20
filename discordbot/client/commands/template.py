@@ -1,3 +1,4 @@
+from argparse import FileType
 import discord
 import os
 import json
@@ -586,26 +587,41 @@ async def rename_source(
         )
 
 @group.command()
-async def from_json(
+async def from_json_file(
     interaction: discord.Interaction,
-    json_string: str,
-    format: Literal["LIST", "SINGLE"]
+    json_file: discord.Attachment, # Accept a Discord attachment
+    format: Literal["LIST", "SINGLE"],
 ):
-    """Updates existing items in sources using a JSON string, automatically finding tiers."""
+    """Updates existing items in sources using a JSON file attachment, automatically finding tiers."""
     logger.info(
-        f"Attempting to update existing items from JSON string (format: {format}): {json_string}"
+        f"Attempting to update existing items from JSON file (format: {format}): {json_file.filename}"
     )
 
     # Defer the interaction response
     await interaction.response.defer()
 
     try:
-        # Parse the JSON string
+        # Validate the file type
+        if not json_file.filename.lower().endswith(".json"):
+            await interaction.followup.send("Please upload a valid JSON file (.json).")
+            logger.warning(f"Received non-JSON file: {json_file.filename}")
+            return
+
+        # Read the content of the file
+        try:
+            file_content = await json_file.read()
+            json_string = file_content.decode("utf-8") # Assuming UTF-8 encoding
+        except Exception as e:
+            await interaction.followup.send("Could not read the content of the file.")
+            logger.error(f"Error reading file content: {e}", exc_info=True)
+            return
+
+        # Parse the JSON string from the file content
         try:
             parsed_data: Union[Dict[str, List[Dict[str, Any]]], List[Dict[str, List[Dict[str, Any]]]]] = json.loads(json_string)
         except json.JSONDecodeError:
-            await interaction.followup.send("Invalid JSON string provided.")
-            logger.warning(f"Invalid JSON string received: {json_string}")
+            await interaction.followup.send("Invalid JSON format in the file.")
+            logger.warning(f"Invalid JSON format in file: {json_file.filename}")
             return
 
         sources_to_process: List[Dict[str, List[Dict[str, Any]]]] = []
@@ -614,60 +630,68 @@ async def from_json(
         if format == "SINGLE":
             if not isinstance(parsed_data, dict) or len(parsed_data) != 1:
                  await interaction.followup.send(
-                    "Invalid JSON format for 'SINGLE'. Expected a single key representing the source name."
+                    "Invalid JSON format for 'SINGLE' in the file. Expected a single key representing the source name."
                 )
-                 logger.warning(f"Invalid JSON format for SINGLE: {parsed_data}")
+                 logger.warning(f"Invalid JSON format for SINGLE in file: {json_file.filename}")
                  return
             sources_to_process.append(parsed_data) # Wrap the single dict in a list
 
         elif format == "LIST":
             if not isinstance(parsed_data, list):
                  await interaction.followup.send(
-                    "Invalid JSON format for 'LIST'. Expected a list of source objects."
+                    "Invalid JSON format for 'LIST' in the file. Expected a list of source objects."
                  )
-                 logger.warning(f"Invalid JSON format for LIST (not a list): {parsed_data}")
+                 logger.warning(f"Invalid JSON format for LIST (not a list) in file: {json_file.filename}")
                  return
             sources_to_process = parsed_data # The parsed data is already a list
 
-            for source_obj in sources_to_process: # Should be sources_to_process here
+            for source_obj in sources_to_process:
                 if not isinstance(source_obj, dict) or len(source_obj) != 1 or not isinstance(list(source_obj.values())[0], list):
                     await interaction.followup.send(
-                        "Invalid JSON format for 'LIST'. Each item in the list should be a single source object (e.g., {\"SourceName\": [...]})."
+                        "Invalid JSON format for 'LIST' in the file. Each item in the list should be a single source object (e.g., {\"SourceName\": [...]})."
                     )
-                    logger.warning(f"Invalid item format in LIST: {source_obj}")
+                    logger.warning(f"Invalid item format in LIST in file: {json_file.filename}")
                     return
 
 
-        logger.info(f"Received data for {len(sources_to_process)} sources to process for updates.")
+        logger.info(f"Received data for {len(sources_to_process)} sources to process for updates from file.")
 
         # Fetch the entire document
         template = await coll.find_one({})
 
         if not template:
-            logger.warning("Template document not found for updating existing source items from JSON.")
+            logger.warning("Template document not found for updating existing source items from JSON file.")
             await interaction.followup.send("Template not found.")
             return
 
         tiers = template.get("tiers", {})
 
         overall_updated_count = 0
-        sources_updated_successfully: List[Tuple[str, str, int]] = [] # (source_name, tier_name, updated_count)
+        sources_updated_successfully: List[Tuple[str, str, int]] = []
         sources_not_found = []
-        skipped_sources = [] # For sources with invalid item lists
-        items_not_found_in_db: List[Tuple[str, str, str]] = [] # (tier, source, item_name)
+        skipped_sources = [] # For sources with invalid item lists or not processed
+        items_not_found_in_db: List[Tuple[str, str, str]] = []
 
 
         # Process each source object from the input list
         for source_data_item in sources_to_process:
+            # Ensure source_data_item is a dict with a single key as expected after initial validation
+            if not isinstance(source_data_item, dict) or len(source_data_item) != 1:
+                 logger.warning(f"Skipping invalid source object format after initial validation: {source_data_item}")
+                 skipped_sources.append(str(source_data_item)) # Append a string representation
+                 continue
+
+
             source_name = list(source_data_item.keys())[0]
             items_from_json = source_data_item.get(source_name)
 
             if not isinstance(items_from_json, list):
-                 logger.warning(f"Skipping source '{source_name}' due to invalid items list format.")
+                 logger.warning(f"Skipping source '{source_name}' from file due to invalid items list format.")
                  skipped_sources.append(source_name)
                  continue
 
-            logger.info(f"Processing source '{source_name}' with {len(items_from_json)} items from JSON for updates.")
+
+            logger.info(f"Processing source '{source_name}' with {len(items_from_json)} items from file.")
 
 
             target_tier_name = None
@@ -711,8 +735,7 @@ async def from_json(
                         break
 
                 if existing_item:
-                    # Item exists, update points and duplicate_points
-                    if existing_item.get("points") != item_points: # Only update if points are changing
+                    if existing_item.get("points") != item_points:
                          existing_item["points"] = item_points
                          existing_item["duplicate_points"] = item_points / 2 if item_points != 0 else 0
                          logger.debug(f"Updated points for existing item '{item_name}' in '{source_name}'.")
@@ -720,12 +743,10 @@ async def from_json(
                     else:
                         logger.debug(f"Item '{item_name}' in '{source_name}' points match, no update needed.")
                 else:
-                    # Item doesn't exist in the database, record it but DO NOT ADD
                     items_not_found_in_db.append((target_tier_name, source_name, item_name)) # type: ignore
-                    logger.debug(f"Item '{item_name}' from JSON not found in database for source '{source_name}'.")
+                    logger.debug(f"Item '{item_name}' from file not found in database for source '{source_name}'.")
 
 
-            # If any items were updated in this source, record it
             if updated_count_for_source > 0:
                  sources_updated_successfully.append((source_name, target_tier_name, updated_count_for_source)) # type: ignore
                  overall_updated_count += updated_count_for_source
@@ -737,19 +758,18 @@ async def from_json(
 
             if replace_result.modified_count > 0:
                 logger.info(
-                    f"Overall successful update from JSON. Total Updated Items: {overall_updated_count}"
+                    f"Overall successful update from JSON file. Total Updated Items: {overall_updated_count}"
                 )
-                response_message = "Overall update from JSON successful. Items Updated:\n"
+                response_message = "Overall update from JSON file successful. Items Updated:\n"
                 for source_name, tier_name, count in sources_updated_successfully:
                      response_message += f"- `{source_name}` ({tier_name}): {count} items updated\n"
 
                 if sources_not_found:
                     response_message += "\nSources not found: " + ", ".join(sources_not_found)
                 if skipped_sources:
-                     response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+                     response_message += "\nSkipped sources (invalid format): " + ", ".join(skipped_sources)
                 if items_not_found_in_db:
-                     response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
-                     # Group items not found by source/tier for cleaner output
+                     response_message += "\nThe following items from the file were not found in the database and were *not* added:\n"
                      items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
                      for tier, source, item_name in items_not_found_in_db:
                          location = (tier, source)
@@ -761,18 +781,22 @@ async def from_json(
                           response_message += f"- In `{source}` ({tier}): " + ", ".join(items) + "\n"
 
 
+                # Handle message splitting if it's too long (similar to missing_icons)
+                # ... (Implement message splitting logic here if needed) ...
+                await interaction.followup.send(response_message)
+
+
             else:
                 logger.warning(
-                    "Replace operation did not modify the document during overall source item update from JSON. Document might have changed or been deleted."
+                    "Replace operation did not modify the document during overall source item update from JSON file. Document might have changed or been deleted."
                 )
-                response_message = "Could not update source items from JSON (replace failed)."
+                response_message = "Could not update source items from JSON file (replace failed)."
                 if sources_not_found:
                     response_message += "\nSources not found: " + ", ".join(sources_not_found)
                 if skipped_sources:
-                     response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+                     response_message += "\nSkipped sources (invalid format): " + ", ".join(skipped_sources)
                 if items_not_found_in_db:
-                     response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
-                     # Group items not found by source/tier
+                     response_message += "\nThe following items from the file were not found in the database and were *not* added:\n"
                      items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
                      for tier, source, item_name in items_not_found_in_db:
                          location = (tier, source)
@@ -787,14 +811,13 @@ async def from_json(
                 await interaction.followup.send(response_message)
 
         else: # No items were updated across all sources
-             response_message = "No existing items were updated from the provided JSON data."
+             response_message = "No existing items were updated from the provided JSON file data."
              if sources_not_found:
                  response_message += "\nSources not found: " + ", ".join(sources_not_found)
              if skipped_sources:
-                 response_message += "\nSkipped sources (invalid item list format): " + ", ".join(skipped_sources)
+                 response_message += "\nSkipped sources (invalid format): " + ", ".join(skipped_sources)
              if items_not_found_in_db:
-                 response_message += "\nThe following items from JSON were not found in the database and were *not* added:\n"
-                 # Group items not found by source/tier
+                 response_message += "\nThe following items from the file were not found in the database and were *not* added:\n"
                  items_not_found_by_location: Dict[Tuple[str, str], List[str]] = {}
                  for tier, source, item_name in items_not_found_in_db:
                      location = (tier, source)
@@ -811,12 +834,13 @@ async def from_json(
 
     except Exception as e:
         logger.error(
-            f"An unexpected error occurred while processing JSON update for existing items: {e}",
+            f"An unexpected error occurred while processing JSON file update for existing items: {e}",
             exc_info=True,
         )
         await interaction.followup.send(
-            "An unexpected error occurred while trying to process the JSON data."
+            "An unexpected error occurred while trying to process the JSON file data."
         )
+
 
 
 
