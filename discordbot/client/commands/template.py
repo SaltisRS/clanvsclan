@@ -629,7 +629,7 @@ async def from_json(
                  return
             sources_to_process = parsed_data # The parsed data is already a list
 
-            for source_obj in sources_to_update: # Should be sources_to_process here
+            for source_obj in sources_to_process: # Should be sources_to_process here
                 if not isinstance(source_obj, dict) or len(source_obj) != 1 or not isinstance(list(source_obj.values())[0], list):
                     await interaction.followup.send(
                         "Invalid JSON format for 'LIST'. Each item in the list should be a single source object (e.g., {\"SourceName\": [...]})."
@@ -721,13 +721,13 @@ async def from_json(
                         logger.debug(f"Item '{item_name}' in '{source_name}' points match, no update needed.")
                 else:
                     # Item doesn't exist in the database, record it but DO NOT ADD
-                    items_not_found_in_db.append((target_tier_name, source_name, item_name))
+                    items_not_found_in_db.append((target_tier_name, source_name, item_name)) # type: ignore
                     logger.debug(f"Item '{item_name}' from JSON not found in database for source '{source_name}'.")
 
 
             # If any items were updated in this source, record it
             if updated_count_for_source > 0:
-                 sources_updated_successfully.append((source_name, target_tier_name, updated_count_for_source))
+                 sources_updated_successfully.append((source_name, target_tier_name, updated_count_for_source)) # type: ignore
                  overall_updated_count += updated_count_for_source
 
 
