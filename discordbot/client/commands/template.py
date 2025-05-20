@@ -265,7 +265,7 @@ async def add_item(interaction: discord.Interaction, tier: str, source: str, nam
 @app_commands.autocomplete(
     tier=autocomplete_tier,
     target_tier=autocomplete_tier,
-    source=autocomplete_source,
+    source=autocomplete_source
 )
 async def move_source(
     interaction: discord.Interaction,
