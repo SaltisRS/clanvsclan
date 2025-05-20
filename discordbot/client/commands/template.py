@@ -223,7 +223,7 @@ async def add_source(interaction: discord.Interaction, tier: str, source: str):
         await interaction.response.send_message("Tier not found.")
 
 @group.command()
-@app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
+@app_commands.autocomplete()
 async def add_multiplier(interaction: discord.Interaction,):
     await interaction.response.send_message("Removed Temporarily")
     
