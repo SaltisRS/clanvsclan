@@ -440,7 +440,7 @@ async def new_progressive(interaction: discord.Interaction,
             )
 
         if result.modified_count > 0:
-            await interaction.response.send_message(f"")
+            await interaction.response.send_message(f"New Activity listed: {name}")
         else:
             await interaction.response.send_message(f"Something Went Wrong...!")
     except Exception as e:
