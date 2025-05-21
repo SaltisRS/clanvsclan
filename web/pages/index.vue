@@ -36,6 +36,7 @@ interface Activity {
   tier4: number;
   multi: number;
   state: boolean;
+  unit: string;
 }
 
 
@@ -361,8 +362,8 @@ const hideTooltip = () => {
           <div>Progress: {{ activity.current }}</div>
           <div>Point/Tier: {{ activity.point_step }}</div>
           <div>Tiers: {{ activity.tier1 }} | {{ activity.tier2 }} | {{ activity.tier3 }} | {{ activity.tier4 }}</div>
-          <div v-if="activity.state">Finished! Multiplier: {{ activity.multi }}</div>
-          <div v-else>Multiplier (when finished): {{ activity.multi }}</div>
+          <div>Multiplier: {{ activity.multi }}</div>
+          <div>Unit: {{ activity.unit }}</div>
         </td>
       </tr>
     </tbody>

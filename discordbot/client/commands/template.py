@@ -10,6 +10,8 @@ from typing import Optional, Literal, Dict, List, Any, Union, Tuple
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 
+from backend import app
+
 
 from .groups.template import TemplateGroup
 
@@ -384,6 +386,7 @@ async def molebor(interaction: discord.Interaction):
     await interaction.response.send_message("https://tenor.com/view/gnomed-gnome-glow-effect-shaking-gif-17863812")
 
 @group.command()
+@app_commands.describe(unit="Nuggets, XP, KC, Peices of Eight etc..")
 async def new_progressive(interaction: discord.Interaction,
                           name: str,
                           description: str,
@@ -392,7 +395,8 @@ async def new_progressive(interaction: discord.Interaction,
                           t2: int,
                           t3: int,
                           t4: int,
-                          multi: float, 
+                          multi: float,
+                          unit: str, 
                           category: Optional[Literal["cluescroll", "experience", "killcount"]]
                           ):
     
@@ -413,6 +417,7 @@ async def new_progressive(interaction: discord.Interaction,
         "tier3": t3,
         "tier4": t4,
         "multiplier": multi,
+        "unit": unit,
         "finished": False
     }
     try:
