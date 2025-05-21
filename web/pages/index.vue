@@ -2,12 +2,6 @@
 import { onMounted, ref } from "vue";
 import { Loading, Navbar, Refresh, PointBox, PointsTooltip } from "#components";
 
-interface Multiplier {
-  name: string;
-  required_items: string;
-  factor: number;
-  unlocked: boolean;
-}
 
 interface Item {
   name: string;
@@ -22,7 +16,6 @@ interface Source {
   name: string;
   source_gained: number;
   items: Item[];
-  multipliers: Multiplier[];
   hovertext: string;
   icon_url: string;
 }
@@ -32,17 +25,37 @@ interface Tier {
   sources: Source[];
 }
 
+interface Activity {
+  name: string;
+  description: string;
+  current: number;
+  point_step: number;
+  tier1: number;
+  tier2: number;
+  tier3: number;
+  tier4: number;
+  multi: number;
+  state: boolean;
+}
+
+
 interface Template {
   associated_team: string;
   total_gained: number;
   tiers: Record<string, Tier>;
+  activities: Activity[];
+  milestones: Activity[];
 }
 
 const activeData = ref<Template>({
   associated_team: "",
   total_gained: 0,
   tiers: {},
+  activities: [],
+  milestones: []
 });
+
+
 const team_uris = ["ironfoundry", "ironclad"];
 const selectedTier = ref<keyof Template["tiers"]>("Easy");
 const selectedTable = ref<string>(team_uris[0]);
@@ -88,6 +101,16 @@ const fetchTable = async (table: string) => {
     setTimeout(() => {
       loading.value = false;
     }, remainingTime);
+  }
+};
+
+const getProgressColorClass = (activity: { current: number; tier4: number; tier1: number; }) => {
+  if (activity.current >= activity.tier4) {
+    return 'text-green-500'; // Green for all tiers completed
+  } else if (activity.current >= activity.tier1) {
+    return 'text-yellow-500'; // Yellow for started (at least tier 1)
+  } else {
+    return 'text-red-500'; // Red for not started
   }
 };
 
@@ -303,6 +326,56 @@ const hideTooltip = () => {
         </tr>
       </tbody>
     </table>
+
+
+    <!-- Divider -->
+    <div v-if="!loading" class="flex w-[97%] items-center">
+      <div class="flex-1 border-t border-blurple"></div>
+      <!-- Left Border -->
+      <span class="px-12 text-center text-xl">Activities</span>
+      <!-- Text -->
+      <div class="flex-1 border-t border-blurple"></div>
+      <!-- Right Border -->
+    </div>
+
+    <table v-if="!loading && activeData"
+    class="bg-dc-accent w-full rounded-xl overflow-hidden">
+    <thead>
+      <tr>
+        <th class="p2 w-1/5">
+          Activity
+        </th>
+        <th class="p2 w-4/5">
+          Details
+        </th>
+      </tr>
+    </thead>
+    <tbody v-if="activeData.activities && activeData.activities.length > 0">
+      <tr v-for="activity in activeData.activities" :key="activity.name"
+        class="border-t border-dc-background">
+        <td class="p2 w-1/5 font-bold">
+          {{ activity.name }}
+        </td>
+        <td :class="['p2', 'w-4/5', getProgressColorClass(activity)]">
+          <div>{{ activity.description }}</div>
+          <div>Progress: {{ activity.current }}</div>
+          <div>Point/Tier: {{ activity.point_step }}</div>
+          <div>Tiers: {{ activity.tier1 }} | {{ activity.tier2 }} | {{ activity.tier3 }} | {{ activity.tier4 }}</div>
+          <div v-if="activity.state">Finished! Multiplier: {{ activity.multi }}</div>
+          <div v-else>Multiplier (when finished): {{ activity.multi }}</div>
+        </td>
+      </tr>
+    </tbody>
+    <tbody v-else>
+        <tr>
+            <td colspan="2" class="py-4 text-center">
+                No activities found.
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
 
     <!-- Tooltip Display -->
     <div

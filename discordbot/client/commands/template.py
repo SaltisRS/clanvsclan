@@ -383,8 +383,71 @@ async def move_source(
 async def molebor(interaction: discord.Interaction):
     await interaction.response.send_message("https://tenor.com/view/gnomed-gnome-glow-effect-shaking-gif-17863812")
 
+@group.command()
+async def new_progressive(interaction: discord.Interaction,
+                          name: str,
+                          description: str,
+                          point_step: int,
+                          t1: int,
+                          t2: int,
+                          t3: int,
+                          t4: int,
+                          multi: float, 
+                          category: Optional[Literal["cluescroll", "experience", "killcount"]]
+                          ):
+    
+    
+    template = await coll.find_one({})
+    
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+    
+    _entry = {
+        "name" : name,
+        "description": description,
+        "current_value": 0,
+        "point_step": point_step,
+        "tier1": t1,
+        "tier2": t2,
+        "tier3": t3,
+        "tier4": t4,
+        "multiplier": multi,
+        "finished": False
+    }
+    try:
+        if not category:
+            result = await coll.update_one(
+            {"_id": template["_id"]},
+            {"$push": {f"activities": _entry}}
+        )
+        
+        match category:
+            case "cluescroll":
+                result = await coll.update_one(
+                {"_id": template["_id"]},
+                {"$push": {f"milestones.cluescroll": _entry}}
+            )
+            case "experience":
+                result = await coll.update_one(
+                {"_id": template["_id"]},
+                {"$push": {f"milestones.experience": _entry}}
+            )
+            case "killcount":
+                result = await coll.update_one(
+                {"_id": template["_id"]},
+                {"$push": {f"milestones.killcount": _entry}}
+            )
 
-
+        if result.modified_count > 0:
+            await interaction.response.send_message(f"")
+        else:
+            await interaction.response.send_message(f"Something Went Wrong...!")
+    except Exception as e:
+        logger.error(e)            
+        await interaction.response.send_message(e)
+        
+    
 @group.command()
 async def sort_all_items(
     interaction: discord.Interaction,
