@@ -23,9 +23,13 @@ gallery = db["Gallery"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
 
 
-async def split_to_list(string: str):
-    return string.split(",")
-
+async def split_to_list(string: str) -> list[str]:
+    sanitized: list[str] = []
+    raw_list = string.split(",")
+    for _str in raw_list:
+        sanitized.append(_str.strip())
+    return sanitized    
+    
 async def autocomplete_tier(interaction: discord.Interaction, current: str):
     if "tiers" not in autocomplete_cache:
         template = await coll.find_one({})
@@ -374,7 +378,7 @@ async def new_multiplier(interaction: discord.Interaction, name: str, affects: s
             {"$push": {f"multipliers": _entry}})
     
     if result.modified_count > 0:
-        message = f"Added new multiplier: `{name}`\nDescription: `{description}\nAffecting Sources: ```{[source + '\n' for source in affects.split(",")]}```\n Requiring: ```{[item + '\n' for item in requirement.split(",")]}```\nFactor: {factor}x"
+        message = f"Added new multiplier: {name}Description: `{description}\nAffecting Sources: ```{[source for source in affects.split(",")]}```\n Requiring: ```{[item for item in requirement.split(",")]}```\nFactor: {factor}x"
         await interaction.followup.send(message)
     
 @group.command()
