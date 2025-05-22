@@ -356,7 +356,7 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-  <div>
+  <div class="w-full">
     <table v-if="!loading && activeData"
         class="bg-dc-accent w-full rounded-xl overflow-hidden">
         <thead>
@@ -368,15 +368,14 @@ const hideTooltip = () => {
               Details
               <button
                 @click="toggleCollapseActivities"
-                class="absolute top-1/2 right-2 transform -translate-y-1/2 px-2 py-1 text-xs bg-blurple text-white hover:bg-dc-accent transition-colors duration-200 z-10"
+                class="absolute top-1/2 right-2 transform -translate-y-1/2 px-2 py-1 text-xs bg-blurple text-white hover:bg-dc-accent transition-colors duration-200 z-10 rounded-xl"
               >
-                {{ isCollapsedActivities ? 'Show' : 'Hide' }} <!-- Shorter text for the button -->
+                {{ isCollapsedActivities ? 'Show' : 'Hide' }}
               </button>
             </th>
           </tr>
         </thead>
 
-        <!-- Conditionally render the tbody based on isCollapsedActivities -->
         <tbody v-if="!isCollapsedActivities && activeData.activities && activeData.activities.length > 0">
           <tr v-for="activity in activeData.activities" :key="activity.name"
             class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200">
@@ -439,7 +438,8 @@ const hideTooltip = () => {
             </td>
           </tr>
         </tbody>
-        <tbody v-else-if="isCollapsedActivities && activeData.activities && activeData.activities.length > 0">
+        <tbody v-else-if="isCollapsedActivities && activeData.activities && activeData.activities.length > 0"
+          >
              <tr>
                 <td colspan="2" class="py-4 text-center">
                    Activities table is collapsed. Click "Expand Activities Table" to view.
