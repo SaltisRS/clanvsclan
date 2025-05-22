@@ -354,6 +354,7 @@ async def molebor(interaction: discord.Interaction):
 
 @group.command()
 async def new_multiplier(interaction: discord.Interaction, name: str, affects: str, factor: float, requirement: str, description: Optional[str]):
+    await interaction.response.defer()
     _entry = {
         "name": name,
         "description": description,
@@ -374,7 +375,7 @@ async def new_multiplier(interaction: discord.Interaction, name: str, affects: s
     
     if result.modified_count > 0:
         message = f"Added new multiplier: `{name}`\nDescription: `{description}\nAffecting Sources: ```{[source + '\n' for source in affects.split(",")]}```\n Requiring: ```{[item + '\n' for item in requirement.split(",")]}```\nFactor: {factor}x"
-        await interaction.response.send_message(message)
+        await interaction.followup.send(message)
     
 @group.command()
 async def view_multis(interaction: discord.Interaction):
