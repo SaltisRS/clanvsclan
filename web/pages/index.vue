@@ -152,6 +152,17 @@ const getTierColorActivity = (activity: Activity, tierNumber: number) => {
   }
 };
 
+const categoryDisplayNameMap: Record<string, string> = {
+  "cluescroll": "Clue Scrolls",
+  "experience": "Experience",
+  "killcount": "Kill Count"
+};
+
+
+const getDisplayCategoryName = (categoryName: string): string => {
+  return categoryDisplayNameMap[categoryName] || categoryName;
+};
+
 const getTierColorMilestone = (milestone: Milestone, tierNumber: number) => {
   const currentValue = milestone.current_value;
   const tierValue = milestone[`tier${tierNumber}` as keyof Milestone] as number;
@@ -442,7 +453,7 @@ const hideTooltip = () => {
                 <thead>
                   <tr>
                     <th class="w-1/6 p-1 text-center">Progress</th>
-                    <th class="w-1/6 p-1 text-center">Point Step</th>
+                    <th class="w-1/6 p-1 text-center">Points / Tier</th>
                     <th class="w-1/6 p-1 text-center">T1</th>
                     <th class="w-1/6 p-1 text-center">T2</th>
                     <th class="w-1/6 p-1 text-center">T3</th>
@@ -533,16 +544,16 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-    <div v-if="!loading && activeData && activeData.milestones">
+    <div v-if="!loading && activeData && activeData.milestones" class="items-center">
       <!-- Iterate through milestone categories -->
       <div
         v-for="(milestonesInCategory, categoryName) in activeData.milestones"
         :key="categoryName"
         class="mb-6"
       >
-        <h3 class="text-lg font-semibold mb-2 text-white">
-          {{ categoryName }}
-        </h3>
+        <span class="text-lg mb-2 text-white">
+          {{ getDisplayCategoryName(categoryName) }}
+        </span>
 
         <table class="bg-dc-accent w-full rounded-xl overflow-hidden">
           <thead>
@@ -562,12 +573,11 @@ const hideTooltip = () => {
                 {{ milestone.name }}
               </td>
               <td class="p-2 w-4/5 text-white">
-                <!-- Nested table for milestone details (similar to activities) -->
                 <table class="w-full table-fixed">
                   <thead>
                     <tr>
                       <th class="w-1/6 p-1 text-center">Progress</th>
-                      <th class="w-1/6 p-1 text-center">Point Step</th>
+                      <th class="w-1/6 p-1 text-center">Points / Tier</th>
                       <th class="w-1/6 p-1 text-center">T1</th>
                       <th class="w-1/6 p-1 text-center">T2</th>
                       <th class="w-1/6 p-1 text-center">T3</th>
@@ -583,7 +593,6 @@ const hideTooltip = () => {
                       <td class="text-center p-1">
                         {{ milestone.point_step }}
                       </td>
-                      <!-- Apply getTierColorActivity to each tier cell -->
                       <td
                         :class="[
                           'text-center',
@@ -591,7 +600,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier1),
                         ]"
                       >
-                        {{ milestone.tier1 }}
+                        {{ milestone.tier1 }} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -600,7 +609,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier2),
                         ]"
                       >
-                        {{ milestone.tier2 }}
+                        {{ milestone.tier2 }} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -609,7 +618,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier3),
                         ]"
                       >
-                        {{ milestone.tier3 }}
+                        {{ milestone.tier3 }} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -618,7 +627,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier4),
                         ]"
                       >
-                        {{ milestone.tier4 }}
+                        {{ milestone.tier4 }} {{ milestone.unit }}
                       </td>
                       <td class="text-center p-1">
                         {{ milestone.multiplier }}x
