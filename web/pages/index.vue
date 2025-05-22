@@ -77,7 +77,7 @@ const loading = ref<boolean>(false);
 const points = ref<number>(0);
 const tierPoints = ref<Record<string, number>>({});
 const tooltip = ref<{ text: string; x: number; y: number } | null>(null);
-const isCollapsedActivities = ref<boolean>(false);
+const isCollapsedActivities = ref<boolean>(true);
 
 // Method to toggle the collapsed state
 const toggleCollapseActivities = () => {
