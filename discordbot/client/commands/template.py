@@ -396,7 +396,7 @@ async def view_multis(interaction: discord.Interaction):
         factor = multi["factor"]
         sources = multi["affects"]
         req = multi["requirement"]
-        message += f"```name: {name}\ndescription: {description}\nfactor: {factor}\naffects: {sources}\nitems: {req}```"
+        message += f"```\n\nname: {name}\ndescription: {description}\nfactor: {factor}\naffects: {sources}\nitems: {req}```"
     
     await interaction.response.send_message(message)
         
