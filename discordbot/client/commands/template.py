@@ -387,8 +387,7 @@ async def new_progressive(interaction: discord.Interaction,
         "tier3": t3,
         "tier4": t4,
         "multiplier": multi,
-        "unit": unit,
-        "finished": False
+        "unit": unit
     }
     try:
         if not category:

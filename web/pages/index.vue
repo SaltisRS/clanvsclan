@@ -2,7 +2,6 @@
 import { onMounted, ref } from "vue";
 import { Loading, Navbar, Refresh, PointBox, PointsTooltip } from "#components";
 
-
 interface Item {
   name: string;
   points: number;
@@ -37,13 +36,30 @@ interface Activity {
   unit: string;
 }
 
+interface Milestone {
+  name: string;
+  current_value: number;
+  point_step: number;
+  tier1: number;
+  tier2: number;
+  tier3: number;
+  tier4: number;
+  multiplier: number;
+  unit: string;
+}
+
+interface Milestones {
+  cluescroll: Milestone[];
+  experience: Milestone[];
+  killcount: Milestone[];
+}
 
 interface Template {
   associated_team: string;
   total_gained: number;
   tiers: Record<string, Tier>;
   activities: Activity[];
-  milestones: Activity[];
+  milestones: Record<string, Milestone[]>;
 }
 
 const activeData = ref<Template>({
@@ -51,9 +67,8 @@ const activeData = ref<Template>({
   total_gained: 0,
   tiers: {},
   activities: [],
-  milestones: []
+  milestones: {},
 });
-
 
 const team_uris = ["ironfoundry", "ironclad"];
 const selectedTier = ref<keyof Template["tiers"]>("Easy");
@@ -109,29 +124,61 @@ const fetchTable = async (table: string) => {
   }
 };
 
-const getTierColorClass = (activity: Activity, tierNumber: number) => {
+const getTierColorActivity = (activity: Activity, tierNumber: number) => {
   const currentValue = activity.current_value;
   const tierValue = activity[`tier${tierNumber}` as keyof Activity] as number;
-  const previousTierValue = (tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0) as number;
-
+  const previousTierValue = (
+    tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0
+  ) as number;
 
   if (currentValue >= tierValue) {
-    return 'text-green-500'; // Green if current value is at or above this tier's threshold
+    return "text-green-500"; // Green if current value is at or above this tier's threshold
   } else if (currentValue >= previousTierValue && currentValue < tierValue) {
-     // Yellow if current value is less than this tier's threshold BUT at or above the previous tier's threshold
-     // For T1, this is currentValue > 0 and < tier1
-     if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
-          return 'text-yellow-500';
-     } else if (tierNumber > 1 && currentValue >= previousTierValue && currentValue < tierValue) {
-          return 'text-yellow-500';
-     } else {
-          return 'text-white'; // Should ideally not hit this with correct logic
-     }
+    // Yellow if current value is less than this tier's threshold BUT at or above the previous tier's threshold
+    // For T1, this is currentValue > 0 and < tier1
+    if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
+      return "text-yellow-500";
+    } else if (
+      tierNumber > 1 &&
+      currentValue >= previousTierValue &&
+      currentValue < tierValue
+    ) {
+      return "text-yellow-500";
+    } else {
+      return "text-white"; // Should ideally not hit this with correct logic
+    }
   } else {
-    return 'text-white'; // White if current value is below the previous tier's threshold
+    return "text-white"; // White if current value is below the previous tier's threshold
   }
 };
 
+const getTierColorMilestone = (milestone: Milestone, tierNumber: number) => {
+  const currentValue = milestone.current_value;
+  const tierValue = milestone[`tier${tierNumber}` as keyof Milestone] as number;
+  const previousTierValue = (
+    tierNumber > 1 ? milestone[`tier${tierNumber - 1}` as keyof Milestone] : 0
+  ) as number;
+
+  if (currentValue >= tierValue) {
+    return "text-green-500"; // Green if current value is at or above this tier's threshold
+  } else if (currentValue >= previousTierValue && currentValue < tierValue) {
+    // Yellow if current value is less than this tier's threshold BUT at or above the previous tier's threshold
+    // For T1, this is currentValue > 0 and < tier1
+    if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
+      return "text-yellow-500";
+    } else if (
+      tierNumber > 1 &&
+      currentValue >= previousTierValue &&
+      currentValue < tierValue
+    ) {
+      return "text-yellow-500";
+    } else {
+      return "text-white"; // Should ideally not hit this with correct logic
+    }
+  } else {
+    return "text-white"; // White if current value is below the previous tier's threshold
+  }
+};
 // Text Highlighting
 const isSourceFullyObtained = (source: Source) => {
   return source.items.every((item) => item.obtained && item.duplicate_obtained);
@@ -345,7 +392,6 @@ const hideTooltip = () => {
       </tbody>
     </table>
 
-
     <!-- Divider -->
     <div v-if="!loading" class="flex w-[97%] items-center">
       <div class="flex-1 border-t border-blurple"></div>
@@ -356,29 +402,38 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-  <div class="w-full">
-    <table v-if="!loading && activeData"
-        class="bg-dc-accent w-full rounded-xl overflow-hidden">
+    <div class="w-full">
+      <table
+        v-if="!loading && activeData"
+        class="bg-dc-accent w-full rounded-xl overflow-hidden"
+      >
         <thead>
           <tr>
-            <th class="p-2 w-1/5 text-center">
-              Activity
-            </th>
+            <th class="p-2 w-1/5 text-center">Activity</th>
             <th class="p-2 w-4/5 text-center relative">
               Details
               <button
                 @click="toggleCollapseActivities"
                 class="absolute top-1/2 right-2 transform -translate-y-1/2 px-2 py-1 text-xs bg-blurple text-white hover:bg-dc-accent transition-colors duration-200 z-10 rounded-xl"
               >
-                {{ isCollapsedActivities ? 'Show' : 'Hide' }}
+                {{ isCollapsedActivities ? "Show" : "Hide" }}
               </button>
             </th>
           </tr>
         </thead>
 
-        <tbody v-if="!isCollapsedActivities && activeData.activities && activeData.activities.length > 0">
-          <tr v-for="activity in activeData.activities" :key="activity.name"
-            class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200">
+        <tbody
+          v-if="
+            !isCollapsedActivities &&
+            activeData.activities &&
+            activeData.activities.length > 0
+          "
+        >
+          <tr
+            v-for="activity in activeData.activities"
+            :key="activity.name"
+            class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200"
+          >
             <td class="p-2 w-1/5 font-bold">
               {{ activity.name }}
             </td>
@@ -386,78 +441,204 @@ const hideTooltip = () => {
               <table class="w-full table-fixed">
                 <thead>
                   <tr>
-                    <th class="w-1/6 p-1 text-center">
-                      Progress
-                    </th>
-                    <th class="w-1/6 p-1 text-center">
-                      Point Step
-                    </th>
-                     <th class="w-1/6 p-1 text-center">
-                      T1
-                    </th>
-                    <th class="w-1/6 p-1 text-center">
-                      T2
-                    </th>
-                    <th class="w-1/6 p-1 text-center">
-                      T3
-                    </th>
-                    <th class="w-1/6 p-1 text-center">
-                      T4
-                    </th>
-                     <th class="w-1/6 p-1 text-center">
-                      Multiplier
-                    </th>
+                    <th class="w-1/6 p-1 text-center">Progress</th>
+                    <th class="w-1/6 p-1 text-center">Point Step</th>
+                    <th class="w-1/6 p-1 text-center">T1</th>
+                    <th class="w-1/6 p-1 text-center">T2</th>
+                    <th class="w-1/6 p-1 text-center">T3</th>
+                    <th class="w-1/6 p-1 text-center">T4</th>
+                    <th class="w-1/6 p-1 text-center">Multiplier</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                     <td class="text-center p-1">
+                    <td class="text-center p-1">
                       {{ activity.current_value }} {{ activity.unit }}
-                     </td>
-                     <td class="text-center p-1">
-                       {{ activity.point_step }}
-                     </td>
-                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier1)]">
-                       {{ activity.tier1 }}
-                     </td>
-                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier2)]">
-                       {{ activity.tier2 }}
-                     </td>
-                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier3)]">
-                       {{ activity.tier3 }}
-                     </td>
-                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier4)]">
-                       {{ activity.tier4 }}
-                     </td>
-                     <td class="text-center p-1">
-                       {{ activity.multiplier }}x
-                     </td>
+                    </td>
+                    <td class="text-center p-1">
+                      {{ activity.point_step }}
+                    </td>
+                    <td
+                      :class="[
+                        'text-center',
+                        'p-1',
+                        getTierColorActivity(activity, activity.tier1),
+                      ]"
+                    >
+                      {{ activity.tier1 }}
+                    </td>
+                    <td
+                      :class="[
+                        'text-center',
+                        'p-1',
+                        getTierColorActivity(activity, activity.tier2),
+                      ]"
+                    >
+                      {{ activity.tier2 }}
+                    </td>
+                    <td
+                      :class="[
+                        'text-center',
+                        'p-1',
+                        getTierColorActivity(activity, activity.tier3),
+                      ]"
+                    >
+                      {{ activity.tier3 }}
+                    </td>
+                    <td
+                      :class="[
+                        'text-center',
+                        'p-1',
+                        getTierColorActivity(activity, activity.tier4),
+                      ]"
+                    >
+                      {{ activity.tier4 }}
+                    </td>
+                    <td class="text-center p-1">{{ activity.multiplier }}x</td>
                   </tr>
                 </tbody>
               </table>
             </td>
           </tr>
         </tbody>
-        <tbody v-else-if="isCollapsedActivities && activeData.activities && activeData.activities.length > 0"
-          >
-             <tr>
-                <td colspan="2" class="py-4 text-center">
-                   Activities table is collapsed. Click "Expand Activities Table" to view.
-                </td>
-             </tr>
+        <tbody
+          v-else-if="
+            isCollapsedActivities &&
+            activeData.activities &&
+            activeData.activities.length > 0
+          "
+        >
+          <tr>
+            <td colspan="2" class="py-4 text-center">
+              Activities table is collapsed. Click "Show" to view activities.
+            </td>
+          </tr>
         </tbody>
 
         <tbody v-else>
-            <tr>
-                <td colspan="2" class="py-4 text-center">
-                    No activities found.
-                </td>
-            </tr>
+          <tr>
+            <td colspan="2" class="py-4 text-center">No activities found.</td>
+          </tr>
         </tbody>
       </table>
-  </div>
+    </div>
 
+    <!-- Divider -->
+    <div v-if="!loading" class="flex w-[97%] items-center">
+      <div class="flex-1 border-t border-blurple"></div>
+      <!-- Left Border -->
+      <span class="px-12 text-center text-xl">Milestones</span>
+      <!-- Text -->
+      <div class="flex-1 border-t border-blurple"></div>
+      <!-- Right Border -->
+    </div>
 
+    <div v-if="!loading && activeData && activeData.milestones">
+      <!-- Iterate through milestone categories -->
+      <div
+        v-for="(milestonesInCategory, categoryName) in activeData.milestones"
+        :key="categoryName"
+        class="mb-6"
+      >
+        <h3 class="text-lg font-semibold mb-2 text-white">
+          {{ categoryName }}
+        </h3>
+
+        <table class="bg-dc-accent w-full rounded-xl overflow-hidden">
+          <thead>
+            <tr>
+              <th class="p-2 w-1/5 text-center">Milestone</th>
+              <th class="p-2 w-4/5 text-center">Details</th>
+            </tr>
+          </thead>
+          <tbody v-if="milestonesInCategory && milestonesInCategory.length > 0">
+            <!-- Iterate through milestones within the category -->
+            <tr
+              v-for="milestone in milestonesInCategory"
+              :key="milestone.name"
+              class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200"
+            >
+              <td class="p-2 w-1/5 font-bold text-center">
+                {{ milestone.name }}
+              </td>
+              <td class="p-2 w-4/5 text-white">
+                <!-- Nested table for milestone details (similar to activities) -->
+                <table class="w-full table-fixed">
+                  <thead>
+                    <tr>
+                      <th class="w-1/6 p-1 text-center">Progress</th>
+                      <th class="w-1/6 p-1 text-center">Point Step</th>
+                      <th class="w-1/6 p-1 text-center">T1</th>
+                      <th class="w-1/6 p-1 text-center">T2</th>
+                      <th class="w-1/6 p-1 text-center">T3</th>
+                      <th class="w-1/6 p-1 text-center">T4</th>
+                      <th class="w-1/6 p-1 text-center">Multiplier</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center p-1">
+                        {{ milestone.current_value }} {{ milestone.unit }}
+                      </td>
+                      <td class="text-center p-1">
+                        {{ milestone.point_step }}
+                      </td>
+                      <!-- Apply getTierColorActivity to each tier cell -->
+                      <td
+                        :class="[
+                          'text-center',
+                          'p-1',
+                          getTierColorMilestone(milestone, milestone.tier1),
+                        ]"
+                      >
+                        {{ milestone.tier1 }}
+                      </td>
+                      <td
+                        :class="[
+                          'text-center',
+                          'p-1',
+                          getTierColorMilestone(milestone, milestone.tier2),
+                        ]"
+                      >
+                        {{ milestone.tier2 }}
+                      </td>
+                      <td
+                        :class="[
+                          'text-center',
+                          'p-1',
+                          getTierColorMilestone(milestone, milestone.tier3),
+                        ]"
+                      >
+                        {{ milestone.tier3 }}
+                      </td>
+                      <td
+                        :class="[
+                          'text-center',
+                          'p-1',
+                          getTierColorMilestone(milestone, milestone.tier4),
+                        ]"
+                      >
+                        {{ milestone.tier4 }}
+                      </td>
+                      <td class="text-center p-1">
+                        {{ milestone.multiplier }}x
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td colspan="2" class="py-4 text-center">
+                No milestones found in this category.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <!-- Tooltip Display -->
     <div
