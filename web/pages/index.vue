@@ -387,7 +387,7 @@ const hideTooltip = () => {
             <tbody>
               <tr>
                  <td class="text-center p-1">
-                  {{ activity.current_value }}{{ activity.unit }}
+                  {{ activity.current_value }} {{ activity.unit }}
                  </td>
                  <td class="text-center p-1">
                    {{ activity.point_step }}
@@ -405,7 +405,7 @@ const hideTooltip = () => {
                    {{ activity.tier4 }}
                  </td>
                  <td class="text-center p-1">
-                   {{ activity.multiplier }}
+                   {{ activity.multiplier }}x
                  </td>
               </tr>
             </tbody>
