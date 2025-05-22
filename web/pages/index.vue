@@ -549,9 +549,9 @@ const hideTooltip = () => {
       <div
         v-for="(milestonesInCategory, categoryName) in activeData.milestones"
         :key="categoryName"
-        class="mb-6"
+        class="mb-6 w-full"
       >
-        <span class="text-lg mb-2 w-full text-center text-white">
+        <span colspan="2" class="text-lg mb-2 w-full text-center text-white">
           {{ getDisplayCategoryName(categoryName) }}
         </span>
 
