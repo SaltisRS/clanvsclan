@@ -56,32 +56,6 @@ async def autocomplete_source(interaction: discord.Interaction, current: str):
         if current.lower() in source.lower()
     ][:25]
 
-""" async def autocomplete_multiplier(interaction: discord.Interaction, current: str):
-    tier = getattr(interaction.namespace, "tier", None)
-    source = getattr(interaction.namespace, "source", None)
-    if not tier or not source:
-        return []
-
-    cache_key = f"multipliers_{tier}_{source}"
-    if cache_key not in autocomplete_cache:
-        template = await coll.find_one({})
-        if not template or tier not in template.get("tiers", {}):
-            return []
-
-        sources = template["tiers"][tier].get("sources", [])
-        source_data = next((s for s in sources if s["name"] == source), None)
-        if not source_data:
-            return []
-
-        multipliers = [m["name"] for m in source_data.get("multipliers", [])]
-        autocomplete_cache[cache_key] = multipliers
-
-    return [
-        discord.app_commands.Choice(name=multiplier, value=multiplier)
-        for multiplier in autocomplete_cache[cache_key]
-        if current.lower() in multiplier.lower()
-    ][:25]
- """
 
 async def autocomplete_item(interaction: discord.Interaction, current: str):
     tier = getattr(interaction.namespace, "tier", None)
@@ -387,7 +361,6 @@ async def molebor(interaction: discord.Interaction):
 @app_commands.describe(unit="Nuggets, XP, KC, Peices of Eight etc..")
 async def new_progressive(interaction: discord.Interaction,
                           name: str,
-                          description: str,
                           point_step: int,
                           t1: int,
                           t2: int,
@@ -407,7 +380,6 @@ async def new_progressive(interaction: discord.Interaction,
     
     _entry = {
         "name" : name,
-        "description": description,
         "current_value": 0,
         "point_step": point_step,
         "tier1": t1,

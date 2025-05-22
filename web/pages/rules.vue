@@ -43,5 +43,6 @@ const rules = [
   "Items bought with points do not actually need to be purchased, just show starting and ending points that they have been gained.",
   "Only individuals who received the drop can submit the drop (cannot submit for a teammate)",
   "We want a clean competition, friendly banter is encouraged however don’t be a dick, if you go overboard and cross any lines you can be subject for removal from the event.",
+  "You must be in your respective clans the whole event, with Clanchat ON."
 ];
 </script>

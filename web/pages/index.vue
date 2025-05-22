@@ -27,7 +27,6 @@ interface Tier {
 
 interface Activity {
   name: string;
-  description: string;
   current: number;
   point_step: number;
   tier1: number;
@@ -357,13 +356,53 @@ const hideTooltip = () => {
         <td class="p2 w-1/5 font-bold">
           {{ activity.name }}
         </td>
-        <td :class="['p2', 'w-4/5', getProgressColorClass(activity)]">
-          <div>{{ activity.description }}</div>
-          <div>Progress: {{ activity.current }}</div>
-          <div>Point/Tier: {{ activity.point_step }}</div>
-          <div>Tiers: {{ activity.tier1 }} | {{ activity.tier2 }} | {{ activity.tier3 }} | {{ activity.tier4 }}</div>
-          <div>Multiplier: {{ activity.multi }}</div>
-          <div>Unit: {{ activity.unit }}</div>
+        <thead>
+          <tr>
+            <th>
+              <th>
+                Progress
+              </th>
+              <th>
+                Points/Tier
+              </th>
+              <th>
+                T1
+              </th>
+              <th>
+                T2
+              </th>
+              <th>
+                T3
+              </th>
+              <th>
+                T4
+              </th>
+              <th>
+                Tier 4 Multiplier
+              </th>
+            </th>
+          </tr>
+        </thead>
+        <td>
+          {{ activity.current }} {{ activity.unit }}
+        </td>
+        <td>
+          {{ activity.point_step }}
+        </td>
+        <td>
+          {{ activity.tier1 }}
+        </td>
+        <td>
+          {{ activity.tier2 }}
+        </td>
+        <td>
+          {{ activity.tier3 }}
+        </td>
+        <td>
+          {{ activity.tier4 }}
+        </td>
+        <td>
+          {{ activity.multi }}
         </td>
       </tr>
     </tbody>
