@@ -356,15 +356,7 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-    <div>
-    <!-- Toggle Button -->
-    <button
-      @click="toggleCollapseActivities"
-      class="mb-4 px-4 py-2 bg-dc-accent text-white rounded hover:bg-blurple transition-colors duration-200"
-    >
-      {{ isCollapsedActivities ? 'Expand Table' : 'Collapse Table' }}
-    </button>
-
+  <div>
     <table v-if="!loading && activeData"
         class="bg-dc-accent w-full rounded-xl overflow-hidden">
         <thead>
@@ -372,8 +364,14 @@ const hideTooltip = () => {
             <th class="p-2 w-1/5 text-center">
               Activity
             </th>
-            <th class="p-2 w-4/5 text-center">
+            <th class="p-2 w-4/5 text-center relative">
               Details
+              <button
+                @click="toggleCollapseActivities"
+                class="absolute top-1/2 right-2 transform -translate-y-1/2 px-2 py-1 text-xs bg-blurple text-white hover:bg-dc-accent transition-colors duration-200 z-10"
+              >
+                {{ isCollapsedActivities ? 'Show' : 'Hide' }} <!-- Shorter text for the button -->
+              </button>
             </th>
           </tr>
         </thead>
