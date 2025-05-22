@@ -10,8 +10,6 @@ from typing import Optional, Literal, Dict, List, Any, Union, Tuple
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 
-from backend import app
-
 
 from .groups.template import TemplateGroup
 
