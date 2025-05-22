@@ -62,6 +62,12 @@ const loading = ref<boolean>(false);
 const points = ref<number>(0);
 const tierPoints = ref<Record<string, number>>({});
 const tooltip = ref<{ text: string; x: number; y: number } | null>(null);
+const isCollapsedActivities = ref<boolean>(false);
+
+// Method to toggle the collapsed state
+const toggleCollapseActivities = () => {
+  isCollapsedActivities.value = !isCollapsedActivities.value;
+};
 
 onMounted(() => fetchTable(team_uris[0]));
 
@@ -106,7 +112,7 @@ const fetchTable = async (table: string) => {
 const getTierColorClass = (activity: Activity, tierNumber: number) => {
   const currentValue = activity.current_value;
   const tierValue = activity[`tier${tierNumber}` as keyof Activity] as number;
-  const previousTierValue = (tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0) as number; // Previous tier threshold (0 for T1)
+  const previousTierValue = (tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0) as number;
 
 
   if (currentValue >= tierValue) {
@@ -350,89 +356,108 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
+    <div>
+    <!-- Toggle Button -->
+    <button
+      @click="toggleCollapseActivities"
+      class="mb-4 px-4 py-2 bg-dc-accent text-white rounded hover:bg-blurple transition-colors duration-200"
+    >
+      {{ isCollapsedActivities ? 'Expand Table' : 'Collapse Table' }}
+    </button>
+
     <table v-if="!loading && activeData"
-    class="bg-dc-accent w-full rounded-xl overflow-hidden">
-    <thead>
-      <tr>
-        <th class="p-2 w-1/5">
-          Activity
-        </th>
-        <th class="p-2 w-4/5">
-          Details
-        </th>
-      </tr>
-    </thead>
-    <tbody v-if="activeData.activities && activeData.activities.length > 0">
-      <tr v-for="activity in activeData.activities" :key="activity.name"
-        class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200">
-        <td class="p-2 w-1/5 font-bold">
-          {{ activity.name }}
-        </td>
-        <td class="p2 w-4/5">
-          <!-- Nested table for activity details -->
-          <table class="w-full table-fixed">
-            <thead>
-              <tr>
-                <th class="w-1/6 p-1">
-                  Progress
-                </th>
-                <th class="w-1/6 p-1">
-                  Points / Tier
-                </th>
-                 <th class="w-1/6 p-1">
-                  T1
-                </th>
-                <th class="w-1/6 p-1">
-                  T2
-                </th>
-                <th class="w-1/6 p-1">
-                  T3
-                </th>
-                <th class="w-1/6 p-1">
-                  T4
-                </th>
-                 <th class="w-1/6 p-1">
-                  T4 Multiplier
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                 <td class="text-center p-1">
-                  {{ activity.current_value }} {{ activity.unit }}
-                 </td>
-                 <td class="text-center p-1">
-                   {{ activity.point_step }}
-                 </td>
-                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 1)]">
-                   {{ activity.tier1 }}
-                 </td>
-                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 2)]">
-                   {{ activity.tier2 }}
-                 </td>
-                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 3)]">
-                   {{ activity.tier3 }}
-                 </td>
-                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 4)]">
-                   {{ activity.tier4 }}
-                 </td>
-                 <td class="text-center p-1">
-                   {{ activity.multiplier }}x
-                 </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-    <tbody v-else>
-        <tr>
-            <td colspan="2" class="py-4 text-center">
-                No activities found.
+        class="bg-dc-accent w-full rounded-xl overflow-hidden">
+        <thead>
+          <tr>
+            <th class="p-2 w-1/5 text-center">
+              Activity
+            </th>
+            <th class="p-2 w-4/5 text-center">
+              Details
+            </th>
+          </tr>
+        </thead>
+
+        <!-- Conditionally render the tbody based on isCollapsedActivities -->
+        <tbody v-if="!isCollapsedActivities && activeData.activities && activeData.activities.length > 0">
+          <tr v-for="activity in activeData.activities" :key="activity.name"
+            class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200">
+            <td class="p-2 w-1/5 font-bold">
+              {{ activity.name }}
             </td>
-        </tr>
-    </tbody>
-  </table>
+            <td class="p-2 w-4/5 text-white">
+              <table class="w-full table-fixed">
+                <thead>
+                  <tr>
+                    <th class="w-1/6 p-1 text-center">
+                      Progress
+                    </th>
+                    <th class="w-1/6 p-1 text-center">
+                      Point Step
+                    </th>
+                     <th class="w-1/6 p-1 text-center">
+                      T1
+                    </th>
+                    <th class="w-1/6 p-1 text-center">
+                      T2
+                    </th>
+                    <th class="w-1/6 p-1 text-center">
+                      T3
+                    </th>
+                    <th class="w-1/6 p-1 text-center">
+                      T4
+                    </th>
+                     <th class="w-1/6 p-1 text-center">
+                      Multiplier
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                     <td class="text-center p-1">
+                      {{ activity.current_value }} {{ activity.unit }}
+                     </td>
+                     <td class="text-center p-1">
+                       {{ activity.point_step }}
+                     </td>
+                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier1)]">
+                       {{ activity.tier1 }}
+                     </td>
+                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier2)]">
+                       {{ activity.tier2 }}
+                     </td>
+                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier3)]">
+                       {{ activity.tier3 }}
+                     </td>
+                     <td :class="['text-center', 'p-1', getTierColorClass(activity, activity.tier4)]">
+                       {{ activity.tier4 }}
+                     </td>
+                     <td class="text-center p-1">
+                       {{ activity.multiplier }}x
+                     </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else-if="isCollapsedActivities && activeData.activities && activeData.activities.length > 0">
+             <tr>
+                <td colspan="2" class="py-4 text-center">
+                   Activities table is collapsed. Click "Expand Activities Table" to view.
+                </td>
+             </tr>
+        </tbody>
+
+        <tbody v-else>
+            <tr>
+                <td colspan="2" class="py-4 text-center">
+                    No activities found.
+                </td>
+            </tr>
+        </tbody>
+      </table>
+  </div>
 
 
 
