@@ -34,7 +34,6 @@ interface Activity {
   tier3: number;
   tier4: number;
   multiplier: number;
-  finished: boolean;
   unit: string;
 }
 
@@ -104,13 +103,26 @@ const fetchTable = async (table: string) => {
   }
 };
 
-const getProgressColorClass = (activity: { current: number; tier4: number; tier1: number; }) => {
-  if (activity.current >= activity.tier4) {
-    return 'text-green-500'; // Green for all tiers completed
-  } else if (activity.current >= activity.tier1) {
-    return 'text-yellow-500'; // Yellow for started (at least tier 1)
+const getTierColorClass = (activity: Activity, tierNumber: number) => {
+  const currentValue = activity.current_value;
+  const tierValue = activity[`tier${tierNumber}` as keyof Activity] as number;
+  const previousTierValue = (tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0) as number; // Previous tier threshold (0 for T1)
+
+
+  if (currentValue >= tierValue) {
+    return 'text-green-500'; // Green if current value is at or above this tier's threshold
+  } else if (currentValue >= previousTierValue && currentValue < tierValue) {
+     // Yellow if current value is less than this tier's threshold BUT at or above the previous tier's threshold
+     // For T1, this is currentValue > 0 and < tier1
+     if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
+          return 'text-yellow-500';
+     } else if (tierNumber > 1 && currentValue >= previousTierValue && currentValue < tierValue) {
+          return 'text-yellow-500';
+     } else {
+          return 'text-white'; // Should ideally not hit this with correct logic
+     }
   } else {
-    return 'text-red-500'; // Red for not started
+    return 'text-white'; // White if current value is below the previous tier's threshold
   }
 };
 
@@ -392,16 +404,16 @@ const hideTooltip = () => {
                  <td class="text-center p-1">
                    {{ activity.point_step }}
                  </td>
-                 <td class="text-center p-1">
+                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 1)]">
                    {{ activity.tier1 }}
                  </td>
-                 <td class="text-center p-1">
+                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 2)]">
                    {{ activity.tier2 }}
                  </td>
-                 <td class="text-center p-1">
+                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 3)]">
                    {{ activity.tier3 }}
                  </td>
-                 <td class="text-center p-1">
+                 <td :class="['text-center', 'p-1', getTierColorClass(activity, 4)]">
                    {{ activity.tier4 }}
                  </td>
                  <td class="text-center p-1">
