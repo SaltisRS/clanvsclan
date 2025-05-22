@@ -23,6 +23,9 @@ gallery = db["Gallery"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
 
 
+async def split_to_list(string: str):
+    return string.split(",")
+
 async def autocomplete_tier(interaction: discord.Interaction, current: str):
     if "tiers" not in autocomplete_cache:
         template = await coll.find_one({})
@@ -197,14 +200,6 @@ async def add_source(interaction: discord.Interaction, tier: str, source: str):
     else:
         await interaction.response.send_message("Tier not found.")
 
-@group.command()
-@app_commands.autocomplete()
-async def add_multiplier(interaction: discord.Interaction,):
-    await interaction.response.send_message("Removed Temporarily")
-    
-    
-    multi = {}
-
     
 @group.command()
 @app_commands.autocomplete(tier=autocomplete_tier, source=autocomplete_source)
@@ -356,6 +351,54 @@ async def move_source(
 @group.command()
 async def molebor(interaction: discord.Interaction):
     await interaction.response.send_message("https://tenor.com/view/gnomed-gnome-glow-effect-shaking-gif-17863812")
+
+@group.command()
+async def new_multiplier(interaction: discord.Interaction, name: str, affects: str, factor: float, requirement: str, description: Optional[str]):
+    _entry = {
+        "name": name,
+        "description": description,
+        "affects": await split_to_list(affects),
+        "factor": factor,
+        "requirement": await split_to_list(requirement),
+        "unlocked": False
+    }
+
+    template = await coll.find_one({})
+    if not template:
+        await interaction.response.send_message("Template not found")
+        return
+
+    result = await coll.update_one(
+            {"_id": template["_id"]},
+            {"$push": {f"multipliers": _entry}})
+    
+    if result.modified_count > 0:
+        message = f"Added new multiplier: `{name}`\nDescription: `{description}\nAffecting Sources: ```{[source + '\n' for source in affects.split(",")]}```\n Requiring: ```{[item + '\n' for item in requirement.split(",")]}```\nFactor: {factor}x"
+        await interaction.response.send_message(message)
+    
+@group.command()
+async def view_multis(interaction: discord.Interaction):
+    template = await coll.find_one({})
+    message = ""
+    if not template:
+        await interaction.response.send_message("Template not found.")
+        return
+        
+    multipliers = template["multipliers"]
+    if len(multipliers) <= 0:
+        await interaction.response.send_message("No multipliers Found.")
+        return
+    
+    for multi in multipliers:
+        name = multi["name"]
+        description = multi["description"]
+        factor = multi["factor"]
+        sources = multi["affects"]
+        req = multi["requirement"]
+        message += f"```name: {name}\ndescription: {description}\nfactor: {factor}\naffects: {sources}\nitems: {req}```"
+    
+    await interaction.response.send_message(message)
+        
 
 @group.command()
 @app_commands.describe(unit="Nuggets, XP, KC, Peices of Eight etc..")
