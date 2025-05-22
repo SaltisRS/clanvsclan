@@ -27,14 +27,14 @@ interface Tier {
 
 interface Activity {
   name: string;
-  current: number;
+  current_value: number;
   point_step: number;
   tier1: number;
   tier2: number;
   tier3: number;
   tier4: number;
-  multi: number;
-  state: boolean;
+  multiplier: number;
+  finished: boolean;
   unit: string;
 }
 
@@ -356,7 +356,7 @@ const hideTooltip = () => {
         <td class="p-2 w-1/5 font-bold">
           {{ activity.name }}
         </td>
-        <td :class="['p-2', 'w-4/5', getProgressColorClass(activity)]">
+        <td class="p2 w-4/5">
           <!-- Nested table for activity details -->
           <table class="w-full table-fixed">
             <thead>
@@ -365,7 +365,7 @@ const hideTooltip = () => {
                   Progress
                 </th>
                 <th class="w-1/6 p-1">
-                  Point Step
+                  Points / Tier
                 </th>
                  <th class="w-1/6 p-1">
                   T1
@@ -380,14 +380,14 @@ const hideTooltip = () => {
                   T4
                 </th>
                  <th class="w-1/6 p-1">
-                  Multiplier
+                  T4 Multiplier
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                  <td class="text-center p-1">
-                  {{ activity.current }}{{ activity.unit }}
+                  {{ activity.current_value }}{{ activity.unit }}
                  </td>
                  <td class="text-center p-1">
                    {{ activity.point_step }}
@@ -405,7 +405,7 @@ const hideTooltip = () => {
                    {{ activity.tier4 }}
                  </td>
                  <td class="text-center p-1">
-                   {{ activity.multi }}
+                   {{ activity.multiplier }}
                  </td>
               </tr>
             </tbody>
