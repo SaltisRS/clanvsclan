@@ -551,7 +551,7 @@ const hideTooltip = () => {
         :key="categoryName"
         class="mb-6"
       >
-        <span class="text-lg mb-2 text-white">
+        <span class="text-lg mb-2 w-full text-center text-white">
           {{ getDisplayCategoryName(categoryName) }}
         </span>
 
