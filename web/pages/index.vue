@@ -342,67 +342,74 @@ const hideTooltip = () => {
     class="bg-dc-accent w-full rounded-xl overflow-hidden">
     <thead>
       <tr>
-        <th class="p2 w-1/5">
+        <th class="p-2 w-1/5">
           Activity
         </th>
-        <th class="p2 w-4/5">
+        <th class="p-2 w-4/5">
           Details
         </th>
       </tr>
     </thead>
     <tbody v-if="activeData.activities && activeData.activities.length > 0">
       <tr v-for="activity in activeData.activities" :key="activity.name"
-        class="border-t border-dc-background">
-        <td class="p2 w-1/5 font-bold">
+        class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200">
+        <td class="p-2 w-1/5 font-bold">
           {{ activity.name }}
         </td>
-        <thead>
-          <tr>
-            <th>
-              <th>
-                Progress
-              </th>
-              <th>
-                Points/Tier
-              </th>
-              <th>
-                T1
-              </th>
-              <th>
-                T2
-              </th>
-              <th>
-                T3
-              </th>
-              <th>
-                T4
-              </th>
-              <th>
-                Tier 4 Multiplier
-              </th>
-            </th>
-          </tr>
-        </thead>
-        <td>
-          {{ activity.current }} {{ activity.unit }}
-        </td>
-        <td>
-          {{ activity.point_step }}
-        </td>
-        <td>
-          {{ activity.tier1 }}
-        </td>
-        <td>
-          {{ activity.tier2 }}
-        </td>
-        <td>
-          {{ activity.tier3 }}
-        </td>
-        <td>
-          {{ activity.tier4 }}
-        </td>
-        <td>
-          {{ activity.multi }}
+        <td :class="['p-2', 'w-4/5', getProgressColorClass(activity)]">
+          <!-- Nested table for activity details -->
+          <table class="w-full table-fixed">
+            <thead>
+              <tr>
+                <th class="w-1/6 p-1">
+                  Progress
+                </th>
+                <th class="w-1/6 p-1">
+                  Point Step
+                </th>
+                 <th class="w-1/6 p-1">
+                  T1
+                </th>
+                <th class="w-1/6 p-1">
+                  T2
+                </th>
+                <th class="w-1/6 p-1">
+                  T3
+                </th>
+                <th class="w-1/6 p-1">
+                  T4
+                </th>
+                 <th class="w-1/6 p-1">
+                  Multiplier
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                 <td class="text-center p-1">
+                  {{ activity.current }}{{ activity.unit }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.point_step }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.tier1 }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.tier2 }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.tier3 }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.tier4 }}
+                 </td>
+                 <td class="text-center p-1">
+                   {{ activity.multi }}
+                 </td>
+              </tr>
+            </tbody>
+          </table>
         </td>
       </tr>
     </tbody>
