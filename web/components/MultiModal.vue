@@ -2,8 +2,6 @@
 
     <div v-if="isVisible" class="fixed inset-16 bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
       <div class="bg-dc-background p-6 rounded-lg w-full max-w-full max-h-full overflow-y-auto">
-        <h3 class="absolute text-4xl top-8 left-8 font-semibold mb-6 text-white">Multipliers</h3>
-
         <div v-if="multipliers && multipliers.length > 0">
             <div>
                 <div class="font-bold text-xl">Frenzy Multiplier</div>
