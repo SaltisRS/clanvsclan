@@ -3,7 +3,7 @@
     <div v-if="isVisible" class="fixed inset-16 bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
       <div class="bg-dc-background p-6 rounded-lg w-full max-w-full max-h-full overflow-y-auto">
         <div v-if="multipliers && multipliers.length > 0">
-            <div>
+            <div class="pb-4 mb-4">
                 <div class="font-bold text-xl">Frenzy Multiplier</div>
                 <div class="text-sm text-gray-300 mb-2">Frenzy unlocks when a Source has all of its items unlocked.</div>
                 <div class="text-sm">This comes with a *1.25x Multiplier* to that source.</div>
