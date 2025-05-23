@@ -1,7 +1,8 @@
 <template>
-    <div v-if="isVisible" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div class="bg-dc-background p-6 rounded-lg w-full max-w-md max-h-[80vh] overflow-y-auto">
-        <h3 class="text-lg font-semibold mb-4 text-white">Multipliers</h3>
+
+    <div v-if="isVisible" class="fixed inset bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
+      <div class="bg-dc-background p-6 rounded-lg w-full max-w-xl max-h-[80vh] overflow-y-auto">
+        <h3 class="text-lg pt-4 font-semibold mb-6 text-white">Multipliers</h3>
   
         <div v-if="multipliers && multipliers.length > 0">
           <div v-for="(multiplier, index) in multipliers" :key="index" class="border-b border-dc-accent pb-4 mb-4 last:border-b-0 last:mb-0">
@@ -13,8 +14,8 @@
                  {{ multiplier.unlocked ? 'Yes' : 'No' }}
                </span>
             </div>
-             <div class="text-sm text-white mt-1">Affects: {{ multiplier.affects.join(', ') }}</div>
-             <div class="text-sm text-white mt-1">Requirements: {{ multiplier.requirement.join(', ') }}</div>
+             <div class="text-sm text-white mt-1">Affects: {{ multiplier.affects.join(',\n') }}</div>
+             <div class="text-sm text-white mt-1">Requirements: {{ multiplier.requirement.join(',\n') }}</div>
           </div>
         </div>
         <div v-else>
@@ -23,7 +24,7 @@
   
         <button
           @click="$emit('close')"
-          class="mt-6 px-4 py-2 bg-dc-accent text-white rounded hover:bg-blurple transition-colors duration-200 w-full"
+          class="absolute top-2 right-2 bg-dc-bg text-white rounded hover:bg-blurple transition-colors duration-200 w-20"
         >
           Close
         </button>
