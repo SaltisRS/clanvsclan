@@ -273,7 +273,7 @@ const hideTooltip = () => {
       </div>
     </div>
 
-    <MultipliersModal
+    <MultiModal
       :isVisible="showMultipliersModal"
       :multipliers="activeData?.multipliers || []"
       @close="showMultipliersModal = false"
