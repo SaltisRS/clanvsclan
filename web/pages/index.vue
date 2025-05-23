@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { Loading, Navbar, Refresh, PointBox, PointsTooltip } from "#components";
+import { Loading, Navbar, Refresh, PointBox, PointsTooltip, MultiModal } from "#components";
 
 interface Item {
   name: string;
@@ -48,16 +48,20 @@ interface Milestone {
   unit: string;
 }
 
-interface Milestones {
-  cluescroll: Milestone[];
-  experience: Milestone[];
-  killcount: Milestone[];
+export interface Multiplier {
+  name: string;
+  description: string;
+  affects: string[];
+  factor: number;
+  requirement: string[];
+  unlocked: boolean;
 }
 
 interface Template {
   associated_team: string;
   total_gained: number;
   tiers: Record<string, Tier>;
+  multipliers: Multiplier[];
   activities: Activity[];
   milestones: Record<string, Milestone[]>;
 }
@@ -66,8 +70,9 @@ const activeData = ref<Template>({
   associated_team: "",
   total_gained: 0,
   tiers: {},
+  multipliers: [],
   activities: [],
-  milestones: {},
+  milestones: {}
 });
 
 const team_uris = ["ironfoundry", "ironclad"];
@@ -78,8 +83,9 @@ const points = ref<number>(0);
 const tierPoints = ref<Record<string, number>>({});
 const tooltip = ref<{ text: string; x: number; y: number } | null>(null);
 const isCollapsedActivities = ref<boolean>(true);
+const showMultipliersModal = ref<boolean>(false);
 
-// Method to toggle the collapsed state
+
 const toggleCollapseActivities = () => {
   isCollapsedActivities.value = !isCollapsedActivities.value;
 };
@@ -242,6 +248,12 @@ const hideTooltip = () => {
 
     <div>
       <Navbar />
+      <button
+      @click="showMultipliersModal = true"
+      class="mb-4 px-4 py-2 bg-dc-accent text-white rounded-xl hover:bg-blurple transition-colors duration-200"
+    >
+      Show Multipliers
+    </button>
     </div>
 
     <div>
@@ -260,6 +272,12 @@ const hideTooltip = () => {
         <span class="ml-2 text-sm text-yellow-500">Partial Completion</span>
       </div>
     </div>
+
+    <MultipliersModal
+      :isVisible="showMultipliersModal"
+      :multipliers="activeData?.multipliers || []"
+      @close="showMultipliersModal = false"
+    />
 
     <div v-if="!loading" class="z-50">
       <PointsTooltip :position="'top'" :tiers="tierPoints">
