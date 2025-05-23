@@ -1,8 +1,8 @@
 <template>
 
-    <div v-if="isVisible" class="fixed inset-auto bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
+    <div v-if="isVisible" class="fixed inset-24 bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
       <div class="bg-dc-background p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
-        <h3 class="text-lg pt-4 font-semibold mb-6 text-white">Multipliers</h3>
+        <h3 class="text-xl pt-4 font-semibold mb-6 text-white">Multipliers</h3>
   
         <div v-if="multipliers && multipliers.length > 0">
           <div v-for="(multiplier, index) in multipliers" :key="index" class="border-b border-dc-accent pb-4 mb-4 last:border-b-0 last:mb-0">
