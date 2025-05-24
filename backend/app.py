@@ -21,8 +21,8 @@ COLLECTION_NAME_3 = "Templates"
 
 client = MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
-if_coll = db[COLLECTION_NAME_3]
-ic_coll = db[COLLECTION_NAME_3]
+if_coll = db[COLLECTION_NAME_1]
+ic_coll = db[COLLECTION_NAME_2]
 
 
 
