@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="bg-dc-accent p-4 rounded-lg shadow-md">
     <h2 class="text-lg font-bold text-white text-center border-b border-dc-bg">
       {{ title }}
@@ -56,4 +56,5 @@ const sortedData = computed(() =>
 );
 
 const displayedData = computed(() => sortedData.value.slice(0, props.maxRows));
-</script>
+</script> -->
+<h3>Coming Soon</h3>
