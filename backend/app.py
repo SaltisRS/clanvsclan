@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
-from typing import List, Dict, Literal
+from typing import List, Dict
 from loguru import logger
 import os
 from dotenv import load_dotenv
