@@ -1920,9 +1920,80 @@ class SourceView(discord.ui.View):
             logger.info(e)
         
 @group.command()
-async def helpsalt(interaction: discord.Interaction):
-    view = InitialView(options=await create_tier_options())
-    await interaction.response.send_message("```Select a tier to continue```", view=view)
+async def remove_old_item_fields(interaction: discord.Interaction):
+    """Removes the old 'obtained' and 'duplicate_obtained' fields from all items."""
+    logger.info("Attempting to remove old item fields ('obtained', 'duplicate_obtained').")
+
+    # Defer the interaction response as this might take time
+    await interaction.response.defer()
+
+    try:
+        # Fetch the entire template document
+        template = await coll.find_one({})
+
+        if not template:
+            logger.warning("Template document not found for removing old item fields.")
+            await interaction.followup.send("Template not found.")
+            return
+
+        tiers = template.get("tiers", {})
+        fields_removed_count = 0
+
+        if not tiers:
+            logger.info("No tiers found in the template.")
+            await interaction.followup.send("No tiers found to process items.")
+            return
+
+        # Iterate through tiers and sources to find and remove fields
+        for tier_name, tier_data in tiers.items():
+            sources = tier_data.get("sources", [])
+            for source in sources:
+                items = source.get("items", [])
+                for item in items:
+                    # Remove 'obtained' field if it exists
+                    if "obtained" in item:
+                        del item["obtained"]
+                        fields_removed_count += 1
+                        logger.debug(f"Removed 'obtained' from item '{item.get('name', 'Unnamed Item')}' in source '{source.get('name', 'Unnamed Source')}' ({tier_name}).")
+
+                    # Remove 'duplicate_obtained' field if it exists
+                    if "duplicate_obtained" in item:
+                        del item["duplicate_obtained"]
+                        fields_removed_count += 1
+                        logger.debug(f"Removed 'duplicate_obtained' from item '{item.get('name', 'Unnamed Item')}' in source '{source.get('name', 'Unnamed Source')}' ({tier_name}).")
+
+
+        if fields_removed_count > 0:
+            # If fields were removed, replace the entire document
+            replace_result = await coll.replace_one({"_id": template["_id"]}, template)
+
+            if replace_result.modified_count > 0:
+                logger.info(
+                    f"Successfully removed {fields_removed_count} old item fields. Document replaced."
+                )
+                await interaction.followup.send(
+                    f"Successfully removed {fields_removed_count} old item fields ('obtained', 'duplicate_obtained') from the database."
+                )
+            else:
+                logger.warning(
+                    "Replace operation did not modify the document after removing old item fields. Document might have changed or been deleted."
+                )
+                await interaction.followup.send(
+                    "Could not remove old item fields (replace failed)."
+                )
+        else:
+             logger.info("No old item fields ('obtained', 'duplicate_obtained') found to remove.")
+             await interaction.followup.send("No old item fields ('obtained', 'duplicate_obtained') found to remove.")
+
+
+    except Exception as e:
+        logger.error(
+            f"An error occurred while attempting to remove old item fields: {e}",
+            exc_info=True,
+        )
+        await interaction.followup.send(
+            "An error occurred while trying to remove old item fields."
+        )
     
 
 def setup(client: discord.Client):

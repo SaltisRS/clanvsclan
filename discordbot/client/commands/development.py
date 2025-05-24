@@ -256,24 +256,6 @@ async def send_role_select(interaction: discord.Interaction):
     await interaction.response.send_message("sending...", ephemeral=True)
     await interaction.channel.send(embed=embed, view=RoleView())#type: ignore
     
-@group.command()
-async def remove_non_linked(interaction: discord.Interaction):
-    await interaction.response.defer()
-    if not interaction.guild:
-        return
-    members = interaction.guild.members
-    linked_role = interaction.guild.get_role(1369434992714842205)
-    to_remove = []
-    for _member in members:
-        if linked_role not in _member.roles:
-            to_remove.append(_member)
-            continue
-    
-    for user in to_remove:
-        await interaction.guild.kick(user, reason="Unlinked past signups being locked")
-        await asyncio.sleep(5)
-        
-    await interaction.followup.send(f"Kicked: {len(to_remove)} unlinked users.")
 
 async def setup(client: discord.Client):
     await populate_verify_set()
