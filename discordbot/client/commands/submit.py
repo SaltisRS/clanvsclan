@@ -110,8 +110,11 @@ async def get_clan_from_roles(interaction: discord.Interaction):
     for role in interaction.user.roles:
         if role.id == If_roleid:
             return "ironfoundry"
-        else:
+        if role.id == IC_roleid:
             return "ironclad"
+
+    return None
+
 
     
 async def find_item_in_template_doc(template_doc: Dict[str, Any], tier_name: str, source_name: str, item_name: str) -> Optional[Dict[str, Any]]:
@@ -225,15 +228,17 @@ class SubmissionView(discord.ui.View):
         self.item_name = item_name
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        # ... (implementation from previous response) ...
-        user_perm_clan = await get_permission(interaction)
-        if user_perm_clan == self.clan_of_submission:
-            await interaction.response.send_message("Admins cannot approve/deny submissions for their own clan.", ephemeral=True)
+        if not interaction.guild:
             return False
-        if user_perm_clan is None:
-            await interaction.response.send_message("You do not have permission to perform this action.", ephemeral=True)
-            return False
-        return True
+        user_role_ids = [role.id for role in interaction.user.roles]
+        required_permission_roles = IFPERM + ICPERM
+
+        for required_role_id in required_permission_roles:
+            if required_role_id in user_role_ids:
+                return True
+
+        return False
+
 
     # --- Refactored Helper Methods for accept_button ---
     async def _get_submission_documents(self):
@@ -387,7 +392,6 @@ class SubmissionView(discord.ui.View):
     
     @discord.ui.button(label="Deny", style=discord.ButtonStyle.red, custom_id="deny_submission_button")
     async def deny_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        # ... (deny logic remains the same) ...
         logger.info(f"Submission denied by {interaction.user.id} for item '{self.item_name}' submitted by {self.submitter_id}")
         button.disabled = True
         if len(self.children) > 0 and isinstance(self.children[0], discord.ui.Button): self.children[0].disabled = True
@@ -417,15 +421,6 @@ async def build_submission_embed(
     embed.add_field(name="Points Value", value=f"**{item_data.get('points', 'N/A')}**", inline=True)
     embed.set_image(url=screenshot.url) # Screenshot as main image
     return embed
-
-async def get_permission(interaction: discord.Interaction) -> Optional[str]:
-    """Determines if the user has permission for a clan and returns the clan if so."""
-    user_roles_ids = [role.id for role in interaction.user.roles]
-    if any(role_id in user_roles_ids for role_id in IFPERM):
-        return "ironfoundry"
-    elif any(role_id in user_roles_ids for role_id in ICPERM):
-        return "ironclad"
-    return None
     
     
     
