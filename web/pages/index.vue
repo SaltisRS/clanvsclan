@@ -476,7 +476,7 @@ const hideTooltip = () => {
                     <th class="w-1/6 p-1 text-center">T2</th>
                     <th class="w-1/6 p-1 text-center">T3</th>
                     <th class="w-1/6 p-1 text-center">T4</th>
-                    <th class="w-1/6 p-1 text-center">Multiplier</th>
+                    <th class="w-1/6 p-1 text-center">T4 Multiplier</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -600,7 +600,7 @@ const hideTooltip = () => {
                       <th class="w-1/6 p-1 text-center">T2</th>
                       <th class="w-1/6 p-1 text-center">T3</th>
                       <th class="w-1/6 p-1 text-center">T4</th>
-                      <th class="w-1/6 p-1 text-center">Multiplier</th>
+                      <th class="w-1/6 p-1 text-center">T4 Multiplier</th>
                     </tr>
                   </thead>
                   <tbody>

@@ -19,7 +19,6 @@ group = TemplateGroup()
 mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
 db = mongo["Frenzy"]
 coll = db["Templates"]
-gallery = db["Gallery"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
 
 
@@ -1862,7 +1861,7 @@ async def submit_to_db(interaction: discord.Interaction, tier: str, source: str,
         await interaction.response.send_message(f"Item `{item}` added to `{source}` in `{tier}` tier.", ephemeral=True, delete_after=30)
     else:
         await interaction.response.send_message("```Tier or source not found.```", ephemeral=True, delete_after=30)
-    
+
     
 class DBmodal(discord.ui.Modal, title="Add new item"):
     item_name = discord.ui.TextInput(label="Item Name")

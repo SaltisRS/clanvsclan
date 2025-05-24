@@ -223,6 +223,9 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
                     logger.info(f"Renamed {member.display_name} ({member.id}) to '{link_name}'")
             await asyncio.sleep(3)
 
+            _db_linked = ""
+            for user in db_players_data["users"]:
+                _db_linked += f"\n<@{user.id}> : {user.rsn}"
         except discord.Forbidden:
             # The bot doesn't have permissions to change nicknames for this member
             logger.warning(f"Missing permissions to rename member: {member.display_name} ({member.id})")
@@ -237,6 +240,7 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
         f"Successfully processed members: {renamed_count}\n"
         f"Failed to rename members (likely due to permissions): {failed_to_rename}"
     )
+    await interaction.followup.send(_db_linked)
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
@@ -251,6 +255,7 @@ async def send_role_select(interaction: discord.Interaction):
     embed.description = "Click any button below to toggle between recieving notifications for the related content!"
     await interaction.response.send_message("sending...", ephemeral=True)
     await interaction.channel.send(embed=embed, view=RoleView())#type: ignore
+    
 
 async def setup(client: discord.Client):
     await populate_verify_set()
