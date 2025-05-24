@@ -85,7 +85,7 @@ async def autocomplete_item(interaction: discord.Interaction, current: str):
         if current.lower() in item.lower()
     ][:25]
 
-def get_template_collection(clan: str) -> AsyncMongoClient.collection:
+def get_template_collection(clan: str):
     """Returns the correct template collection based on clan string."""
     if clan == "ironfoundry":
         return if_coll
@@ -223,7 +223,7 @@ async def submit(
 
         # 2. Determine Target Template Collection
         template_collection = get_template_collection(player_clan)
-        if not template_collection:
+        if not template_collection: # type: ignore
             await interaction.followup.send("Could not determine your clan's template. Please contact an admin.", ephemeral=True)
             logger.error(f"Could not get template collection for clan '{player_clan}'.")
             return
