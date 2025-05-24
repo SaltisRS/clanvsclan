@@ -236,7 +236,7 @@ class SubmissionView(discord.ui.View):
         return True
 
     # --- Refactored Helper Methods for accept_button ---
-    async def _get_submission_documents(self) -> Optional[Tuple[Dict[str, Any], Dict[str, Any], AsyncMongoClient.collection]]:
+    async def _get_submission_documents(self):
         """Fetches and validates player and template documents."""
         player_document = await get_player_info(self.submitter_id)
         if not player_document:
