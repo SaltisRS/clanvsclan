@@ -57,4 +57,6 @@ const sortedData = computed(() =>
 
 const displayedData = computed(() => sortedData.value.slice(0, props.maxRows));
 </script> -->
-<h3>Coming Soon</h3>
+<template>
+  <h3>Coming Soon</h3>
+</template>
