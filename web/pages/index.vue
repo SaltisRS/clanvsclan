@@ -395,9 +395,7 @@ const hideTooltip = () => {
                     <!-- Display progress towards the current duplicate set -->
                     <!-- Only show if unique_required is met -->
                     <span v-if="item.obtained >= item.required">
-                      {{
-                        (item.obtained - item.required) %
-                        item.duplicate_required
+                      {{item.obtained - item.required
                       }}/{{ item.duplicate_required }}
                     </span>
                     <span v-else>

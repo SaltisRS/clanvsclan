@@ -308,15 +308,17 @@ class SubmissionView(discord.ui.View):
     async def _send_acceptance_feedback(self, interaction: discord.Interaction, button: discord.ui.Button, points_gained: float, player_total_points: float):
         """Sends feedback messages and disables buttons."""
         button.disabled = True
+        button.label = "Accepted"
         if len(self.children) > 1 and isinstance(self.children[1], discord.ui.Button): # Check if deny button exists
             self.children[1].disabled = True
+            self.children[1].label = "Accepted"
         await interaction.message.edit(view=self) # type: ignore
 
         await interaction.followup.send(
             f"Submission for '{self.item_name}' by <@{self.submitter_id}> accepted by {interaction.user.mention}.\n"
             f"Points Gained from this submission: {points_gained:.2f}\n"
             f"Submitter's New Total Points: {player_total_points:.2f}",
-            ephemeral=False
+            ephemeral=True
         )
         submitter_user = interaction.client.get_user(self.submitter_id)
         if submitter_user:
