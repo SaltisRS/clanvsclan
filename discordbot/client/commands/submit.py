@@ -221,7 +221,7 @@ async def submit(
 
         # 2. Determine Target Template Collection
         template_collection = get_template_collection(player_clan)
-        if not template_collection: # type: ignore
+        if template_collection is None: # type: ignore
             await interaction.followup.send("Could not determine your clan's template. Please contact an admin.", ephemeral=True)
             logger.error(f"Could not get template collection for clan '{player_clan}'.")
             return
