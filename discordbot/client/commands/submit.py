@@ -110,9 +110,8 @@ async def get_clan_from_roles(interaction: discord.Interaction):
     for role in interaction.user.roles:
         if role.id == If_roleid:
             return "ironfoundry"
-        elif role == IC_roleid:
+        else:
             return "ironclad"
-        continue
 
     
 async def find_item_in_template_doc(template_doc: Dict[str, Any], tier_name: str, source_name: str, item_name: str) -> Optional[Dict[str, Any]]:
