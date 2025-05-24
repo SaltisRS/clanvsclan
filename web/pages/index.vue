@@ -485,7 +485,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, activity.tier1),
                       ]"
                     >
-                      {{ activity.tier1 }}
+                      {{ activity.tier1 * activity.req_factor}}
                     </td>
                     <td
                       :class="[
@@ -494,7 +494,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, activity.tier2),
                       ]"
                     >
-                      {{ activity.tier2 }}
+                      {{ activity.tier2 * activity.req_factor}}
                     </td>
                     <td
                       :class="[
@@ -503,7 +503,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, activity.tier3),
                       ]"
                     >
-                      {{ activity.tier3 }}
+                      {{ activity.tier3 * activity.req_factor}}
                     </td>
                     <td
                       :class="[
@@ -512,7 +512,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, activity.tier4),
                       ]"
                     >
-                      {{ activity.tier4 }}
+                      {{ activity.tier4 * activity.req_factor}}
                     </td>
                     <td class="text-center p-1">{{ activity.multiplier }}x</td>
                   </tr>
@@ -612,7 +612,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier1),
                         ]"
                       >
-                        {{ milestone.tier1 }} {{ milestone.unit }}
+                        {{ milestone.tier1 * milestone.req_factor}} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -621,7 +621,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier2),
                         ]"
                       >
-                        {{ milestone.tier2 }} {{ milestone.unit }}
+                        {{ milestone.tier2 * milestone.req_factor }} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -630,7 +630,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier3),
                         ]"
                       >
-                        {{ milestone.tier3 }} {{ milestone.unit }}
+                        {{ milestone.tier3 * milestone.req_factor}} {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -639,7 +639,7 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, milestone.tier4),
                         ]"
                       >
-                        {{ milestone.tier4 }} {{ milestone.unit }}
+                        {{ milestone.tier4 * milestone.req_factor}} {{ milestone.unit }}
                       </td>
                       <td class="text-center p-1">
                         {{ milestone.multiplier }}x
