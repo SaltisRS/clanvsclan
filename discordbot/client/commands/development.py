@@ -176,7 +176,7 @@ class LinkView(discord.ui.View):
         await interaction.response.send_modal(LinkModal())
 
 @group.command()
-async def force_rename_all(interaction: discord.Interaction, strict: bool = False):
+async def force_rename_all(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True)
     guild = interaction.guild
     if guild is None:
@@ -240,7 +240,7 @@ async def force_rename_all(interaction: discord.Interaction, strict: bool = Fals
         f"Successfully processed members: {renamed_count}\n"
         f"Failed to rename members (likely due to permissions): {failed_to_rename}"
     )
-    await interaction.followup.send(_db_linked)
+
 
 @group.command()
 async def send_link_message(interaction: discord.Interaction):
@@ -256,6 +256,19 @@ async def send_role_select(interaction: discord.Interaction):
     await interaction.response.send_message("sending...", ephemeral=True)
     await interaction.channel.send(embed=embed, view=RoleView())#type: ignore
     
+@group.command()
+async def remove_non_linked(interaction: discord.Interaction):
+    if not interaction.guild:
+        return
+    members = interaction.guild.members
+    linked_role = interaction.guild.get_role(1369434992714842205)
+    to_remove = []
+    for _member in members:
+        if linked_role not in _member.roles:
+            to_remove.append(_member.nick)
+            continue
+    
+    await interaction.response.send_message(to_remove)
 
 async def setup(client: discord.Client):
     await populate_verify_set()
