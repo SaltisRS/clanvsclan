@@ -19,15 +19,7 @@ group = TemplateGroup()
 mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
 db = mongo["Frenzy"]
 coll = db["Templates"]
-autocomplete_cache = TTLCache(maxsize=512, ttl=30)
-
-
-async def split_to_list(string: str) -> list[str]:
-    sanitized: list[str] = []
-    raw_list = string.split(",")
-    for _str in raw_list:
-        sanitized.append(_str.strip())
-    return sanitized    
+autocomplete_cache = TTLCache(maxsize=512, ttl=30) 
     
 async def autocomplete_tier(interaction: discord.Interaction, current: str):
     if "tiers" not in autocomplete_cache:
@@ -92,7 +84,7 @@ async def autocomplete_item(interaction: discord.Interaction, current: str):
 @group.command()
 async def refresh_cache(interaction: discord.Interaction):
     global autocomplete_cache
-    autocomplete_cache.clear()  # Clear existing cache
+    autocomplete_cache.clear()
 
     template = await coll.find_one({})
     if not template:
