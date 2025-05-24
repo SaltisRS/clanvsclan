@@ -12,8 +12,6 @@ from cachetools import TTLCache
 
 IC_roleid = 1343921208948953128
 If_roleid = 1343921101687750716
-IRONCLAD = ""
-IRONFOUNDRY = ""
 ICPERM = [1369428787342737488, 1369428819907448832]
 IFPERM = [1369428706161852436, 1369428754773840082]
 load_dotenv()
@@ -109,9 +107,9 @@ async def calculate_points():
 
 async def get_clan_from_roles(interaction: discord.Interaction):
     for role in interaction.user.roles:
-        if role == IRONFOUNDRY:
+        if role.id == If_roleid:
             return "ironfoundry"
-        elif role == IRONCLAD:
+        elif role == IC_roleid:
             return "ironclad"
 
     
@@ -250,5 +248,3 @@ async def submit(
     
 def setup(client: discord.Client):
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
-    IRONFOUNDRY = client.selected_guild.get_role(If_roleid)
-    IRONCLAD = client.selected_guild.get_role(If_roleid)
