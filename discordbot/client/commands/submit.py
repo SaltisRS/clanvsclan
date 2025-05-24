@@ -10,7 +10,8 @@ from pymongo import AsyncMongoClient
 from cachetools import TTLCache
 
 
-
+IC_roleid = 1343921208948953128
+If_roleid = 1343921101687750716
 IRONCLAD = ""
 IRONFOUNDRY = ""
 ICPERM = [1369428787342737488, 1369428819907448832]
@@ -246,3 +247,8 @@ async def submit(
         logger.error(f"An unexpected error occurred during item submission: {e}", exc_info=True)
         await interaction.followup.send("An unexpected error occurred while processing your submission. Please try again later.", ephemeral=True)
     
+    
+def setup(client: discord.Client):
+    client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
+    IRONFOUNDRY = client.selected_guild.get_role(If_roleid)
+    IRONCLAD = client.selected_guild.get_role(If_roleid)

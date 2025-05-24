@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from .modules.invite_checks import InviteTracker
 from .commands.template import setup as TemplateTools
 from .commands.development import setup as DevSetup
+from .commands.submit import setup as SubmitSetup
 
 
 
@@ -41,6 +42,7 @@ class DiscordClient(discord.Client):
         
     async def load_commands(self):
         TemplateTools(self)
+        SubmitSetup(self)
         await DevSetup(self)
         commands = await self.tree.sync(guild=self.selected_guild)
         logger.info(f"Loading commands: {commands}")
