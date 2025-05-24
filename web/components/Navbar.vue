@@ -3,12 +3,11 @@
 const routes = [
     { path: "/leaderboard", name: "Leaderboard" },
     { path: "/rules", name: "Rules" },
-    {path: "/gallery", name: "Gallery"},
     {path: "/help", name: "Help"}
 ]
 
 const redirectToWiseOldMan = () => {
-  window.open("https://wiseoldman.net", "_blank");
+  window.open("https://wiseoldman.net/competitions/90513", "_blank");
 };
 
 </script>
