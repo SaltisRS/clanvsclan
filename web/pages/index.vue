@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { Loading, Navbar, Refresh, PointBox, PointsTooltip, MultiModal } from "#components";
+import {
+  Loading,
+  Navbar,
+  Refresh,
+  PointBox,
+  PointsTooltip,
+  MultiModal,
+} from "#components";
 
 interface Item {
   name: string;
   points: number;
   duplicate_points: number;
-  obtained: boolean;
-  duplicate_obtained: boolean;
+  required: number;
+  duplicate_required: number;
+  obtained: number;
   icon_url: string | null;
 }
 
@@ -34,6 +42,7 @@ interface Activity {
   tier4: number;
   multiplier: number;
   unit: string;
+  req_factor: number;
 }
 
 interface Milestone {
@@ -46,6 +55,7 @@ interface Milestone {
   tier4: number;
   multiplier: number;
   unit: string;
+  req_factor: number;
 }
 
 export interface Multiplier {
@@ -72,7 +82,7 @@ const activeData = ref<Template>({
   tiers: {},
   multipliers: [],
   activities: [],
-  milestones: {}
+  milestones: {},
 });
 
 const team_uris = ["ironfoundry", "ironclad"];
@@ -84,7 +94,6 @@ const tierPoints = ref<Record<string, number>>({});
 const tooltip = ref<{ text: string; x: number; y: number } | null>(null);
 const isCollapsedActivities = ref<boolean>(true);
 const showMultipliersModal = ref<boolean>(false);
-
 
 const toggleCollapseActivities = () => {
   isCollapsedActivities.value = !isCollapsedActivities.value;
@@ -159,11 +168,10 @@ const getTierColorActivity = (activity: Activity, tierNumber: number) => {
 };
 
 const categoryDisplayNameMap: Record<string, string> = {
-  "cluescroll": "Clue Scrolls",
-  "experience": "Experience",
-  "killcount": "Kill Count"
+  cluescroll: "Clue Scrolls",
+  experience: "Experience",
+  killcount: "Kill Count",
 };
-
 
 const getDisplayCategoryName = (categoryName: string): string => {
   return categoryDisplayNameMap[categoryName] || categoryName;
@@ -195,14 +203,6 @@ const getTierColorMilestone = (milestone: Milestone, tierNumber: number) => {
   } else {
     return "text-white"; // White if current value is below the previous tier's threshold
   }
-};
-// Text Highlighting
-const isSourceFullyObtained = (source: Source) => {
-  return source.items.every((item) => item.obtained && item.duplicate_obtained);
-};
-// Text Highlighting
-const isSourcePartiallyObtained = (source: Source) => {
-  return source.items.some((item) => item.obtained || item.duplicate_obtained);
 };
 
 // Table Logic
@@ -249,11 +249,11 @@ const hideTooltip = () => {
     <div>
       <Navbar />
       <button
-      @click="showMultipliersModal = true"
-      class="mb-4 px-4 py-2 bg-dc-accent text-white rounded-xl hover:bg-blurple transition-colors duration-200"
-    >
-      Show Multipliers
-    </button>
+        @click="showMultipliersModal = true"
+        class="mb-4 px-4 py-2 bg-dc-accent text-white rounded-xl hover:bg-blurple transition-colors duration-200"
+      >
+        Show Multipliers
+      </button>
     </div>
 
     <div>
@@ -352,11 +352,6 @@ const hideTooltip = () => {
         >
           <td
             class="px-4"
-            :class="{
-              'text-green-500': isSourceFullyObtained(source),
-              'text-yellow-500': isSourcePartiallyObtained(source),
-              'text-white': !isSourcePartiallyObtained(source),
-            }"
           >
             {{ source.name }}
           </td>
@@ -376,10 +371,11 @@ const hideTooltip = () => {
                   v-for="(item, key) in source.items"
                   :key="key"
                   :class="{
+                    'text-green-500': item.obtained >= item.required,
                     'text-yellow-500':
-                      item.obtained && !item.duplicate_obtained,
-                    'text-green-500': item.obtained && item.duplicate_obtained,
-                    'text-white': !item.obtained,
+                      item.obtained > 0 &&
+                      item.obtained < item.duplicate_required,
+                    'text-white': item.obtained === 0,
                   }"
                 >
                   <td class="p-1">{{ item.name }}</td>
@@ -390,28 +386,23 @@ const hideTooltip = () => {
                     {{ item.duplicate_points }}
                   </td>
                   <td class="text-center p-1">
-                    <Icon
-                      v-if="item.obtained"
-                      name="nrk:media-media-complete"
-                      class="text-green-500"
-                    />
-                    <Icon
-                      v-else="item.obtained"
-                      name="nrk:media-media-incomplete"
-                      class="text-red-500"
-                    />
+                    <!-- Display obtained_count / unique_required for unique status -->
+                    {{ Math.min(item.obtained, item.required) }}/{{
+                      item.required
+                    }}
                   </td>
                   <td class="text-center p-1">
-                    <Icon
-                      v-if="item.duplicate_obtained"
-                      name="nrk:media-media-complete"
-                      class="text-green-500"
-                    />
-                    <Icon
-                      v-else="item.duplicate_obtained"
-                      name="nrk:media-media-incomplete"
-                      class="text-red-500"
-                    />
+                    <!-- Display progress towards the current duplicate set -->
+                    <!-- Only show if unique_required is met -->
+                    <span v-if="item.obtained >= item.required">
+                      {{
+                        (item.obtained - item.required) %
+                        item.duplicate_required
+                      }}/{{ item.duplicate_required }}
+                    </span>
+                    <span v-else>
+                      0/{{ item.duplicate_required }}
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -562,7 +553,10 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-    <div v-if="!loading && activeData && activeData.milestones" class="items-center">
+    <div
+      v-if="!loading && activeData && activeData.milestones"
+      class="items-center"
+    >
       <!-- Iterate through milestone categories -->
       <div
         v-for="(milestonesInCategory, categoryName) in activeData.milestones"
