@@ -1,10 +1,10 @@
 import math
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Literal, Optional, Tuple
 import discord
 import os
-import copy
 
 
+from upyloadthing import AsyncUTApi, UTApiOptions
 from loguru import logger
 from dotenv import load_dotenv
 from discord import Embed, app_commands
@@ -12,11 +12,28 @@ from pymongo import AsyncMongoClient
 from cachetools import TTLCache
 
 
+
+
+
+
+load_dotenv()
+UPLOADTHING_TOKEN=os.getenv("UPLOADTHING_TOKEN")
+
+if not UPLOADTHING_TOKEN:
+    logger.error("UPLOADTHING_TOKEN not found in environment variables!")
+
+try:
+    uploadthing_api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
+    logger.info("Uploadthing API client initialized.")
+except Exception as e:
+    logger.error(f"Failed to initialize Uploadthing API client: {e}", exc_info=True)
+    uploadthing_api = None
+
+
 IC_roleid = 1343921208948953128
-If_roleid = 1343921101687750716
+IF_roleid = 1343921101687750716
 ICPERM = [1369428787342737488, 1369428819907448832]
 IFPERM = [1369428706161852436, 1369428754773840082]
-load_dotenv()
 mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
 db = mongo["Frenzy"]
@@ -24,6 +41,22 @@ if_coll = db["ironfoundry"]
 ic_coll = db["ironclad"]
 template_coll = db["Templates"]
 player_coll = db["Players"]
+
+
+async def autocomplete_activity_metric(interaction: discord.Interaction, current: str):
+    """Autocomplete for activity metrics based on the selected activity."""
+    activity = getattr(interaction.namespace, "activity", None)
+    activity_data = ACTIVITY_METRICS.get(activity) # type: ignore
+    if not activity_data:
+        return []
+
+    available_metrics = activity_data.get("metrics", [])
+
+    return [
+        discord.app_commands.Choice(name=metric, value=metric)
+        for metric in available_metrics
+        if current.lower() in metric.lower()
+    ][:25]
 
 async def autocomplete_tier(interaction: discord.Interaction, current: str):
     if "tiers" not in autocomplete_cache:
@@ -109,7 +142,7 @@ async def calculate_points():
 
 async def get_clan_from_roles(interaction: discord.Interaction):
     for role in interaction.user.roles:
-        if role.id == If_roleid:
+        if role.id == IF_roleid:
             return "ironfoundry"
         if role.id == IC_roleid:
             return "ironclad"
@@ -602,7 +635,20 @@ async def submit(
     except Exception as e:
         logger.error(f"An unexpected error occurred during item submission: {e}", exc_info=True)
         await interaction.followup.send("An unexpected error occurred while processing your submission. Please try again later.", ephemeral=True)
-    
+
+
+@app_commands.command()
+async def get_submission_stats(interaction: discord.Interaction, clan: Literal["ironfoundry", "ironclad"]):
+    ...
+
+
+
+@app_commands.command()
+async def set(interaction: discord.Interaction, mode: Literal["Start", "End"]):
+    ...
+
+
+
     
 def setup(client: discord.Client):
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore

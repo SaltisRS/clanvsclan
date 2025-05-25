@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Optional
 import discord
 import os
 import io
@@ -9,6 +10,8 @@ from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 from httpx import AsyncClient
 from discord import Embed, Object
+
+from discordbot.client.commands.submit import IC_roleid, IF_roleid, get_player_info
 
 from .groups.dev import DevGroup
 
@@ -27,6 +30,9 @@ db = mongo["Frenzy"]
 players = db["Players"]
 verify_set = set()
 linked_role_id = 1369434992714842205
+
+
+
 
 notif_roles: dict[str, dict] = {
     "toa": {"role": Object(id=1370919773256421480), "icon": "<:toa_e:1371626690869985360>"},
@@ -255,6 +261,97 @@ async def send_role_select(interaction: discord.Interaction):
     embed.description = "Click any button below to toggle between recieving notifications for the related content!"
     await interaction.response.send_message("sending...", ephemeral=True)
     await interaction.channel.send(embed=embed, view=RoleView())#type: ignore
+    
+def get_clan_from_role_list(roles: List[discord.Role]) -> Optional[str]:
+    """Determines the clan string from a list of Discord roles."""
+    for role in roles:
+        if role.id == IF_roleid:
+            return "ironfoundry"
+        elif role.id == IC_roleid:
+            return "ironclad"
+    return None
+
+# --- New Command: Update Player Clans ---
+@group.command(name="update_player_clans", description="Updates the clan field for all members based on roles.")
+async def update_player_clans(interaction: discord.Interaction):
+    logger.info(f"Update player clans command initiated by {interaction.user.id} ({interaction.user.name}).")
+    await interaction.response.defer() # Defer as this can take time
+
+    guild = interaction.guild # Get the server the command was run in
+    if not guild:
+        await interaction.followup.send("This command must be run in a server.", ephemeral=True)
+        return
+
+    updated_count = 0
+    created_count = 0 # Count for players whose documents are created if they don't exist
+    errors_count = 0
+
+    # You might want to exclude bots from this process
+    members_to_process = [member for member in guild.members if not member.bot]
+
+    logger.info(f"Processing {len(members_to_process)} members in guild {guild.id} for clan updates.")
+
+    for member in members_to_process:
+        try:
+            # Determine the member's clan based on their roles
+            member_clan = get_clan_from_role_list(member.roles)
+
+            # Fetch the player document for this member
+            player_document = await get_player_info(member.id)
+
+            if player_document:
+                # Player document exists, update the clan field if it's different
+                current_clan_in_db = player_document.get("clan")
+                if current_clan_in_db != member_clan:
+                    player_document["clan"] = member_clan # Update the clan field
+                    update_result = await players.replace_one({"_id": player_document["_id"]}, player_document)
+                    if update_result.modified_count > 0:
+                        updated_count += 1
+                        logger.debug(f"Updated clan for {member.id} ({member.name}) from '{current_clan_in_db}' to '{member_clan}'.")
+                    else:
+                         # This might happen if the document was modified concurrently,
+                         # or if the update didn't result in a change (e.g., both None).
+                         # It's not necessarily an error, but worth noting.
+                         logger.debug(f"Player {member.id} clan in DB already matched determined clan or no change needed.")
+
+            else:
+                # Player document does not exist, create a new one
+                if member_clan: # Only create if they have a clan role
+                    new_player_document: Dict[str, Any] = {
+                        "discord_id": member.id,
+                        "rsn": "", # Initialize RSN (might need a separate command to set this)
+                        "submissions": [],
+                        "clan": member_clan, # Set the determined clan
+                        "screenshots": [], # Or remove if not needed at this level
+                        "total_gained": 0.0,
+                        "obtained_items": {} # Initialize obtained items structure
+                    }
+                    insert_result = await players.insert_one(new_player_document)
+                    if insert_result.inserted_id:
+                        created_count += 1
+                        logger.debug(f"Created player document for {member.id} ({member.name}) with clan '{member_clan}'.")
+                    else:
+                         logger.error(f"Failed to create player document for {member.id}.")
+                         errors_count += 1
+                else:
+                     # Member doesn't have a recognized clan role and no player document exists.
+                     # Do nothing in this case.
+                     logger.debug(f"Member {member.id} has no clan role and no existing player document. Skipping creation.")
+
+
+        except Exception as e:
+            logger.error(f"An error occurred while processing member {member.id} ({member.name}): {e}", exc_info=True)
+            errors_count += 1
+
+    # Send a summary message after processing all members
+    summary_message = f"Finished updating player clans.\n"
+    summary_message += f"Updated {updated_count} existing player documents.\n"
+    summary_message += f"Created {created_count} new player documents.\n"
+    if errors_count > 0:
+        summary_message += f"Encountered {errors_count} errors."
+
+    await interaction.followup.send(summary_message)
+    logger.info(f"Update player clans command finished. Updated: {updated_count}, Created: {created_count}, Errors: {errors_count}.")
     
 
 async def setup(client: discord.Client):
