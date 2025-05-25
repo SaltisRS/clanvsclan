@@ -643,46 +643,88 @@ async def submit(
         await interaction.followup.send("An unexpected error occurred while processing your submission. Please try again later.", ephemeral=True)
 
 
-@app_commands.command()
+@app_commands.command(name="precheck", description="Upload activity start or end screenshots.")
+@app_commands.describe(
+    action="Choose whether this is a start or end screenshot.",
+    content="The type of content for the screenshot.",
+    screenshot="The screenshot."
+)
 @app_commands.choices(content=IMAGE_UPLOAD_CHOICES)
-async def precheck(interaction: discord.Interaction, action:Literal["Start", "End"], content: str, screenshot: discord.Attachment):
-    await interaction.response.defer()
-    
-    url = await upload_screenshot(screenshot)
-    player_data = await get_player_info(interaction.user.id)
-    _content = None
-    
-    if not player_data:
-        return
-    
-    for activity in player_data.get("screenshots"):
-        if activity["name"] == content:
-            _content = activity
-            break
-    
-    if not _content and action == "Start":
-        _entry = {
-            "name": content,
-            "start": url,
-            "end": None
-        }
-    else:
-        await interaction.response.send_message("You already set your starting picture for this content type.")
-        return
-    
-    if _content and action == "End":
-        _content["end"] == url
-        _entry = _content
-    else:
-        await interaction.response.send_message("Must upload a starting picture before ending.")
-        
+async def precheck(
+    interaction: discord.Interaction,
+    action: Literal["Start", "End"],
+    content: str,
+    screenshot: discord.Attachment
+):
+    # Defer the interaction since file upload can take time
+    await interaction.response.defer(ephemeral=False) # Consider ephemeral=True if you don't want others to see the response
+
     try:
-        await player_coll.update_one({"_id": player_data["_id"]}, _entry)
-        await interaction.response.send_message(f"Uploaded screenshot for {activity}: {url}")
-        
+        url = await upload_screenshot(screenshot)
+        if url is None:
+            await interaction.followup.send("Failed to upload screenshot. Please try again.")
+            logger.error(f"Failed to get upload URL for screenshot from {interaction.user.id}")
+            return
+
+        player_data = await get_player_info(interaction.user.id)
+        if not player_data:
+            await interaction.followup.send("User data not found. Cannot save screenshot.")
+            logger.error(f"Player data not found for {interaction.user.id} during precheck.")
+            return
+
+        screenshots_list = player_data.get("screenshots", []) # Get the screenshots list, default to empty if not exists
+
+        # Find the entry for the specific content type
+        existing_entry = None
+        for entry in screenshots_list:
+            if entry.get("name") == content:
+                existing_entry = entry
+                break
+
+        update_successful = False
+        feedback_message = "Operation failed."
+
+        if action == "Start":
+            if existing_entry is not None and existing_entry.get("start") is not None:
+                # A start entry already exists for this content
+                feedback_message = f"You already have a starting screenshot for **{content}**."
+            else:
+                # Create or update the start entry
+                if existing_entry is None:
+                    new_entry = {
+                        "name": content,
+                        "start": url,
+                        "end": None
+                    }
+                    screenshots_list.append(new_entry)
+                else:
+                    existing_entry["start"] = url
+                    existing_entry["end"] = None # Reset end on new start
+                
+                # Update the entire screenshots list in the document
+                await player_coll.update_one({"_id": player_data["_id"]}, {"$set": {"screenshots": screenshots_list}})
+                feedback_message = f"✅ Set starting screenshot for **{content}**."
+                update_successful = True
+
+        elif action == "End":
+            if existing_entry is None or existing_entry.get("start") is None:
+                 # No start entry found for this content
+                 feedback_message = f"You must upload a **Start** screenshot for **{content}** before setting an End screenshot."
+            else:
+                 # Update the end entry of the existing start entry
+                 existing_entry["end"] = url
+                 
+                 # Update the entire screenshots list in the document
+                 await player_coll.update_one({"_id": player_data["_id"]}, {"$set": {"screenshots": screenshots_list}})
+                 feedback_message = f"✅ Set ending screenshot for **{content}**."
+                 update_successful = True
+
+        # Send the feedback message using followup.send
+        await interaction.followup.send(feedback_message)
+
     except Exception as e:
-        logger.info(e)
-        await interaction.response.send_message("Something went wrong...!")
+        logger.error(f"Error in precheck command for user {interaction.user.id}: {e}", exc_info=True)
+        await interaction.followup.send("An unexpected error occurred while processing your request. Please try again.")
 
 
 @app_commands.command(name="set_count", description="Set activity start or end count with a screenshot.")
