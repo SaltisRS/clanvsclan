@@ -11,8 +11,6 @@ from dotenv import load_dotenv
 from httpx import AsyncClient
 from discord import Embed, Object
 
-from discordbot.client.commands.submit import IC_roleid, IF_roleid, get_player_info
-
 from .groups.dev import DevGroup
 
 
@@ -30,9 +28,17 @@ db = mongo["Frenzy"]
 players = db["Players"]
 verify_set = set()
 linked_role_id = 1369434992714842205
+IC_roleid = 1343921208948953128
+IF_roleid = 1343921101687750716
 
-
-
+async def get_player_info(discord_id: int):
+    """Fetches a player's document from the Players collection."""
+    try:
+        player_document = await players.find_one({"discord_id": discord_id})
+        return player_document
+    except Exception as e:
+        logger.error(f"Error fetching player info for {discord_id}: {e}", exc_info=True)
+        return None
 
 notif_roles: dict[str, dict] = {
     "toa": {"role": Object(id=1370919773256421480), "icon": "<:toa_e:1371626690869985360>"},
