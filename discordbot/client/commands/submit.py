@@ -4,7 +4,7 @@ import discord
 import os
 
 
-from upyloadthing import AsyncUTApi, UTApiOptions
+
 from loguru import logger
 from dotenv import load_dotenv
 from discord import Embed, app_commands
@@ -17,17 +17,7 @@ from cachetools import TTLCache
 
 
 load_dotenv()
-UPLOADTHING_TOKEN=os.getenv("UPLOADTHING_TOKEN")
 
-if not UPLOADTHING_TOKEN:
-    logger.error("UPLOADTHING_TOKEN not found in environment variables!")
-
-try:
-    uploadthing_api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
-    logger.info("Uploadthing API client initialized.")
-except Exception as e:
-    logger.error(f"Failed to initialize Uploadthing API client: {e}", exc_info=True)
-    uploadthing_api = None
 
 
 IC_roleid = 1343921208948953128
