@@ -55,7 +55,7 @@ async def insert_activity_data(activity_data: Dict[str, Any], interaction: disco
                 in_progress_entry = entry
                 break
 
-    if action == "start":
+    if action == "Start":
         if in_progress_entry is not None:
              logger.warning(f"Insertion handler received 'start' for '{activity}' while one was in progress for {user_id}. This shouldn't happen if command logic is correct.")
              await interaction.followup.send(f"You already have an in-progress tracking entry for **{activity}**.", ephemeral=True)
@@ -79,7 +79,7 @@ async def insert_activity_data(activity_data: Dict[str, Any], interaction: disco
         feedback_message = f"✅ Started tracking **{activity}**. Start counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
 
 
-    elif action == "end":
+    elif action == "End":
          if in_progress_entry is None:
               logger.warning(f"Insertion handler received 'end' for '{activity}' without an active start entry for {user_id}. This shouldn't happen if command logic is correct.")
               await interaction.followup.send(f"Error: Could not find an active tracking entry for **{activity}**, start one before retrying.", ephemeral=True)
