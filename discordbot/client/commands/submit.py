@@ -647,12 +647,11 @@ async def get_submission_stats(interaction: discord.Interaction, clan: Literal["
 @app_commands.autocomplete(activity=autocomplete_activity)
 async def set_count(
     interaction: discord.Interaction,
-    action: str, # Use str as Literals are for type hinting, choices provide the value
+    action: str,
     activity: str,
     screenshot: discord.Attachment
 ):
     logger.info(f"Received /set_count {action} from {interaction.user.id} ({interaction.user.name}) for Activity: '{activity}' with screenshot.")
-    await interaction.response.defer(ephemeral=True) # Defer ephemerally immediately
 
     # Validate activity using the map keys
     if activity not in ACTIVITY_MODAL_MAP:
@@ -681,7 +680,7 @@ async def set_count(
         insert_activity_data_func=insert_activity_data
     )
 
-    await interaction.followup.send_modal(modal)
+    await interaction.response.send_modal(modal)
 
     
 def setup(client: discord.Client):
