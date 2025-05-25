@@ -20,7 +20,7 @@ players_coll = db["Players"]
 async def upload_screenshot(screenshot: discord.Attachment):
     url = None
     _screenshot = BytesIO()
-    await screenshot.save(_screenshot)
+    await screenshot.read()
     api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
     result = api.upload_files(_screenshot)
     if result:
