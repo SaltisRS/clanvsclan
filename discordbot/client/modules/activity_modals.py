@@ -117,7 +117,7 @@ class DefaultSingleMetricModal(discord.ui.Modal, title="Single Input Modal"):
     
     
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("Submitted.")
 
         metric_values: Dict[str, Any] = {}
         try:
@@ -160,7 +160,7 @@ class BarbarianAssaultModal(discord.ui.Modal, title="Barbarian Assault"):
     
     
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("Submitted.")
 
         metric_values: Dict[str, Any] = {}
         try:
@@ -204,7 +204,7 @@ class LastManStandingModal(discord.ui.Modal, title="Last Man Standing"):
     
     
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("Submitted.")
 
         metric_values: Dict[str, Any] = {}
         try:
@@ -247,7 +247,7 @@ class MageTrainingArenaModal(discord.ui.Modal, title="Mage Training Arena"):
     
     
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("Submitted.")
 
         metric_values: Dict[str, Any] = {}
         try:
@@ -291,7 +291,7 @@ class MasteringMixologyModal(discord.ui.Modal, title="Mastering Mixology"):
     
     
     async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("Submitted.")
 
         metric_values: Dict[str, Any] = {}
         try:
