@@ -6,7 +6,7 @@ from io import BytesIO
 from upyloadthing import AsyncUTApi, UTApiOptions
 from dotenv import load_dotenv
 from loguru import logger
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any
 from loguru import logger
 from pymongo import AsyncMongoClient
 
@@ -30,6 +30,81 @@ async def upload_screenshot(screenshot: discord.Attachment):
     return url
             
     
+async def insert_activity_data(activity_data: Dict[str, Any], interaction: discord.Interaction):
+    """Handles the insertion/update of activity tracking data in the player document."""
+    user_id = activity_data.get("user_id")
+    action = activity_data.get("action")
+    activity = activity_data.get("activity")
+    screenshot_url = activity_data.get("screenshot_url")
+    metric_values = activity_data.get("metric_values", {})
+
+    logger.info(f"Insertion handler called for {user_id}, Activity: '{activity}', Action: '{action}', Metrics: {metric_values}")
+
+    player_document = await get_player_info(user_id) # type: ignore
+    if not player_document:
+         logger.error(f"Player data not found for {user_id} during insertion handler.")
+         await interaction.followup.send("Error saving your data. Player data not found.", ephemeral=True)
+         return
+
+    if "tracking" not in player_document:
+        player_document["tracking"] = []
+
+    in_progress_entry = None
+    for _, entry in enumerate(player_document["tracking"]):
+         if entry.get("name") == activity:
+                in_progress_entry = entry
+                break
+
+    if action == "start":
+        if in_progress_entry is not None:
+             logger.warning(f"Insertion handler received 'start' for '{activity}' while one was in progress for {user_id}. This shouldn't happen if command logic is correct.")
+             await interaction.followup.send(f"You already have an in-progress tracking entry for **{activity}**.", ephemeral=True)
+             return
+
+        new_tracking_entry = {
+             "name": activity,
+             "start": {
+                 "screenshot": screenshot_url,
+                 "values": metric_values,
+                 "timestamp": discord.utils.utcnow()
+             },
+             "end": {
+                 "screenshot": "",
+                 "values": {},
+                 "timestamp": None
+             }
+        }
+        player_document["tracking"].append(new_tracking_entry)
+        logger.debug(f"Insertion handler created new tracking entry for activity '{activity}'.")
+        feedback_message = f"✅ Started tracking **{activity}**. Start counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
+
+
+    elif action == "end":
+         if in_progress_entry is None:
+              logger.warning(f"Insertion handler received 'end' for '{activity}' without an active start entry for {user_id}. This shouldn't happen if command logic is correct.")
+              await interaction.followup.send(f"Error: Could not find an active tracking entry for **{activity}**, start one before retrying.", ephemeral=True)
+              return
+
+        # --- Update the In-Progress Tracking Entry with End Data ---
+         in_progress_entry["end"] = {
+             "screenshot": screenshot_url,
+             "values": metric_values, # Use the values submitted in the end modal
+             "timestamp": discord.utils.utcnow() # Add timestamp for end
+         }
+
+         feedback_message = f"✅ Updated tracking for **{activity}**. Updated counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
+
+    try:
+        await players_coll.replace_one({"_id": player_document["_id"]}, player_document)
+
+        logger.info(f"Player {user_id} successfully saved data via insertion handler for '{activity}'.")
+        await interaction.followup.send(feedback_message, ephemeral=True)
+
+    except Exception as e:
+        logger.error(f"Failed to save player document via insertion handler for '{activity}' for {user_id}: {e}", exc_info=True)
+        await interaction.followup.send("Error saving your tracking data. Please try again.", ephemeral=True)
+
+
 
 class DefaultSingleMetricModal(discord.ui.Modal, title="Single Input Modal"):
     count = discord.ui.TextInput(label="Amount of Keys/Points/Kc etc..", placeholder="Only Numbers", required=True)
@@ -61,7 +136,7 @@ class DefaultSingleMetricModal(discord.ui.Modal, title="Single Input Modal"):
         }
 
         try:
-            await self.insert_activity_data_func(
+            await insert_activity_data(
                 activity_data=activity_data,
                 interaction=interaction
             )
@@ -106,7 +181,7 @@ class BarbarianAssaultModal(discord.ui.Modal, title="Barbarian Assault"):
         }
 
         try:
-            await self.insert_activity_data_func(
+            await insert_activity_data(
                 activity_data=activity_data,
                 interaction=interaction
             )
@@ -147,7 +222,7 @@ class LastManStandingModal(discord.ui.Modal, title="Last Man Standing"):
         }
 
         try:
-            await self.insert_activity_data_func(
+            await insert_activity_data(
                 activity_data=activity_data,
                 interaction=interaction
             )
@@ -191,7 +266,7 @@ class MageTrainingArenaModal(discord.ui.Modal, title="Mage Training Arena"):
         }
 
         try:
-            await self.insert_activity_data_func(
+            await insert_activity_data(
                 activity_data=activity_data,
                 interaction=interaction
             )
@@ -233,7 +308,7 @@ class MasteringMixologyModal(discord.ui.Modal, title="Mastering Mixology"):
         }
 
         try:
-            await self.insert_activity_data_func(
+            await insert_activity_data(
                 activity_data=activity_data,
                 interaction=interaction
             )
@@ -328,76 +403,4 @@ def get_activity_modal_class(activity: str):
 
     return modal_class
 
-async def insert_activity_data(activity_data: Dict[str, Any], interaction: discord.Interaction):
-    """Handles the insertion/update of activity tracking data in the player document."""
-    user_id = activity_data.get("user_id")
-    action = activity_data.get("action")
-    activity = activity_data.get("activity")
-    screenshot_url = activity_data.get("screenshot_url")
-    metric_values = activity_data.get("metric_values", {})
 
-    logger.info(f"Insertion handler called for {user_id}, Activity: '{activity}', Action: '{action}', Metrics: {metric_values}")
-
-    player_document = await get_player_info(user_id) # type: ignore
-    if not player_document:
-         logger.error(f"Player data not found for {user_id} during insertion handler.")
-         await interaction.followup.send("Error saving your data. Player data not found.", ephemeral=True)
-         return
-
-    if "tracking" not in player_document:
-        player_document["tracking"] = []
-
-    in_progress_entry = None
-    for _, entry in enumerate(player_document["tracking"]):
-         if entry.get("name") == activity:
-                in_progress_entry = entry
-                break
-
-    if action == "start":
-        if in_progress_entry is not None:
-             logger.warning(f"Insertion handler received 'start' for '{activity}' while one was in progress for {user_id}. This shouldn't happen if command logic is correct.")
-             await interaction.followup.send(f"You already have an in-progress tracking entry for **{activity}**.", ephemeral=True)
-             return
-
-        new_tracking_entry = {
-             "name": activity,
-             "start": {
-                 "screenshot": screenshot_url,
-                 "values": metric_values,
-                 "timestamp": discord.utils.utcnow()
-             },
-             "end": {
-                 "screenshot": "",
-                 "values": {},
-                 "timestamp": None
-             }
-        }
-        player_document["tracking"].append(new_tracking_entry)
-        logger.debug(f"Insertion handler created new tracking entry for activity '{activity}'.")
-        feedback_message = f"✅ Started tracking **{activity}**. Start counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
-
-
-    elif action == "end":
-         if in_progress_entry is None:
-              logger.warning(f"Insertion handler received 'end' for '{activity}' without an active start entry for {user_id}. This shouldn't happen if command logic is correct.")
-              await interaction.followup.send(f"Error: Could not find an active tracking entry for **{activity}**, start one before retrying.", ephemeral=True)
-              return
-
-        # --- Update the In-Progress Tracking Entry with End Data ---
-         in_progress_entry["end"] = {
-             "screenshot": screenshot_url,
-             "values": metric_values, # Use the values submitted in the end modal
-             "timestamp": discord.utils.utcnow() # Add timestamp for end
-         }
-
-         feedback_message = f"✅ Updated tracking for **{activity}**. Updated counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
-
-    try:
-        await players_coll.replace_one({"_id": player_document["_id"]}, player_document)
-
-        logger.info(f"Player {user_id} successfully saved data via insertion handler for '{activity}'.")
-        await interaction.followup.send(feedback_message, ephemeral=True)
-
-    except Exception as e:
-        logger.error(f"Failed to save player document via insertion handler for '{activity}' for {user_id}: {e}", exc_info=True)
-        await interaction.followup.send("Error saving your tracking data. Please try again.", ephemeral=True)

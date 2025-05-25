@@ -659,7 +659,7 @@ async def set_count(
          logger.warning(f"Player {interaction.user.id} submitted unknown activity: {activity}")
          return
 
-    # Get the correct modal class using the helper function
+    logger.info("Setting Modal Type")
     activity_modal_class = get_activity_modal_class(activity)
 
     if not activity_modal_class:
@@ -673,13 +673,13 @@ async def set_count(
         logger.error(f"Player data not found for {interaction.user.id} during initial check for '{activity}' {action}.")
         return
 
+    logger.info("Initializing Modal Class")
     modal = activity_modal_class(
         action=action,
         activity=activity,
-        screenshot_url=screenshot,
-        insert_activity_data_func=insert_activity_data
+        screenshot=screenshot
     )
-
+    logger.info("Sending Modal...")
     await interaction.response.send_modal(modal)
 
     
