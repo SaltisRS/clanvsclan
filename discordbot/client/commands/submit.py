@@ -679,9 +679,12 @@ async def set_count(
         activity=activity,
         screenshot=screenshot
     )
-    logger.info("Sending Modal...")
-    await interaction.response.send_modal(modal)
-
+    try:
+        logger.info("Sending Modal...")
+        await interaction.response.send_modal(modal)
+    except Exception as e:
+        logger.info(e)
+        await interaction.response.send_message(e)
     
 def setup(client: discord.Client):
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
