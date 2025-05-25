@@ -1,9 +1,11 @@
 # modules/activity_modals.py
+import pathlib
+import tempfile
 import discord
 import os
 
 from io import BytesIO
-from upyloadthing import AsyncUTApi, UTApiOptions
+from upyloadthing import AsyncUTApi, UTApiOptions, FileData
 from dotenv import load_dotenv
 from loguru import logger
 from typing import Dict, Any
@@ -19,14 +21,34 @@ players_coll = db["Players"]
 
 async def upload_screenshot(screenshot: discord.Attachment):
     url = None
-    _screenshot = BytesIO()
-    await screenshot.read()
-    api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
-    result = api.upload_files(_screenshot)
-    if result:
-        for res in await result:
-            url = res.url
-            break
+    temp_file_path: pathlib.Path | None = None # Type hint for clarity
+
+    try:
+        fd, temp_file_path_str = tempfile.mkstemp(suffix=f".{screenshot.filename.split('.')[-1] or ''}")
+        os.close(fd) # Close the file descriptor immediately
+
+        temp_file_path = pathlib.Path(temp_file_path_str)
+
+
+        await screenshot.save(temp_file_path)
+
+        api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
+        
+
+        with open(temp_file_path, 'rb') as file_to_upload:
+
+            result = api.upload_files([file_to_upload]) 
+
+            if result:
+                upload_results = await result 
+                if upload_results:
+                    url = upload_results[0].url 
+
+    finally:
+
+        if temp_file_path and temp_file_path.exists():
+            temp_file_path.unlink()
+
     return url
             
     
