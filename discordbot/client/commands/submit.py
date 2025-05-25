@@ -11,7 +11,7 @@ from discord import Embed, app_commands
 from pymongo import AsyncMongoClient
 from cachetools import TTLCache
 
-from ..modules.activity_modals import ACTIVITY_MODAL_MAP, get_activity_modal_class, insert_activity_data
+from ..modules.activity_modals import ACTIVITY_MODAL_MAP, get_activity_modal_class, upload_screenshot
 
 
 load_dotenv()
@@ -26,6 +26,24 @@ if_coll = db["ironfoundry"]
 ic_coll = db["ironclad"]
 template_coll = db["Templates"]
 player_coll = db["Players"]
+
+
+
+IMAGE_UPLOAD_CHOICES = [
+    app_commands.Choice(name="Hunter's Guild", value="Hunter's Guild"),
+    app_commands.Choice(name="Clue Caskets", value="Clue Caskets"),
+    app_commands.Choice(name="Gotr Points", value="Gotr Points"),
+    app_commands.Choice(name="Wintertodt Cart", value="Wintertodt Cart"),
+    app_commands.Choice(name="Brimstone Keys", value="Brimstone Keys"),
+    app_commands.Choice(name="Bryophyta Keys", value="Bryophyta Keys"),
+    app_commands.Choice(name="Obor Keys", value="Obor Keys"),
+    app_commands.Choice(name="Impling Jars", value="Impling Jars"),
+    app_commands.Choice(name="Ancient Totems", value="Ancient Totems"),
+    app_commands.Choice(name="Soulwars Crates", value="Soulwars Crates"),
+    app_commands.Choice(name="Mermaid Tears", value="Mermaid Tears"),
+    app_commands.Choice(name="Shade Keys", value="Shade Keys"),
+    app_commands.Choice(name="Tempoross Reward Pool", value="Tempoross Reward Pool"),
+]
 
 async def autocomplete_activity(interaction: discord.Interaction, current: str):
      return [
@@ -127,9 +145,6 @@ async def get_player_info(discord_id: int):
     except Exception as e:
         logger.error(f"Error fetching player info for {discord_id}: {e}", exc_info=True)
         return None
-
-async def calculate_points():
-    ...
 
 async def get_clan_from_roles(interaction: discord.Interaction):
     for role in interaction.user.roles:
@@ -629,9 +644,45 @@ async def submit(
 
 
 @app_commands.command()
-async def get_submission_stats(interaction: discord.Interaction, clan: Literal["ironfoundry", "ironclad"]):
-    ...
-
+@app_commands.choices(content=IMAGE_UPLOAD_CHOICES)
+async def precheck(interaction: discord.Interaction, action:Literal["Start", "End"], content: str, screenshot: discord.Attachment):
+    await interaction.response.defer()
+    
+    url = await upload_screenshot(screenshot)
+    player_data = await get_player_info(interaction.user.id)
+    _content = None
+    
+    if not player_data:
+        return
+    
+    for activity in player_data.get("screenshots"):
+        if activity["name"] == content:
+            _content = activity
+            break
+    
+    if not _content and action == "Start":
+        _entry = {
+            "name": content,
+            "start": url,
+            "end": None
+        }
+    else:
+        await interaction.response.send_message("You already set your starting picture for this content type.")
+        return
+    
+    if _content and action == "End":
+        _content["end"] == url
+        _entry = _content
+    else:
+        await interaction.response.send_message("Must upload a starting picture before ending.")
+        
+    try:
+        await player_coll.update_one({"_id": player_data["_id"]}, _entry)
+        await interaction.response.send_message(f"Uploaded screenshot for {activity}: {url}")
+        
+    except Exception as e:
+        logger.info(e)
+        await interaction.response.send_message("Something went wrong...!")
 
 
 @app_commands.command(name="set_count", description="Set activity start or end count with a screenshot.")
@@ -645,7 +696,7 @@ async def get_submission_stats(interaction: discord.Interaction, clan: Literal["
     app_commands.Choice(name="End", value="End"),
 ])
 @app_commands.autocomplete(activity=autocomplete_activity)
-async def set_count(
+async def tracking(
     interaction: discord.Interaction,
     action: str,
     activity: str,
@@ -688,4 +739,5 @@ async def set_count(
     
 def setup(client: discord.Client):
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
-    client.tree.add_command(set_count, guild=client.selected_guild) # type: ignore
+    client.tree.add_command(tracking, guild=client.selected_guild)
+    client.tree.add_command(precheck, guild=client.selected_guild)
