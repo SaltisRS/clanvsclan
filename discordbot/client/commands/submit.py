@@ -780,6 +780,6 @@ async def tracking(
         await interaction.response.send_message(e)
     
 def setup(client: discord.Client):
-    client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(tracking, guild=client.selected_guild)
+    client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
