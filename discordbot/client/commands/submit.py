@@ -727,7 +727,7 @@ async def precheck(
         await interaction.followup.send("An unexpected error occurred while processing your request. Please try again.")
 
 
-@app_commands.command(name="set_count", description="Set activity start or end count with a screenshot.")
+@app_commands.command(name="tracking", description="Set activity start or end count with a screenshot.")
 @app_commands.describe(
     action="Choose whether to start or end an activity.",
     activity="The name of the activity.",
