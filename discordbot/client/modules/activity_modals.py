@@ -108,6 +108,7 @@ async def insert_activity_data(activity_data: Dict[str, Any], interaction: disco
 
 class DefaultSingleMetricModal(discord.ui.Modal, title="Single Input Modal"):
     count = discord.ui.TextInput(label="Amount of Keys/Points/Kc etc..", placeholder="Only Numbers", required=True)
+    custom_id = "default_modal"
     
     def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
         self.action = action
@@ -150,6 +151,7 @@ class BarbarianAssaultModal(discord.ui.Modal, title="Barbarian Assault"):
     healer = discord.ui.TextInput(label="Healer Points", placeholder="Only Numbers", required=True)
     collector = discord.ui.TextInput(label="Collector Points", placeholder="Only Numbers", required=True)
     attacker = discord.ui.TextInput(label="Attacker Points", placeholder="Only Numbers", required=True)
+    custom_id = "barbarian_assault_modal"
     
     def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
         self.action = action
@@ -193,6 +195,7 @@ class BarbarianAssaultModal(discord.ui.Modal, title="Barbarian Assault"):
 class LastManStandingModal(discord.ui.Modal, title="Last Man Standing"):
     wins = discord.ui.TextInput(label="Victories", placeholder="Only Numbers", required=True)
     points = discord.ui.TextInput(label="Points", placeholder="Only Numbers", required=True)
+    custom_id = "lms_modal"
     
     def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
         self.action = action
@@ -235,6 +238,7 @@ class MageTrainingArenaModal(discord.ui.Modal, title="Mage Training Arena"):
     telekinetic = discord.ui.TextInput(label="Telekinetic Points", placeholder="Only Numbers", required=True)
     graveyard = discord.ui.TextInput(label="Graveyard Points", placeholder="Only Numbers", required=True)
     enchantment = discord.ui.TextInput(label="Enchantment Points", placeholder="Only Numbers", required=True)
+    custom_id = "mta_modal"
     
     def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
         self.action = action
@@ -278,6 +282,7 @@ class MasteringMixologyModal(discord.ui.Modal, title="Mastering Mixology"):
     aga = discord.ui.TextInput(label="Aga Resin", placeholder="Only Numbers", required=True)
     lye = discord.ui.TextInput(label="Lye Resin", placeholder="Only Numbers", required=True)
     mox = discord.ui.TextInput(label="Mox Resin", placeholder="Only Numbers", required=True)
+    custom_id = "mastering_mixology_modal"
     
     def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
         self.action = action
