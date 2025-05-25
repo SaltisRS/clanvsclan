@@ -681,7 +681,7 @@ async def set_count(
     )
     try:
         logger.info("Sending Modal...")
-        await interaction.response.send_modal(modal())
+        await interaction.response.send_modal(modal)
     except Exception as e:
         logger.info(e)
         await interaction.response.send_message(e)
