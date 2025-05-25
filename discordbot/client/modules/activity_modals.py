@@ -1,25 +1,253 @@
 # modules/activity_modals.py
 import discord
-from discord import ui, app_commands
+import os
+
+from io import BytesIO
+from upyloadthing import AsyncUTApi, UTApiOptions
+from dotenv import load_dotenv
+from loguru import logger
 from typing import Dict, Any, Optional, List
 from loguru import logger
-
-DefaultSingleMetricModal = ""
-BarbarianAssaultModal = ""
-ClueCasketModal = ""
-LastManStandingModal = ""
-MageTrainingArenaModal = ""
-MasteringMixologyModal = ""
+from pymongo import AsyncMongoClient
 
 
+load_dotenv()
+UPLOADTHING_TOKEN = os.getenv("UPLOADTHING_TOKEN")
+mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
+db = mongo["Frenzy"]
+players_coll = db["Players"]
 
+async def upload_screenshot(screenshot: discord.Attachment):
+    url = None
+    _screenshot = BytesIO()
+    await screenshot.save(_screenshot)
+    api = AsyncUTApi(UTApiOptions(token=UPLOADTHING_TOKEN))
+    result = api.upload_files(_screenshot)
+    if result:
+        for res in await result:
+            url = res.url
+            break
+    return url
+            
+    
+
+class DefaultSingleMetricModal(discord.ui.Modal, title="Single Input Modal"):
+    count = discord.ui.TextInput(label="Amount of Keys/Points/Kc etc..", placeholder="Only Numbers", required=True)
+    
+    def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
+        self.action = action
+        self.activity = activity
+        self.screenshot = screenshot
+    
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        metric_values: Dict[str, Any] = {}
+        try:
+            metric_values[SingleMetricMappings.get(self.activity, "Unknown")] = int(self.count.value)
+        except ValueError:
+             await interaction.followup.send("Invalid input for 'count' metric. Please enter numbers.", ephemeral=True)
+             return
+        
+        self.screenshot_url = await upload_screenshot(self.screenshot)
+        
+        activity_data = {
+            "user_id": interaction.user.id,
+            "action": self.action,
+            "activity": self.activity,
+            "screenshot_url": self.screenshot_url,
+            "metric_values": metric_values
+        }
+
+        try:
+            await self.insert_activity_data_func(
+                activity_data=activity_data,
+                interaction=interaction
+            )
+        except Exception as e:
+            logger.error(f"Error calling insertion handler from Modal ({self.activity}, {self.action}): {e}", exc_info=True)
+            await interaction.followup.send("An error occurred while processing your data.", ephemeral=True)
+
+
+class BarbarianAssaultModal(discord.ui.Modal, title="Barbarian Assault"):
+    defender = discord.ui.TextInput(label="Defender Points", placeholder="Only Numbers.", required=True)
+    healer = discord.ui.TextInput(label="Healer Points", placeholder="Only Numbers", required=True)
+    collector = discord.ui.TextInput(label="Collector Points", placeholder="Only Numbers", required=True)
+    attacker = discord.ui.TextInput(label="Attacker Points", placeholder="Only Numbers", required=True)
+    
+    def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
+        self.action = action
+        self.activity = activity
+        self.screenshot = screenshot
+    
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        metric_values: Dict[str, Any] = {}
+        try:
+            metric_values[self.defender.label] = int(self.defender.value)
+            metric_values[self.healer.label] = int(self.healer.value)
+            metric_values[self.collector.label] = int(self.collector.value)
+            metric_values[self.attacker.label] = int(self.attacker.value)
+        except ValueError:
+             await interaction.followup.send("Invalid input for one or more metrics. Please enter numbers.", ephemeral=True)
+             return
+        
+        self.screenshot_url = await upload_screenshot(self.screenshot)
+        
+        activity_data = {
+            "user_id": interaction.user.id,
+            "action": self.action,
+            "activity": self.activity,
+            "screenshot_url": self.screenshot_url,
+            "metric_values": metric_values
+        }
+
+        try:
+            await self.insert_activity_data_func(
+                activity_data=activity_data,
+                interaction=interaction
+            )
+        except Exception as e:
+            logger.error(f"Error calling insertion handler from Modal ({self.activity}, {self.action}): {e}", exc_info=True)
+            await interaction.followup.send("An error occurred while processing your data.", ephemeral=True)
+            
+
+class LastManStandingModal(discord.ui.Modal, title="Last Man Standing"):
+    wins = discord.ui.TextInput(label="Victories", placeholder="Only Numbers", required=True)
+    points = discord.ui.TextInput(label="Points", placeholder="Only Numbers", required=True)
+    
+    def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
+        self.action = action
+        self.activity = activity
+        self.screenshot = screenshot
+    
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        metric_values: Dict[str, Any] = {}
+        try:
+            metric_values[self.wins.label] = int(self.wins.value)
+            metric_values[self.points.label] = int(self.points.value)
+        except ValueError:
+             await interaction.followup.send("Invalid input for one or more metrics. Please enter numbers.", ephemeral=True)
+             return
+        
+        self.screenshot_url = await upload_screenshot(self.screenshot)
+        
+        activity_data = {
+            "user_id": interaction.user.id,
+            "action": self.action,
+            "activity": self.activity,
+            "screenshot_url": self.screenshot_url,
+            "metric_values": metric_values
+        }
+
+        try:
+            await self.insert_activity_data_func(
+                activity_data=activity_data,
+                interaction=interaction
+            )
+        except Exception as e:
+            logger.error(f"Error calling insertion handler from Modal ({self.activity}, {self.action}): {e}", exc_info=True)
+            await interaction.followup.send("An error occurred while processing your data.", ephemeral=True)
+    
+class MageTrainingArenaModal(discord.ui.Modal, title="Mage Training Arena"):
+    alchemy = discord.ui.TextInput(label="Alchemy Points", placeholder="Only Numbers", required=True)
+    telekinetic = discord.ui.TextInput(label="Telekinetic Points", placeholder="Only Numbers", required=True)
+    graveyard = discord.ui.TextInput(label="Graveyard Points", placeholder="Only Numbers", required=True)
+    enchantment = discord.ui.TextInput(label="Enchantment Points", placeholder="Only Numbers", required=True)
+    
+    def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
+        self.action = action
+        self.activity = activity
+        self.screenshot = screenshot
+    
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        metric_values: Dict[str, Any] = {}
+        try:
+            metric_values[self.alchemy.label] = int(self.alchemy.value)
+            metric_values[self.telekinetic.label] = int(self.telekinetic.value)
+            metric_values[self.graveyard.label] = int(self.graveyard.value)
+            metric_values[self.enchantment.label] = int(self.enchantment.value)
+        except ValueError:
+             await interaction.followup.send("Invalid input for one or more metrics. Please enter numbers.", ephemeral=True)
+             return
+        
+        self.screenshot_url = await upload_screenshot(self.screenshot)
+        
+        activity_data = {
+            "user_id": interaction.user.id,
+            "action": self.action,
+            "activity": self.activity,
+            "screenshot_url": self.screenshot_url,
+            "metric_values": metric_values
+        }
+
+        try:
+            await self.insert_activity_data_func(
+                activity_data=activity_data,
+                interaction=interaction
+            )
+        except Exception as e:
+            logger.error(f"Error calling insertion handler from Modal ({self.activity}, {self.action}): {e}", exc_info=True)
+            await interaction.followup.send("An error occurred while processing your data.", ephemeral=True)
+    
+class MasteringMixologyModal(discord.ui.Modal, title="Mastering Mixology"):
+    aga = discord.ui.TextInput(label="Aga Resin", placeholder="Only Numbers", required=True)
+    lye = discord.ui.TextInput(label="Lye Resin", placeholder="Only Numbers", required=True)
+    mox = discord.ui.TextInput(label="Mox Resin", placeholder="Only Numbers", required=True)
+    
+    def __init__(self, action: str, activity: str, screenshot: discord.Attachment):
+        self.action = action
+        self.activity = activity
+        self.screenshot = screenshot
+    
+    
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+
+        metric_values: Dict[str, Any] = {}
+        try:
+            metric_values[self.aga.label] = int(self.aga.value)
+            metric_values[self.lye.label] = int(self.lye.value)
+            metric_values[self.mox.label] = int(self.mox.value)
+        except ValueError:
+             await interaction.followup.send("Invalid input for one or more metrics. Please enter numbers.", ephemeral=True)
+             return
+        
+        self.screenshot_url = await upload_screenshot(self.screenshot)
+        
+        activity_data = {
+            "user_id": interaction.user.id,
+            "action": self.action,
+            "activity": self.activity,
+            "screenshot_url": self.screenshot_url,
+            "metric_values": metric_values
+        }
+
+        try:
+            await self.insert_activity_data_func(
+                activity_data=activity_data,
+                interaction=interaction
+            )
+        except Exception as e:
+            logger.error(f"Error calling insertion handler from Modal ({self.activity}, {self.action}): {e}", exc_info=True)
+            await interaction.followup.send("An error occurred while processing your data.", ephemeral=True)
+    
+    
 ACTIVITY_MODAL_MAP = {
     "Aerial Fishing": DefaultSingleMetricModal,
     "Barbarian Assault": BarbarianAssaultModal,
     "Brimhaven Agility Arena": DefaultSingleMetricModal,
     "Castle Wars": DefaultSingleMetricModal,
     "Chompy Bird Hunting": DefaultSingleMetricModal,
-    "Clue Caskets": ClueCasketModal,
     "Forestry": DefaultSingleMetricModal,
     "Giants' Foundry": DefaultSingleMetricModal,
     "Hallowed Sepulchre": DefaultSingleMetricModal,
@@ -50,12 +278,49 @@ ACTIVITY_MODAL_MAP = {
     "Ardougne Rooftop Course": DefaultSingleMetricModal
 }
 
-# ... (MODAL_TYPE_MAP) ...
+SingleMetricMappings = {
+    "Aerial Fishing": "Molch Pearls",
+    "Brimhaven Agility Arena": "Tickets",
+    "Castle Wars": "Tickets",
+    "Chompy Bird Hunting": "Chompy Birds",
+    "Forestry": "Anima-Infused Bark",
+    "Giants' Foundry": "Points",
+    "Hallowed Sepulchre": "Hallowed Marks",
+    "Herbiboar Hunting": "Herbiboars",
+    "Mahogany Homes": "Points",
+    "Motherlode Mine": "Gold Nuggets",
+    "Pest Control": "Points",
+    "Shooting Stars": "Stardust",
+    "Soul Wars": "Zeal",
+    "Tithe Farm": "Points",
+    "Trouble Brewing": "Pieces of Eight",
+    "Unidentified Minerals": "Minerals",
+    "Volcanic Mine": "Points",
+    "Colossal Wyrm Agility": "Termites",
+    "Ape Atoll Agility Course": "Laps",
+    "Agility Pyramid": "Laps",
+    "Dorgesh Kaan Agility Course": "Laps",
+    "Penguin Agility Course": "Laps",
+    "Prifddinas Agility Course": "Laps",
+    "Wilderness Agility Course": "Laps",
+    "Canifis Rooftop Course": "Laps",
+    "Seers' Village Rooftop Course": "Laps",
+    "Pollnivneach Rooftop Course": "Laps",
+    "Rellekka Rooftop Course": "Laps",
+    "Ardougne Rooftop Course": "Laps"
+}
 
-# Helper function to get the correct modal class (uses the simplified map)
+async def get_player_info(discord_id: int):
+    """Fetches a player's document from the Players collection."""
+    try:
+        player_document = await players_coll.find_one({"discord_id": discord_id})
+        return player_document
+    except Exception as e:
+        logger.error(f"Error fetching player info for {discord_id}: {e}", exc_info=True)
+        return None
+
 def get_activity_modal_class(activity: str):
     modal_class = ACTIVITY_MODAL_MAP.get(activity)
-
 
     if not modal_class:
          logger.error(f"No modal class found in ACTIVITY_MODAL_MAP for activity '{activity}'.")
@@ -63,103 +328,76 @@ def get_activity_modal_class(activity: str):
 
     return modal_class
 
-# Autocomplete for activity names (uses the keys of the simplified map)
-async def autocomplete_activity(interaction: discord.Interaction, current: str):
-     """Autocomplete for activity names based on ACTIVITY_MODAL_MAP keys."""
-     from modules.activity_modals import ACTIVITY_MODAL_MAP # Ensure import if needed
-     return [
-         discord.app_commands.Choice(name=activity, value=activity)
-         for activity in ACTIVITY_MODAL_MAP.keys()
-         if current.lower() in activity.lower()
-     ][:25]
+async def insert_activity_data(activity_data: Dict[str, Any], interaction: discord.Interaction):
+    """Handles the insertion/update of activity tracking data in the player document."""
+    user_id = activity_data.get("user_id")
+    action = activity_data.get("action")
+    activity = activity_data.get("activity")
+    screenshot_url = activity_data.get("screenshot_url")
+    metric_values = activity_data.get("metric_values", {})
 
+    logger.info(f"Insertion handler called for {user_id}, Activity: '{activity}', Action: '{action}', Metrics: {metric_values}")
 
-# --- Base Modal Class (Now it doesn't know the metrics list in __init__) ---
-class BaseActivityModal(ui.Modal):
-    def __init__(self, action: str, activity: str, screenshot_url: str, player_coll, get_player_info_func, title: str, **kwargs):
-        super().__init__(title=title, **kwargs)
-        self.action = action
-        self.activity = activity
-        self.screenshot_url = screenshot_url
-        # self.metrics is removed - specific modals define inputs
-        self.player_coll = player_coll
-        self.get_player_info_func = get_player_info_func
-        self.custom_id = f"activity_modal:{action}:{activity}"
+    player_document = await get_player_info(user_id) # type: ignore
+    if not player_document:
+         logger.error(f"Player data not found for {user_id} during insertion handler.")
+         await interaction.followup.send("Error saving your data. Player data not found.", ephemeral=True)
+         return
 
+    if "tracking" not in player_document:
+        player_document["tracking"] = []
 
-    async def process_modal_submission(self, interaction: discord.Interaction, metric_values: Dict[str, Any]):
-        """Common logic to process submitted metric values and update player data."""
-        logger.info(f"Processing modal submission for {interaction.user.id} ({self.activity}, {self.action}). Metrics: {metric_values}")
+    in_progress_entry = None
+    for _, entry in enumerate(player_document["tracking"]):
+         if entry.get("name") == activity:
+                in_progress_entry = entry
+                break
 
-        # Refetch player document
-        player_document = await self.get_player_info_func(interaction.user.id)
-        if not player_document:
-             logger.error(f"Player data not found for {interaction.user.id} during modal submission processing.")
-             await interaction.followup.send("Error processing your data. Player data not found.", ephemeral=True)
+    if action == "start":
+        if in_progress_entry is not None:
+             logger.warning(f"Insertion handler received 'start' for '{activity}' while one was in progress for {user_id}. This shouldn't happen if command logic is correct.")
+             await interaction.followup.send(f"You already have an in-progress tracking entry for **{activity}**.", ephemeral=True)
              return
 
-        if "screenshots" not in player_document:
-            player_document["screenshots"] = []
-
-        # Find the tracking entry for this activity (logic depends on action)
-        tracking_entry = None
-        tracking_entry_index = -1
-
-        # We need to find the entry for this activity where *not all* end screenshots are populated.
-        # The BaseActivityModal doesn't know the list of metrics for this activity anymore.
-        # This requires the specific modal class to provide the list of its metrics
-        # or the Base class needs a way to determine the metrics from the inputs in on_submit.
-        # Let's pass the list of metrics from the specific modal's __init__ to the base class.
-
-        # This logic needs to be adjusted to handle the case where the list of metrics
-        # is passed down or determined differently. For now, assume self.metrics is available.
-        # A better approach: find the entry first, then use the metrics from that entry's start data.
-        # But on 'start', there's no existing entry.
-        # Simplest for this minimalist structure: Assume all submitted metrics are the relevant ones for state check.
-        submitted_metric_names = list(metric_values.keys())
+        new_tracking_entry = {
+             "name": activity,
+             "start": {
+                 "screenshot": screenshot_url,
+                 "values": metric_values,
+                 "timestamp": discord.utils.utcnow()
+             },
+             "end": {
+                 "screenshot": "",
+                 "values": {},
+                 "timestamp": None
+             }
+        }
+        player_document["tracking"].append(new_tracking_entry)
+        logger.debug(f"Insertion handler created new tracking entry for activity '{activity}'.")
+        feedback_message = f"✅ Started tracking **{activity}**. Start counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
 
 
-        if self.action == "start":
-            # For 'start', check if an in-progress entry already exists with ANY end screenshot missing
-            # We need to iterate through ALL screenshots and find one for this activity
-            # where at least one end screenshot (from any metric) is missing.
-            for i, entry in enumerate(player_document["screenshots"]):
-                 if entry.get("activity") == self.activity:
-                      # Check if ANY end screenshot is populated in this entry
-                      any_end_populated = any(url for url in entry.get("end_screenshots", {}).values())
-                      if not any_end_populated: # If no end screenshots are populated, it's in progress
-                           tracking_entry = entry
-                           tracking_entry_index = i
-                           break
+    elif action == "end":
+         if in_progress_entry is None:
+              logger.warning(f"Insertion handler received 'end' for '{activity}' without an active start entry for {user_id}. This shouldn't happen if command logic is correct.")
+              await interaction.followup.send(f"Error: Could not find an active tracking entry for **{activity}**, start one before retrying.", ephemeral=True)
+              return
 
-            if tracking_entry is not None:
-                 await interaction.followup.send(f"You already have an in-progress tracking entry for **{self.activity}**.", ephemeral=True)
-                 logger.warning(f"Modal submitted to start '{self.activity}' tracking while one was in progress for {interaction.user.id}.")
-                 return
+        # --- Update the In-Progress Tracking Entry with End Data ---
+         in_progress_entry["end"] = {
+             "screenshot": screenshot_url,
+             "values": metric_values, # Use the values submitted in the end modal
+             "timestamp": discord.utils.utcnow() # Add timestamp for end
+         }
 
-            # --- Create New Tracking Entry ---
-            new_tracking_entry = {
-                 "activity": self.activity,
-                 "pre_screenshots": {metric: self.screenshot_url for metric in submitted_metric_names}, # Use submitted metric names
-                 "pre_counts": metric_values,
-                 "end_screenshots": {metric: "" for metric in submitted_metric_names}, # Initialize end fields
-                 "end_counts": {metric: 0 for metric in submitted_metric_names}
-            }
-            player_document["screenshots"].append(new_tracking_entry)
-            logger.debug(f"Created new tracking entry for activity '{self.activity}'.")
-            feedback_message = f"✅ Started tracking **{self.activity}**. Start counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
+         feedback_message = f"✅ Updated tracking for **{activity}**. Updated counts: {', '.join([f'{m}: {v}' for m, v in metric_values.items()])}"
 
+    try:
+        await players_coll.replace_one({"_id": player_document["_id"]}, player_document)
 
-        elif self.action == "end":
-             # For 'end', find the in-progress entry (where ANY end screenshot is missing)
-             for i, entry in enumerate(player_document["screenshots"]):
-                 if entry.get("activity") == self.activity:
-                      any_end_populated = any(url for url in entry.get("end_screenshots", {}).values())
-                      if not any_end_populated: # If no end screenshots are populated, it's in progress
-                           tracking_entry = entry
-                           tracking_entry_index = i
-                           break
+        logger.info(f"Player {user_id} successfully saved data via insertion handler for '{activity}'.")
+        await interaction.followup.send(feedback_message, ephemeral=True)
 
-
-             if tracking_entry is None:
-                  await interaction.followup.send(f"Could not find an active tracking entry for **{self.activity}**.")
+    except Exception as e:
+        logger.error(f"Failed to save player document via insertion handler for '{activity}' for {user_id}: {e}", exc_info=True)
+        await interaction.followup.send("Error saving your tracking data. Please try again.", ephemeral=True)

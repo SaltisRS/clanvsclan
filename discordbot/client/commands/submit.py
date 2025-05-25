@@ -11,15 +11,10 @@ from discord import Embed, app_commands
 from pymongo import AsyncMongoClient
 from cachetools import TTLCache
 
-
-
-
+from ..modules.activity_modals import ACTIVITY_MODAL_MAP, get_activity_modal_class, insert_activity_data
 
 
 load_dotenv()
-
-
-
 IC_roleid = 1343921208948953128
 IF_roleid = 1343921101687750716
 ICPERM = [1369428787342737488, 1369428819907448832]
@@ -32,6 +27,12 @@ ic_coll = db["ironclad"]
 template_coll = db["Templates"]
 player_coll = db["Players"]
 
+async def autocomplete_activity(interaction: discord.Interaction, current: str):
+     return [
+         discord.app_commands.Choice(name=activity, value=activity)
+         for activity in ACTIVITY_MODAL_MAP.keys()
+         if current.lower() in activity.lower()
+     ][:25]
 
 async def autocomplete_activity_metric(interaction: discord.Interaction, current: str):
     """Autocomplete for activity metrics based on the selected activity."""
@@ -633,12 +634,56 @@ async def get_submission_stats(interaction: discord.Interaction, clan: Literal["
 
 
 
-@app_commands.command()
-async def set(interaction: discord.Interaction, mode: Literal["Start", "End"]):
-    ...
+@app_commands.command(name="set_count", description="Set activity start or end count with a screenshot.")
+@app_commands.describe(
+    action="Choose whether to start or end an activity.",
+    activity="The name of the activity.",
+    screenshot="A screenshot verifying the count(s)."
+)
+@app_commands.choices(action=[
+    app_commands.Choice(name="Start", value="Start"),
+    app_commands.Choice(name="End", value="End"),
+])
+@app_commands.autocomplete(activity=autocomplete_activity)
+async def set_count(
+    interaction: discord.Interaction,
+    action: str, # Use str as Literals are for type hinting, choices provide the value
+    activity: str,
+    screenshot: discord.Attachment
+):
+    logger.info(f"Received /set_count {action} from {interaction.user.id} ({interaction.user.name}) for Activity: '{activity}' with screenshot.")
+    await interaction.response.defer(ephemeral=True) # Defer ephemerally immediately
 
+    # Validate activity using the map keys
+    if activity not in ACTIVITY_MODAL_MAP:
+         await interaction.followup.send(f"'{activity}' is not a recognized trackable activity.", ephemeral=True)
+         logger.warning(f"Player {interaction.user.id} submitted unknown activity: {activity}")
+         return
 
+    # Get the correct modal class using the helper function
+    activity_modal_class = get_activity_modal_class(activity)
+
+    if not activity_modal_class:
+         logger.error(f"Could not determine modal class for activity '{activity}' from ACTIVITY_MODAL_MAP.")
+         await interaction.followup.send(f"An internal error occurred. Could not find modal configuration for activity '{activity}'.", ephemeral=True)
+         return
+
+    player_document = await get_player_info(interaction.user.id)
+    if not player_document:
+        await interaction.followup.send("Could not retrieve player data for initial check.", ephemeral=True)
+        logger.error(f"Player data not found for {interaction.user.id} during initial check for '{activity}' {action}.")
+        return
+
+    modal = activity_modal_class(
+        action=action,
+        activity=activity,
+        screenshot_url=screenshot,
+        insert_activity_data_func=insert_activity_data
+    )
+
+    await interaction.followup.send_modal(modal)
 
     
 def setup(client: discord.Client):
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
+    client.tree.add_command(set_count, guild=client.selected_guild) # type: ignore

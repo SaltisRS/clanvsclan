@@ -30,14 +30,14 @@ ic_coll = db[COLLECTION_NAME_2]
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
     data = list(if_coll.find({}))
-    logger.info(f"Data retrieved: {data}")
+    logger.info(f"Data retrieved.")
     return data
 
 @app.get("/ironclad")
 async def get_ic_data() -> List[Dict]:
     logger.info("Retrieving data from the second collection")
     data = list(ic_coll.find({}))
-    logger.info(f"Data retrieved: {data}")
+    logger.info(f"Data retrieved.")
     return data
 
 
