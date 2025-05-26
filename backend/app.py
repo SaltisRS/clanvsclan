@@ -42,16 +42,16 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
 @app.get("/ironfoundry")
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
-    event_data = if_coll.find_one({})
+    event_data = list(if_coll.find({}))
     logger.info(f"Data retrieved.")
-    return list(event_data) # type: ignore
+    return event_data # type: ignore
 
 @app.get("/ironclad")
 async def get_ic_data() -> List[Dict]:
     logger.info("Retrieving data from the second collection")
-    event_data = ic_coll.find_one({})
+    event_data = list(ic_coll.find({}))
     logger.info(f"Data retrieved.")
-    return list(event_data) # type: ignore
+    return event_data # type: ignore
 
 
 @app.post("/milestones")
