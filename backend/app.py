@@ -1,8 +1,6 @@
-from bson import ObjectId
 from fastapi import FastAPI
-from pydantic import BaseModel, RootModel, model_validator
 from pymongo import MongoClient
-from typing import List, Dict, Optional
+from typing import List, Dict
 from loguru import logger
 import os
 from dotenv import load_dotenv
@@ -28,13 +26,6 @@ players = db["Players"]
 
 
     
-@app.post("/milestones")
-async def update_milestones(milestone_data: Dict):
-    logger.info(f"Received milestone update:")
-    logger.info(milestone_data)
-
-    return {"message": "Milestone data received and logged successfully."}
-
 
 @app.get("/ironfoundry")
 async def get_if_data() -> List[Dict]:
@@ -55,6 +46,13 @@ async def get_ic_data() -> List[Dict]:
         event_data[0]["players"] = player_data
     logger.info(f"Data retrieved.")
     return event_data
+
+
+@app.post("/milestones")
+async def update_milestones(milestone_data: Dict):
+    logger.info(milestone_data)
+
+    return {"message": "Milestone data received and logged successfully."}
 
 
 if __name__ == "__main__":
