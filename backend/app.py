@@ -31,9 +31,6 @@ players = db["Players"]
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
     event_data = list(if_coll.find({}))
-    player_data = list(players.find({"clan": "ironfoundry"}))
-    if player_data:
-        event_data[0]["players"] = player_data
     logger.info(f"Data retrieved.")
     return event_data
 
@@ -41,9 +38,6 @@ async def get_if_data() -> List[Dict]:
 async def get_ic_data() -> List[Dict]:
     logger.info("Retrieving data from the second collection")
     event_data = list(ic_coll.find({}))
-    player_data = players.find({"clan": "ironclad"})
-    if player_data:
-        event_data[0]["players"] = player_data
     logger.info(f"Data retrieved.")
     return event_data
 
