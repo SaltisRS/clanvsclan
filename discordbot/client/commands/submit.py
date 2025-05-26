@@ -403,6 +403,8 @@ class SubmissionView(discord.ui.View):
                 for i_data in s_data.get("items", []):
                     # Calculate base item points first
                     item_total_points_base = get_total_points_for_item_no_flags(i_data)
+                    if template_doc["associated_team"] == "ironclad":
+                        item_total_points_base *= 1.5
 
                     # Apply the effective multiplier
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
@@ -779,151 +781,9 @@ async def tracking(
     except Exception as e:
         logger.info(e)
         await interaction.response.send_message(e)
-        
-    
-    
-@app_commands.command(name="team_stats", description="Shows submission statistics for each team.")
-async def team_stats(interaction: discord.Interaction):
-    logger.info(f"Received /team_stats from {interaction.user.id} ({interaction.user.name})")
-    await interaction.response.defer() # Defer publicly as the response will be an embed
-
-    # --- Data Structure to Store Team Stats ---
-    team_stats_data = {
-        "ironfoundry": {
-            "submitted_items": 0,
-            "total_base_points": 0.0,
-            "item_values": [], # Store points of each submitted item to calculate average
-            "total_submissions": 0 # Count of entries in the submissions array
-        },
-        "ironclad": {
-            "submitted_items": 0,
-            "total_base_points": 0.0,
-            "item_values": [],
-            "total_submissions": 0
-        }
-    }
-
-    # --- Fetch All Player Documents ---
-    try:
-        # Fetch all player documents. In a very large database, consider fetching in batches.
-        all_players_cursor = player_coll.find({})
-        all_players = await all_players_cursor.to_list(length=None) # Get all documents
-        logger.debug(f"Fetched {len(all_players)} player documents.")
-    except Exception as e:
-        logger.error(f"Error fetching player documents for team_stats: {e}", exc_info=True)
-        await interaction.followup.send("Error retrieving player data. Please try again later.", ephemeral=True)
-        return
-
-    # --- Fetch All Template Documents (to get item base points) ---
-    # We need the base points for each item to calculate "Total points without multipliers".
-    # Multipliers are applied to the clan's template total, not individual item base points.
-    # We need to find the 'points' value for each item in the submissions.
-
-    # Fetch template documents for each clan
-    team_templates = {}
-    try:
-        if_template_doc = await if_coll.find_one({})
-        if if_template_doc:
-            team_templates["ironfoundry"] = if_template_doc
-            logger.debug("Fetched Ironfoundry template.")
-
-        ic_template_doc = await ic_coll.find_one({})
-        if ic_template_doc:
-            team_templates["ironclad"] = ic_template_doc
-            logger.debug("Fetched Ironclad template.")
-
-        if not team_templates:
-             logger.warning("No clan template documents found.")
-             await interaction.followup.send("Warning: Could not find clan template data. Point calculations might be inaccurate.", ephemeral=True)
-
-    except Exception as e:
-        logger.error(f"Error fetching template documents for team_stats: {e}", exc_info=True)
-        # Continue without templates, but warn that point calculations will be 0
-        await interaction.followup.send("Warning: Error retrieving clan template data. Point calculations will be 0.", ephemeral=True)
-
-
-    # --- Process Player Submissions ---
-    for player_doc in all_players:
-        player_clan = player_doc.get("clan")
-        if player_clan not in team_stats_data:
-            logger.warning(f"Player {player_doc.get('discord_id')} has unknown clan '{player_clan}'. Skipping.")
-            continue
-
-        submissions = player_doc.get("submissions", [])
-        team_stats_data[player_clan]["total_submissions"] += len(submissions)
-
-        # To count submitted items and their values, we need to iterate through submissions.
-        # Note: This counts each *accepted* submission entry. If a player submits the same
-        # item multiple times and they are accepted, each acceptance counts as a submitted item here.
-        for submission in submissions:
-            if submission.get("status") == "accepted":
-                team_stats_data[player_clan]["submitted_items"] += 1
-
-                item_name = submission.get("item")
-                source_name = submission.get("source")
-                tier_name = submission.get("tier")
-
-                # Try to find the base points of the submitted item from the template
-                base_points = 0.0
-                clan_template = team_templates.get(player_clan)
-                if clan_template:
-                    # Need a function to find item data in a template document by tier, source, and name
-                    # We can adapt the find_item_in_template_doc function.
-                    item_info = await find_item_in_template_doc(clan_template, tier_name, source_name, item_name)
-                    if item_info and "item" in item_info:
-                        base_points = float(item_info["item"].get("points", 0))
-                        team_stats_data[player_clan]["total_base_points"] += base_points
-                        team_stats_data[player_clan]["item_values"].append(base_points)
-                    else:
-                        logger.warning(f"Item '{item_name}' not found in template for clan '{player_clan}' during stats calculation. Base points assumed 0.")
-                else:
-                    logger.debug(f"Template not available for clan '{player_clan}', cannot find base points for '{item_name}'.")
-
-
-    # --- Calculate Averages ---
-    for clan, stats in team_stats_data.items():
-        total_items = stats["submitted_items"]
-        total_value = stats["total_base_points"] # Use total_base_points for average calculation
-
-        average_value = total_value / total_items if total_items > 0 else 0
-        stats["average_item_value"] = average_value # Add average to the stats data
-
-    # --- Build and Send Embed ---
-    embed = Embed(title="Team Submission Statistics", color=discord.Color.blue())
-
-    for clan, stats in team_stats_data.items():
-        clan_name = clan.replace("iron", "Iron ").title() # Format clan name
-
-        embed.add_field(
-            name=f"__**{clan_name}**__",
-            value=(
-                f"Total Submissions Received: {stats['total_submissions']}\n" # Count of entries in submissions array
-                f"Accepted Items Submitted: {stats['submitted_items']}\n"
-                f"Average Accepted Item Base Value: {stats['average_item_value']:.2f} points\n"
-                f"Total Base Points from Accepted Items: {stats['total_base_points']:.2f} points" # Total without multiplier effect
-            ),
-            inline=False
-        )
-
-    embed.set_footer(text="Accepted items count each individual item submission that was accepted.")
-    embed.set_author(name=interaction.guild.name if interaction.guild else "Server")
-
-    await interaction.followup.send(embed=embed)
-
-
-# --- Need to ensure find_item_in_template_doc is available ---
-# Assuming it's defined elsewhere or imported.
-# If it's in modules/activity_modals.py, you'll need to import it.
-# from modules.activity_modals import find_item_in_template_doc # Example import
-
-# Add the command to your setup function
-# def setup(client: discord.Client):
-#     ...
-#     client.tree.add_command(team_stats, guild=client.selected_guild) # type: ignore
 
     
 def setup(client: discord.Client):
     client.tree.add_command(tracking, guild=client.selected_guild)
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
-    client.tree.add_command(team_stats, guild=client.selected_guild)
