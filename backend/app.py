@@ -1,3 +1,4 @@
+from bson import ObjectId
 from fastapi import FastAPI
 from pydantic import BaseModel, RootModel, model_validator
 from pymongo import MongoClient
@@ -25,6 +26,15 @@ if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
+def encode_objectid(o):
+    if isinstance(o, ObjectId):
+        return str(o)
+    raise TypeError(f"Object of type {o.__class__.__name__} is not JSON serializable")
+
+app.json_encoder = encode_objectid
+
+
+
 class MetricValue(RootModel[Dict[str, int]]):
     pass
 
@@ -34,10 +44,14 @@ class CategoryData(BaseModel):
     experience: Optional[MetricValue] = None
     killcount: Optional[MetricValue] = None
 
-    @model_validator(mode="before")
+    @model_validator(mode='before')
+    @classmethod
     def check_exclusive_category(cls, values):
+        if not isinstance(values, dict):
+             return values
+
         categories = ['cluescroll', 'experience', 'killcount']
-        present_categories = [cat for cat in categories if cat in values and values[cat] is not None]
+        present_categories = [cat for cat in categories if values.get(cat) is not None]
         if len(present_categories) != 1:
             raise ValueError("Exactly one category (cluescroll, experience, or killcount) must be provided.")
         return values
