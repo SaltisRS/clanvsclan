@@ -98,8 +98,7 @@ async def update_milestones(milestone_data: Dict):
 
     except Exception as e:
         logger.error(f"An unhandled error occurred during milestone update processing: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Internal server error during milestone update.")
-
+        return {"error": "Internal Server Error"}
 
 
 if __name__ == "__main__":
