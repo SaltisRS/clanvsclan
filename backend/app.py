@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, RootModel, model_validator
 from pymongo import MongoClient
 from typing import List, Dict, Optional
 from loguru import logger
@@ -25,8 +25,8 @@ if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
-class MetricValue(BaseModel):
-    __root__: Dict[str, int]
+class MetricValue(RootModel[Dict[str, int]]):
+    pass
 
 
 class CategoryData(BaseModel):
