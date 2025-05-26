@@ -92,25 +92,6 @@ export interface Multiplier {
   unlocked: boolean;
 }
 
-interface Submission {
-  item: string;
-  source: string;
-  tier: string;
-  status: string;
-  accepted_by: number;
-  timestamp: Date;
-  points_awarded: number;
-}
-
-interface Player {
-  discord_id: number;
-  rsn: string;
-  submissions: Submission[]
-  clan: string;
-  obtained_items: Record<string, number>;
-  tracking: TrackingEntry[]
-  screenshots: Screenshot[];
-}
 
 interface Template {
   associated_team: string;
@@ -119,7 +100,6 @@ interface Template {
   multipliers: Multiplier[];
   activities: Activity[];
   milestones: Record<string, Milestone[]>;
-  players: Player[];
 }
 
 const activeData = ref<Template>({
@@ -128,8 +108,7 @@ const activeData = ref<Template>({
   tiers: {},
   multipliers: [],
   activities: [],
-  milestones: {},
-  players: []
+  milestones: {}
 });
 
 const team_uris = ["ironfoundry", "ironclad"];
