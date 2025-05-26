@@ -23,9 +23,6 @@ async_client = AsyncMongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
-adb = client[DATABASE_NAME]
-aif_coll = db[COLLECTION_NAME_1]
-aic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
 
@@ -70,9 +67,9 @@ async def update_milestones(milestone_data: Dict):
 
             logger.info(f"Updating Iron Foundry: Category='{category}', Metric='{metric_name}', Value={updated_value}")
 
-            ironfoundry_template = await aif_coll.find_one({}) # type: ignore
+            ironfoundry_template = if_coll.find_one({}) # type: ignore
             if ironfoundry_template:
-                update_result = await aif_coll.update_one(
+                update_result = if_coll.update_one(
                     {"_id": ironfoundry_template["_id"], f"milestones.{category}.name": metric_name},
                     {"$set": {f"milestones.{category}.$.current_value": updated_value}}
                 ) # type: ignore
@@ -88,9 +85,9 @@ async def update_milestones(milestone_data: Dict):
 
             logger.info(f"Updating Ironclad: Category='{category}', Metric='{metric_name}', Value={updated_value}")
 
-            ironclad_template = await aic_coll.find_one({}) # type: ignore
+            ironclad_template = ic_coll.find_one({}) # type: ignore
             if ironclad_template and '_id' in ironclad_template:
-                 update_result = await aic_coll.update_one(
+                 update_result = ic_coll.update_one(
                     {"_id": ironclad_template["_id"], f"milestones.{category}.name": metric_name},
                     {"$set": {f"milestones.{category}.$.current_value": updated_value}}
                 ) # type: ignore
