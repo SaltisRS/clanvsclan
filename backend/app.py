@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pymongo import AsyncMongoClient
+from pymongo import AsyncMongoClient, MongoClient
 from typing import Any, List, Dict, Optional
 from loguru import logger
 import os
@@ -18,10 +18,14 @@ COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
 
 
-client = AsyncMongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI)
+async_client = AsyncMongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
+adb = client[DATABASE_NAME]
+aif_coll = db[COLLECTION_NAME_1]
+aic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
 
@@ -41,14 +45,14 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
 @app.get("/ironfoundry")
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
-    event_data = await if_coll.find_one({})
+    event_data = if_coll.find_one({})
     logger.info(f"Data retrieved.")
     return list(event_data) # type: ignore
 
 @app.get("/ironclad")
 async def get_ic_data() -> List[Dict]:
     logger.info("Retrieving data from the second collection")
-    event_data = await ic_coll.find_one({})
+    event_data = ic_coll.find_one({})
     logger.info(f"Data retrieved.")
     return list(event_data) # type: ignore
 
@@ -66,12 +70,12 @@ async def update_milestones(milestone_data: Dict):
 
             logger.info(f"Updating Iron Foundry: Category='{category}', Metric='{metric_name}', Value={updated_value}")
 
-            ironfoundry_template = await if_coll.find_one({})
+            ironfoundry_template = await aif_coll.find_one({}) # type: ignore
             if ironfoundry_template:
-                update_result = await if_coll.update_one(
+                update_result = await aif_coll.update_one(
                     {"_id": ironfoundry_template["_id"], f"milestones.{category}.name": metric_name},
                     {"$set": {f"milestones.{category}.$.current_value": updated_value}}
-                )
+                ) # type: ignore
                 logger.info(f"Iron Foundry update_one acknowledged: {update_result.acknowledged}, matched: {update_result.matched_count}, modified: {update_result.modified_count}")
             else:
                  logger.warning("Iron Foundry template document not found or missing _id for update.")
@@ -84,12 +88,12 @@ async def update_milestones(milestone_data: Dict):
 
             logger.info(f"Updating Ironclad: Category='{category}', Metric='{metric_name}', Value={updated_value}")
 
-            ironclad_template = await ic_coll.find_one({})
+            ironclad_template = await aic_coll.find_one({}) # type: ignore
             if ironclad_template and '_id' in ironclad_template:
-                 update_result = await ic_coll.update_one(
+                 update_result = await aic_coll.update_one(
                     {"_id": ironclad_template["_id"], f"milestones.{category}.name": metric_name},
                     {"$set": {f"milestones.{category}.$.current_value": updated_value}}
-                )
+                ) # type: ignore
                  logger.info(f"Ironclad update_one acknowledged: {update_result.acknowledged}, matched: {update_result.matched_count}, modified: {update_result.modified_count}")
             else:
                  logger.warning("Ironclad template document not found or missing _id for update.")
