@@ -26,14 +26,6 @@ if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
-def encode_objectid(o):
-    if isinstance(o, ObjectId):
-        return str(o)
-    raise TypeError(f"Object of type {o.__class__.__name__} is not JSON serializable")
-
-app.json_encoder = encode_objectid
-
-
 
 class MetricValue(RootModel[Dict[str, int]]):
     pass
@@ -64,7 +56,7 @@ class MilestoneUpdate(BaseModel):
 @app.post("/milestones")
 async def update_milestones(milestone_data: MilestoneUpdate):
     logger.info(f"Received milestone update:")
-    logger.info(milestone_data.model_dump_json(indent=2))
+    logger.info(milestone_data.model_dump())
 
     return {"message": "Milestone data received and logged successfully."}
 
