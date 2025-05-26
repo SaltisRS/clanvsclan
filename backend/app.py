@@ -27,36 +27,11 @@ ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
 
 
-class MetricValue(RootModel[Dict[str, int]]):
-    pass
-
-
-class CategoryData(BaseModel):
-    cluescroll: Optional[MetricValue] = None
-    experience: Optional[MetricValue] = None
-    killcount: Optional[MetricValue] = None
-
-    @model_validator(mode='before')
-    @classmethod
-    def check_exclusive_category(cls, values):
-        if not isinstance(values, dict):
-             return values
-
-        categories = ['cluescroll', 'experience', 'killcount']
-        present_categories = [cat for cat in categories if values.get(cat) is not None]
-        if len(present_categories) != 1:
-            raise ValueError("Exactly one category (cluescroll, experience, or killcount) must be provided.")
-        return values
-
-
-class MilestoneUpdate(BaseModel):
-    ironfoundry: CategoryData
-    ironclad: CategoryData
     
 @app.post("/milestones")
-async def update_milestones(milestone_data: MilestoneUpdate):
+async def update_milestones(milestone_data: Dict):
     logger.info(f"Received milestone update:")
-    logger.info(milestone_data.model_dump())
+    logger.info(milestone_data)
 
     return {"message": "Milestone data received and logged successfully."}
 
