@@ -68,7 +68,6 @@ interface TimestampObject {
   $date: string;
 }
 
-
 interface TrackingEntry {
   name: string;
   start: {
@@ -91,7 +90,6 @@ export interface Multiplier {
   requirement: string[];
   unlocked: boolean;
 }
-
 
 interface Template {
   associated_team: string;
@@ -122,27 +120,27 @@ const isCollapsedActivities = ref<boolean>(true);
 const showMultipliersModal = ref<boolean>(false);
 
 const isSourceObtained = (source: Source): boolean => {
-  return Object.values(source.items).some(item => item.obtained > 0);
+  return Object.values(source.items).some((item) => item.obtained > 0);
 };
 
 // Helper function to check if a source is fully obtained for the current team
 const isSourceFullyObtained = (source: Source): boolean => {
   // Check if all items in the source meet their individual requirements
-  return Object.values(source.items).every(item =>
+  return Object.values(source.items).every(
+    (item) =>
       item.obtained >= item.required && // Unique requirement met
-      (item.obtained - item.required) >= item.duplicate_required // Duplicate requirement met
+      item.obtained - item.required >= item.duplicate_required // Duplicate requirement met
   );
 };
-
 
 // Helper function to get the class for a source row
 const getSourceRowClass = (source: Source): string => {
   if (isSourceFullyObtained(source)) {
-    return 'text-green-500';
+    return "text-green-500";
   } else if (isSourceObtained(source)) {
-    return 'text-yellow-500';
+    return "text-yellow-500";
   } else {
-    return 'text-white';
+    return "text-white";
   }
 };
 
@@ -152,36 +150,36 @@ const getItemCellClass = (item: Item): string => {
   const duplicateObtained = Math.max(0, item.obtained - item.required); // Duplicates obtained after getting unique
 
   // Case 1: Fully obtained (unique met AND duplicate requirement met)
-  if (uniqueObtained >= item.required && duplicateObtained >= item.duplicate_required) {
-     return 'text-green-500';
+  if (
+    uniqueObtained >= item.required &&
+    duplicateObtained >= item.duplicate_required
+  ) {
+    return "text-green-500";
   }
   // Case 2: Partially obtained (at least one obtained, but not fully)
   else if (item.obtained > 0) {
-    return 'text-yellow-500';
+    return "text-yellow-500";
   }
   // Case 3: Not obtained
   else {
-    return 'text-white';
+    return "text-white";
   }
 };
 
-
 // Helper function to display unique obtained
 const getUniqueObtainedDisplay = (item: Item): string => {
-    return `${Math.min(item.obtained, item.required)}/${item.required}`;
+  return `${Math.min(item.obtained, item.required)}/${item.required}`;
 };
 
 // Helper function to display duplicate obtained
 const getDuplicateObtainedDisplay = (item: Item): string => {
-     if (item.obtained >= item.required) {
-         const duplicateProgress = item.obtained - item.required;
-         return `${duplicateProgress}/${item.duplicate_required}`;
-     } else {
-         return `0/${item.duplicate_required}`;
-     }
+  if (item.obtained >= item.required) {
+    const duplicateProgress = item.obtained - item.required;
+    return `${duplicateProgress}/${item.duplicate_required}`;
+  } else {
+    return `0/${item.duplicate_required}`;
+  }
 };
-
-
 
 const toggleCollapseActivities = () => {
   isCollapsedActivities.value = !isCollapsedActivities.value;
@@ -230,7 +228,9 @@ const fetchTable = async (table: string) => {
 const getTierColorActivity = (activity: Activity, tierNumber: number) => {
   const currentValue = activity.current_value;
   const tierValue = activity[`tier${tierNumber}` as keyof Activity] as number;
-  const previousTierValue = (tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0) as number;
+  const previousTierValue = (
+    tierNumber > 1 ? activity[`tier${tierNumber - 1}` as keyof Activity] : 0
+  ) as number;
 
   // If the current value is at or above this tier, it's green
   if (currentValue >= tierValue) {
@@ -239,13 +239,17 @@ const getTierColorActivity = (activity: Activity, tierNumber: number) => {
 
   // If the current value is below this tier but at or above the previous tier (or greater than 0 for tier 1), it's yellow
   if (currentValue >= previousTierValue && currentValue < tierValue) {
-     // Special case for Tier 1: current_value needs to be > 0 and < tier1
+    // Special case for Tier 1: current_value needs to be > 0 and < tier1
     if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
-        return "text-yellow-500";
+      return "text-yellow-500";
     }
-     // For tiers 2, 3, and 4, it just needs to be >= the previous tier and < this tier
-    if (tierNumber > 1 && currentValue >= previousTierValue && currentValue < tierValue) {
-        return "text-yellow-500";
+    // For tiers 2, 3, and 4, it just needs to be >= the previous tier and < this tier
+    if (
+      tierNumber > 1 &&
+      currentValue >= previousTierValue &&
+      currentValue < tierValue
+    ) {
+      return "text-yellow-500";
     }
   }
 
@@ -263,10 +267,15 @@ const getDisplayCategoryName = (categoryName: string): string => {
   return categoryDisplayNameMap[categoryName] || categoryName;
 };
 
-const getTierColorMilestone = (milestone: Milestone, tierNumber: number): string => {
+const getTierColorMilestone = (
+  milestone: Milestone,
+  tierNumber: number
+): string => {
   const currentValue = milestone.current_value;
   const tierValue = milestone[`tier${tierNumber}` as keyof Milestone] as number;
-  const previousTierValue = (tierNumber > 1 ? milestone[`tier${tierNumber - 1}` as keyof Milestone] : 0) as number;
+  const previousTierValue = (
+    tierNumber > 1 ? milestone[`tier${tierNumber - 1}` as keyof Milestone] : 0
+  ) as number;
 
   // If the current value is at or above this tier, it's green
   if (currentValue >= tierValue) {
@@ -275,13 +284,17 @@ const getTierColorMilestone = (milestone: Milestone, tierNumber: number): string
 
   // If the current value is below this tier but at or above the previous tier (or greater than 0 for tier 1), it's yellow
   if (currentValue >= previousTierValue && currentValue < tierValue) {
-     // Special case for Tier 1: current_value needs to be > 0 and < tier1
+    // Special case for Tier 1: current_value needs to be > 0 and < tier1
     if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
-        return "text-yellow-500";
+      return "text-yellow-500";
     }
-     // For tiers 2, 3, and 4, it just needs to be >= the previous tier and < this tier
-    if (tierNumber > 1 && currentValue >= previousTierValue && currentValue < tierValue) {
-        return "text-yellow-500";
+    // For tiers 2, 3, and 4, it just needs to be >= the previous tier and < this tier
+    if (
+      tierNumber > 1 &&
+      currentValue >= previousTierValue &&
+      currentValue < tierValue
+    ) {
+      return "text-yellow-500";
     }
   }
 
@@ -413,8 +426,8 @@ const hideTooltip = () => {
       <!-- Right Border -->
     </div>
 
-    <!-- Main Table -->
-<table
+    <!-- Main Table (Sources) -->
+    <table
       v-if="!loading && activeData"
       class="bg-dc-accent w-full rounded-xl overflow-hidden"
     >
@@ -428,16 +441,17 @@ const hideTooltip = () => {
         <tr
           v-for="(source, key) in (activeData.tiers[selectedTier] as Tier)?.sources"
           :key="key"
-          :class="getSourceRowClass(source)"
+          class="border-t border-black hover:bg-blurple/25 cursor-pointer transition-all duration-200"
           @click="showDetails"
           @mouseenter="showTooltip($event, source.hovertext)"
           @mouseleave="hideTooltip"
           @mousemove="updateTooltipPosition"
         >
-          <td
-            class="px-4"
-          >
-            {{ source.name }}
+          <td class="px-4">
+            <!-- Apply the color class to an inner span -->
+            <span :class="getSourceRowClass(source)">
+              {{ source.name }}
+            </span>
           </td>
           <td class="details-cell">
             <table class="hidden w-full table-fixed">
@@ -464,12 +478,10 @@ const hideTooltip = () => {
                     {{ item.duplicate_points }}
                   </td>
                   <td class="text-center p-1">
-                    <!-- Display unique obtained status using the helper -->
                     {{ getUniqueObtainedDisplay(item) }}
                   </td>
                   <td class="text-center p-1">
-                    <!-- Display duplicate obtained status using the helper -->
-                     {{ getDuplicateObtainedDisplay(item) }}
+                    {{ getDuplicateObtainedDisplay(item) }}
                   </td>
                 </tr>
               </tbody>
@@ -559,7 +571,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, 1),
                       ]"
                     >
-                      {{ activity.tier1 * activity.req_factor}}
+                      {{ activity.tier1 * activity.req_factor }}
                     </td>
                     <td
                       :class="[
@@ -568,7 +580,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, 2),
                       ]"
                     >
-                      {{ activity.tier2 * activity.req_factor}}
+                      {{ activity.tier2 * activity.req_factor }}
                     </td>
                     <td
                       :class="[
@@ -577,7 +589,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, 3),
                       ]"
                     >
-                      {{ activity.tier3 * activity.req_factor}}
+                      {{ activity.tier3 * activity.req_factor }}
                     </td>
                     <td
                       :class="[
@@ -586,7 +598,7 @@ const hideTooltip = () => {
                         getTierColorActivity(activity, 4),
                       ]"
                     >
-                      {{ activity.tier4 * activity.req_factor}}
+                      {{ activity.tier4 * activity.req_factor }}
                     </td>
                     <td class="text-center p-1">{{ activity.multiplier }}x</td>
                   </tr>
@@ -684,7 +696,8 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, 1),
                         ]"
                       >
-                        {{ milestone.tier1 * milestone.req_factor}} {{ milestone.unit }}
+                        {{ milestone.tier1 * milestone.req_factor }}
+                        {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -693,7 +706,8 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, 2),
                         ]"
                       >
-                        {{ milestone.tier2 * milestone.req_factor }} {{ milestone.unit }}
+                        {{ milestone.tier2 * milestone.req_factor }}
+                        {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -702,7 +716,8 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, 3),
                         ]"
                       >
-                        {{ milestone.tier3 * milestone.req_factor}} {{ milestone.unit }}
+                        {{ milestone.tier3 * milestone.req_factor }}
+                        {{ milestone.unit }}
                       </td>
                       <td
                         :class="[
@@ -711,7 +726,8 @@ const hideTooltip = () => {
                           getTierColorMilestone(milestone, 4),
                         ]"
                       >
-                        {{ milestone.tier4 * milestone.req_factor}} {{ milestone.unit }}
+                        {{ milestone.tier4 * milestone.req_factor }}
+                        {{ milestone.unit }}
                       </td>
                       <td class="text-center p-1">
                         {{ milestone.multiplier }}x
