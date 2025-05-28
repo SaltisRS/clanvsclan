@@ -631,7 +631,7 @@ const hideTooltip = () => {
                         :class="[
                           'text-center',
                           'p-1',
-                          getTierColorMilestone(milestone, milestone.tier1),
+                          getTierColorMilestone(milestone, 1),
                         ]"
                       >
                         {{ milestone.tier1 * milestone.req_factor}} {{ milestone.unit }}
@@ -640,7 +640,7 @@ const hideTooltip = () => {
                         :class="[
                           'text-center',
                           'p-1',
-                          getTierColorMilestone(milestone, milestone.tier2),
+                          getTierColorMilestone(milestone, 2),
                         ]"
                       >
                         {{ milestone.tier2 * milestone.req_factor }} {{ milestone.unit }}
@@ -649,7 +649,7 @@ const hideTooltip = () => {
                         :class="[
                           'text-center',
                           'p-1',
-                          getTierColorMilestone(milestone, milestone.tier3),
+                          getTierColorMilestone(milestone, 3),
                         ]"
                       >
                         {{ milestone.tier3 * milestone.req_factor}} {{ milestone.unit }}
@@ -658,7 +658,7 @@ const hideTooltip = () => {
                         :class="[
                           'text-center',
                           'p-1',
-                          getTierColorMilestone(milestone, milestone.tier4),
+                          getTierColorMilestone(milestone, 4),
                         ]"
                       >
                         {{ milestone.tier4 * milestone.req_factor}} {{ milestone.unit }}
