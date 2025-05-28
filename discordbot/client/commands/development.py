@@ -270,7 +270,7 @@ async def get_inactive_players(interaction: discord.Interaction, point_threshold
     message = f"# Inactive Players =< '{point_threshold}'\n"
     
     for player in inactive_players:
-        message += f"`{player.get('rsn', 'Unknown')}` - <@{player.get('discord_id', 'Unknown')}> : {player.get('total_gained', 0)}pts"
+        message += f"`{player.get('rsn', 'Unknown')}` - <@{player.get('discord_id', 'Unknown')}> : {player.get('total_gained', 0)}pts\n"
     
     await interaction.response.send_message(message)
 
