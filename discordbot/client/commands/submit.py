@@ -255,7 +255,7 @@ async def check_and_unlock_clan_multipliers_template(template_doc: Dict[str, Any
                      break # No need to check further requirements for this multiplier
 
              if all_requirements_met_in_template:
-                 logger.info(f"Clan multiplier '{multiplier.get('name')}' unlocked for clan '{template_doc.get('clan')}' based on template item counts.")
+                 logger.info(f"Clan multiplier '{multiplier.get('name')}' unlocked for clan '{template_doc.get('associated_team')}' based on template item counts.")
                  multiplier["unlocked"] = True # Modify the template_doc in place
                  template_modified = True
 
@@ -274,7 +274,7 @@ async def check_and_unlock_clan_multipliers_template(template_doc: Dict[str, Any
 
         except Exception as e:
             # Log any errors during this checking phase if needed, though the main save happens later
-            logger.error(f"Error during multiplier unlock check for clan '{template_doc.get('clan')}': {e}", exc_info=True)
+            logger.error(f"Error during multiplier unlock check for clan '{template_doc.get('associated_team')}': {e}", exc_info=True)
 
     return newly_unlocked_multipliers
 
@@ -404,7 +404,7 @@ class SubmissionView(discord.ui.View):
                     # Calculate base item points first
                     item_total_points_base = get_total_points_for_item_no_flags(i_data)
                     if template_doc["associated_team"] == "ironclad":
-                        item_total_points_base *= 1.5
+                        item_total_points_base *= 1.4
 
                     # Apply the effective multiplier
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
@@ -417,7 +417,7 @@ class SubmissionView(discord.ui.View):
         # Update the total_gained field in the template_doc
         template_doc["total_gained"] = total_template_points
 
-        logger.info(f"Template: Recalculated total_gained to {total_template_points:.2f} for clan '{template_doc.get('clan')}'.")
+        logger.info(f"Template: Recalculated total_gained to {total_template_points:.2f} for clan '{template_doc.get('associated_team')}'.")
         return total_template_points
 
 
@@ -704,7 +704,7 @@ async def precheck(
                     existing_entry["end"] = None # Reset end on new start
                 
                 # Update the entire screenshots list in the document
-                await player_coll.update_one({"_id": player_data["_id"]}, {"$set": {"screenshots": screenshots_list}})
+                await player_coll.update_one({"_id": player_data["_id"]}, {"$push": {"screenshots": screenshots_list}})
                 feedback_message = f"✅ Set starting screenshot for **{content}**."
                 update_successful = True
 

@@ -255,6 +255,27 @@ async def force_rename_all(interaction: discord.Interaction):
 
 
 @group.command()
+async def get_inactive_players(interaction: discord.Interaction, point_threshold: int = 0):
+    players_cursor = players.find({"awarded_points": {"$lte": point_threshold}})
+    if not players_cursor:
+        await interaction.response.send_message("None")
+        return
+    
+    inactive_players = await players_cursor.to_list()
+    
+    if not inactive_players:
+        await interaction.response.send_message(f"No players under: {point_threshold} found.")
+
+    message = f"# Inactive Players =< '{point_threshold}'\n"
+    
+    for player in inactive_players:
+        message += f"`{player.get('rsn', 'Unknown')}` - <@{player.get('discord_id', 'Unknown')}> : {player.get('total_gained', 0)}pts"
+    
+    await interaction.response.send_message(message)
+
+
+
+@group.command()
 async def send_link_message(interaction: discord.Interaction):
     embed = discord.Embed(title="Link Your RSN", color=discord.Color.teal())
     embed.description = "Link your RSN of the active account to be used in the event.\nThis is a requirement to participate and is checked against WiseOldMan."
