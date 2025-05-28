@@ -256,10 +256,11 @@ async def force_rename_all(interaction: discord.Interaction):
 
 @group.command()
 async def get_inactive_players(interaction: discord.Interaction, point_threshold: int = 0):
-    players_cursor = players.find({"awarded_points": {"$lte": point_threshold}})
+    players_cursor = players.find({"total_gained": {"$lte": point_threshold}})
     if not players_cursor:
         await interaction.response.send_message("None")
         return
+    
     
     inactive_players = await players_cursor.to_list()
     
