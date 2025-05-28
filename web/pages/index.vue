@@ -203,32 +203,30 @@ const getDisplayCategoryName = (categoryName: string): string => {
   return categoryDisplayNameMap[categoryName] || categoryName;
 };
 
-const getTierColorMilestone = (milestone: Milestone, tierNumber: number) => {
+const getTierColorMilestone = (milestone: Milestone, tierNumber: number): string => {
   const currentValue = milestone.current_value;
   const tierValue = milestone[`tier${tierNumber}` as keyof Milestone] as number;
-  const previousTierValue = (
-    tierNumber > 1 ? milestone[`tier${tierNumber - 1}` as keyof Milestone] : 0
-  ) as number;
+  const previousTierValue = (tierNumber > 1 ? milestone[`tier${tierNumber - 1}` as keyof Milestone] : 0) as number;
 
+  // If the current value is at or above this tier, it's green
   if (currentValue >= tierValue) {
-    return "text-green-500"; // Green if current value is at or above this tier's threshold
-  } else if (currentValue >= previousTierValue && currentValue < tierValue) {
-    // Yellow if current value is less than this tier's threshold BUT at or above the previous tier's threshold
-    // For T1, this is currentValue > 0 and < tier1
-    if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
-      return "text-yellow-500";
-    } else if (
-      tierNumber > 1 &&
-      currentValue >= previousTierValue &&
-      currentValue < tierValue
-    ) {
-      return "text-yellow-500";
-    } else {
-      return "text-white"; // Should ideally not hit this with correct logic
-    }
-  } else {
-    return "text-white"; // White if current value is below the previous tier's threshold
+    return "text-green-500";
   }
+
+  // If the current value is below this tier but at or above the previous tier (or greater than 0 for tier 1), it's yellow
+  if (currentValue >= previousTierValue && currentValue < tierValue) {
+     // Special case for Tier 1: current_value needs to be > 0 and < tier1
+    if (tierNumber === 1 && currentValue > 0 && currentValue < tierValue) {
+        return "text-yellow-500";
+    }
+     // For tiers 2, 3, and 4, it just needs to be >= the previous tier and < this tier
+    if (tierNumber > 1 && currentValue >= previousTierValue && currentValue < tierValue) {
+        return "text-yellow-500";
+    }
+  }
+
+  // If none of the above, it's white (below the first tier requirement or 0)
+  return "text-white";
 };
 
 // Table Logic
