@@ -179,6 +179,3 @@ venv*
 .vscode
 
 backup.json
-
-#standalone scripts
-wom_connector.py
