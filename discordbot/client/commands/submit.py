@@ -658,8 +658,8 @@ async def precheck(
     content: str,
     screenshot: discord.Attachment
 ):
-    # Defer the interaction since file upload can take time
-    await interaction.response.defer(ephemeral=False) # Consider ephemeral=True if you don't want others to see the response
+    logger.info(f"Received /precheck {action} from {interaction.user.id} ({interaction.user.name}) for Content: '{content}' with screenshot.")
+    await interaction.response.defer(ephemeral=False)
 
     try:
         url = await upload_screenshot(screenshot)
@@ -667,65 +667,94 @@ async def precheck(
             await interaction.followup.send("Failed to upload screenshot. Please try again.")
             logger.error(f"Failed to get upload URL for screenshot from {interaction.user.id}")
             return
-
+        
         player_data = await get_player_info(interaction.user.id)
         if not player_data:
             await interaction.followup.send("User data not found. Cannot save screenshot.")
             logger.error(f"Player data not found for {interaction.user.id} during precheck.")
             return
 
-        screenshots_list = player_data.get("screenshots", []) # Get the screenshots list, default to empty if not exists
+        screenshots_list = player_data.get("screenshots", [])
+        if not isinstance(screenshots_list, list):
+             logger.error(f"Player {interaction.user.id} has invalid 'screenshots' field (not a list). Cannot proceed with precheck.")
+             await interaction.followup.send("Error processing your data: Invalid screenshots format. Please contact an admin.", ephemeral=True)
+             return
 
-        # Find the entry for the specific content type
         existing_entry = None
         for entry in screenshots_list:
-            if entry.get("name") == content:
+            if isinstance(entry, dict) and entry.get("name") == content:
                 existing_entry = entry
                 break
 
         update_successful = False
         feedback_message = "Operation failed."
+        db_update_operation = None
+        array_filters = None
 
         if action == "Start":
-            if existing_entry is not None and existing_entry.get("start") is not None:
-                # A start entry already exists for this content
-                feedback_message = f"You already have a starting screenshot for **{content}**."
+            # Rule: Start can only be set if NO entry for this content exists.
+            if existing_entry is not None:
+                feedback_message = f"A tracking entry for **{content}** already exists. Start can only be set once."
             else:
-                # Create or update the start entry
-                if existing_entry is None:
-                    new_entry = {
-                        "name": content,
-                        "start": url,
-                        "end": None
-                    }
-                    screenshots_list.append(new_entry)
-                else:
-                    existing_entry["start"] = url
-                    existing_entry["end"] = None # Reset end on new start
-                
-                # Update the entire screenshots list in the document
-                await player_coll.update_one({"_id": player_data["_id"]}, {"$push": {"screenshots": screenshots_list}})
+                # Create a brand new entry with start data
+                new_entry = {
+                    "name": content,
+                    "start": url,
+                    "end": None
+                }
+                db_update_operation = {"$push": {"screenshots": new_entry}}
+
                 feedback_message = f"✅ Set starting screenshot for **{content}**."
                 update_successful = True
 
         elif action == "End":
+            # End requires a start entry to exist. End can be set/updated multiple times.
             if existing_entry is None or existing_entry.get("start") is None:
-                 # No start entry found for this content
                  feedback_message = f"You must upload a **Start** screenshot for **{content}** before setting an End screenshot."
             else:
-                 # Update the end entry of the existing start entry
-                 existing_entry["end"] = url
-                 
-                 # Update the entire screenshots list in the document
-                 await player_coll.update_one({"_id": player_data["_id"]}, {"$set": {"screenshots": screenshots_list}})
+                 db_update_operation = {
+                     "$set": {
+                         "screenshots.$[elem].end": url
+                     }
+                 }
+                 array_filters = [{"elem.name": content}]
+
                  feedback_message = f"✅ Set ending screenshot for **{content}**."
                  update_successful = True
 
-        # Send the feedback message using followup.send
+
+        if db_update_operation:
+            try:
+                # $push operation does not use array_filters
+                # $set with arrayFilters uses array_filters
+                update_result = await player_coll.update_one(
+                    {"_id": player_data["_id"]},
+                    db_update_operation,
+                    array_filters=array_filters if array_filters is not None else None
+                )
+
+                if update_result.acknowledged:
+                    if update_result.modified_count > 0:
+                         logger.info(f"Successfully updated screenshots for user {interaction.user.id} with action '{action}' for content '{content}'. Modified count: {update_result.modified_count}")
+                    else:
+                         logger.warning(f"Screenshots update acknowledged but modified_count was 0 for user {interaction.user.id} with action '{action}' for content '{content}'. This is expected if the state was already correct.")
+
+                else:
+                     logger.error(f"Screenshots update acknowledged was False for user {interaction.user.id} with action '{action}' for content '{content}'.")
+                     feedback_message = "Database update not acknowledged. Data might not be saved."
+                     update_successful = False
+
+
+            except Exception as e:
+                logger.error(f"Error saving screenshots for user {interaction.user.id} with action '{action}' for content '{content}': {e}", exc_info=True)
+                feedback_message = "Error saving screenshot data. Please try again."
+                update_successful = False
+
+        logger.info(update_successful)
         await interaction.followup.send(feedback_message)
 
     except Exception as e:
-        logger.error(f"Error in precheck command for user {interaction.user.id}: {e}", exc_info=True)
+        logger.error(f"An unexpected error occurred in precheck command for user {interaction.user.id}: {e}", exc_info=True)
         await interaction.followup.send("An unexpected error occurred while processing your request. Please try again.")
 
 

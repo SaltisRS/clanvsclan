@@ -6,7 +6,6 @@ from discord import app_commands
 from dotenv import load_dotenv
 from discord.ext.tasks import loop
 
-from .modules.invite_checks import InviteTracker
 from .modules.activity_updater import activity_update as task1
 from .modules.milestone_updater import milestone_update as task2
 from .commands.template import setup as TemplateTools
@@ -46,8 +45,7 @@ class DiscordClient(discord.Client):
         await task2()
     
     async def load_modules(self):
-        self.invite_tracker = InviteTracker(self, self.selected_guild) # type: ignore
-        await self.invite_tracker.startup_cache()
+        ...
         
     async def load_commands(self):
         TemplateTools(self)
