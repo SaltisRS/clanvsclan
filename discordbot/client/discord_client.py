@@ -4,10 +4,8 @@ import os
 from loguru import logger
 from discord import app_commands
 from dotenv import load_dotenv
-from discord.ext.tasks import loop
 
-from .modules.activity_updater import activity_update as task1
-from .modules.milestone_updater import milestone_update as task2
+
 from .commands.template import setup as TemplateTools
 from .commands.development import setup as DevSetup
 from .commands.submit import setup as SubmitSetup
@@ -38,11 +36,6 @@ class DiscordClient(discord.Client):
             return
         logger.info(f"Guild set to {self.selected_guild}")
     
-    @loop(minutes=5)
-    async def tasks(self):
-        logger.info("Starting Task loop...")
-        await task1()
-        await task2()
     
     async def load_modules(self):
         ...
@@ -67,4 +60,3 @@ class DiscordClient(discord.Client):
     async def on_ready(self):
         logger.info("Bot is ready as {0.user}".format(self))
         await self.setup_hook()
-        await self.tasks.start()
