@@ -1,17 +1,11 @@
-from argparse import FileType
+
 import discord
-import os
-import json
 
 from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
-from typing import Optional, Literal, Dict, List, Any, Union, Tuple
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
-
-from discordbot.client.commands.development import MONGO
-
 
 from .groups.template import TemplateGroup
 
