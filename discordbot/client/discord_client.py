@@ -53,7 +53,8 @@ class DiscordClient(discord.Client):
     
     @loop(minutes=10)
     async def event_tracking(self):
-        await trackers(mongo_client=self.mongo_client)
+        if self.mongo_client:
+            await trackers(mongo_client=self.mongo_client)
     
     async def load_modules(self):
         ...

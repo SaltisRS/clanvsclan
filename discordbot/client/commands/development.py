@@ -6,7 +6,7 @@ import pandas as pd
 import asyncio
 
 from loguru import logger
-from pymongo import AsyncMongoClient
+from pymongo import AsyncmongoClient
 from dotenv import load_dotenv
 from httpx import AsyncClient
 from discord import Embed, Object
@@ -23,8 +23,8 @@ headers = {
 }
 
 urls = ("https://api.wiseoldman.net/v2/groups/1500/csv", "https://api.wiseoldman.net/v2/groups/9403/csv")
-db = MONGO["Frenzy"]
-players = db["Players"]
+db = Optional
+players = Optional
 verify_set = set()
 linked_role_id = 1369434992714842205
 IC_roleid = 1343921208948953128
@@ -381,11 +381,13 @@ async def update_player_clans(interaction: discord.Interaction):
     logger.info(f"Update player clans command finished. Updated: {updated_count}, Created: {created_count}, Errors: {errors_count}.")
     
 
-async def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
+async def setup(client: discord.Client, mongo_client: AsyncmongoClient | None):
     if mongo_client == None:
         return
-    global MONGO
-    MONGO = mongo_client
+    global mongo, db, players
+    mongo = mongo_client
+    db = mongo["Frenzy"]
+    players = db["Players"] # type: ignore
     await populate_verify_set()
     client.tree.add_command(group, guild=client.selected_guild) 
     client.add_view(LinkView())

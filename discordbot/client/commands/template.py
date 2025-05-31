@@ -1,22 +1,29 @@
 
+from typing import Optional
 import discord
 
 from loguru import logger
 from discord import app_commands
 from cachetools import TTLCache
 from pymongo import AsyncMongoClient
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.database import AsyncDatabase
 from dotenv import load_dotenv
 
 from .groups.template import TemplateGroup
 
-
+mongo: Optional[AsyncMongoClient] = None
+db: Optional[AsyncDatabase] = None
+coll: Optional[AsyncCollection] = None
 load_dotenv()
+
 group = TemplateGroup()
-db = MONGO["Frenzy"]
-coll = db["Templates"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30) 
     
 async def autocomplete_tier(interaction: discord.Interaction, current: str):
+    if coll == None:
+        return
+    
     if "tiers" not in autocomplete_cache:
         template = await coll.find_one({})
         if not template:
@@ -30,6 +37,8 @@ async def autocomplete_tier(interaction: discord.Interaction, current: str):
     ][:25]
 
 async def autocomplete_source(interaction: discord.Interaction, current: str):
+    if coll == None:
+        return
     tier = getattr(interaction.namespace, "tier", None)
     if not tier:
         return []
@@ -51,6 +60,8 @@ async def autocomplete_source(interaction: discord.Interaction, current: str):
 
 
 async def autocomplete_item(interaction: discord.Interaction, current: str):
+    if coll == None:
+        return
     tier = getattr(interaction.namespace, "tier", None)
     source = getattr(interaction.namespace, "source", None)
     if not tier or not source:
@@ -78,6 +89,8 @@ async def autocomplete_item(interaction: discord.Interaction, current: str):
 
 @group.command()
 async def refresh_cache(interaction: discord.Interaction):
+    if coll == None:
+        return
     global autocomplete_cache
     autocomplete_cache.clear()
 
@@ -135,7 +148,9 @@ async def get_clan(interaction: discord.Interaction):
         if role.id == 1343921101687750716:
             return "Iron Foundry"
 
-async def create_tier_options() -> list[discord.SelectOption]:
+async def create_tier_options() -> list[discord.SelectOption] | None:
+    if coll == None:
+        return
     options = []
     template: dict | None = await coll.find_one({})
     if not template: return [discord.SelectOption(label="No Data Matched")]
@@ -145,7 +160,9 @@ async def create_tier_options() -> list[discord.SelectOption]:
         logger.info(f"Adding '{tier}' to options.")
     return options
 
-async def create_source_options(tier: str) -> list[discord.SelectOption]:
+async def create_source_options(tier: str) -> list[discord.SelectOption] | None:
+    if coll == None:
+        return
     options = []
     template: dict | None = await coll.find_one({})
     if not template: return [discord.SelectOption(label="No Data Matched")]
@@ -156,7 +173,9 @@ async def create_source_options(tier: str) -> list[discord.SelectOption]:
     
     return options
 
-async def parse_tier(source: str) -> str: # type: ignore
+async def parse_tier(source: str) -> str | None:
+    if coll == None:
+        return
     template: dict | None = await coll.find_one({})
     if not template:
         return ""
@@ -171,6 +190,10 @@ async def parse_tier(source: str) -> str: # type: ignore
 def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     if mongo_client == None:
         return
-    global MONGO
-    MONGO = mongo_client
+    global mongo, db, coll
+    mongo = mongo_client
+    db = mongo["Frenzy"]
+    coll = db["Templates"]
+    if (mongo, db, coll) == None:
+        return
     client.tree.add_command(group, guild=client.selected_guild) # type: ignore

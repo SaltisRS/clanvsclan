@@ -1,17 +1,16 @@
 import math
 from typing import Any, Dict, List, Literal, Optional, Tuple
 import discord
-import os
-
-
 
 from loguru import logger
 from dotenv import load_dotenv
 from discord import Embed, app_commands
-from pymongo import AsyncMongoClient
+from pymongo import AsyncmongoClient
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.database import AsyncDatabase
 from cachetools import TTLCache
 
-from discordbot.client.commands.development import MONGO
+from discordbot.client.commands.development import mongo
 
 from ..modules.activity_modals import ACTIVITY_MODAL_MAP, get_activity_modal_class, upload_screenshot
 
@@ -22,11 +21,11 @@ IF_roleid = 1343921101687750716
 ICPERM = [1369428787342737488, 1369428819907448832]
 IFPERM = [1369428706161852436, 1369428754773840082]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30)
-db = MONGO["Frenzy"]
-if_coll = db["ironfoundry"]
-ic_coll = db["ironclad"]
-template_coll = db["Templates"]
-player_coll = db["Players"]
+db = Optional[AsyncDatabase]
+if_coll = Optional
+ic_coll = Optional
+template_coll = Optional
+player_coll = Optional
 
 
 
@@ -129,6 +128,7 @@ async def autocomplete_item(interaction: discord.Interaction, current: str):
     ][:25]
 
 def get_template_collection(clan: str):
+    
     """Returns the correct template collection based on clan string."""
     if clan == "ironfoundry":
         return if_coll
@@ -139,7 +139,10 @@ def get_template_collection(clan: str):
         return None
     
 async def get_player_info(discord_id: int):
+    
     """Fetches a player's document from the Players collection."""
+    if not player_coll:
+        return
     try:
         player_document = await player_coll.find_one({"discord_id": discord_id})
         return player_document
@@ -813,11 +816,16 @@ async def tracking(
         await interaction.response.send_message(e)
 
     
-def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
+def setup(client: discord.Client, mongo_client: AsyncmongoClient | None):
     if mongo_client == None:
         return
-    global MONGO
-    MONGO = mongo_client
+    global mongo, db, if_coll, ic_coll, template_coll, player_coll
+    mongo = mongo_client
+    db = mongo["Frenzy"]
+    if_coll = db["ironfoundry"]
+    ic_coll = db["ironclad"]
+    template_coll = db["Templates"]
+    player_coll = db["Players"]
     client.tree.add_command(tracking, guild=client.selected_guild)
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
