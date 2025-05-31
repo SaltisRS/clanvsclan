@@ -5,7 +5,7 @@ import discord
 from loguru import logger
 from dotenv import load_dotenv
 from discord import Embed, app_commands
-from pymongo import AsyncmongoClient
+from pymongo import AsyncMongoClient
 from pymongo.asynchronous.collection import AsyncCollection
 from pymongo.asynchronous.database import AsyncDatabase
 from cachetools import TTLCache
@@ -141,8 +141,6 @@ def get_template_collection(clan: str):
 async def get_player_info(discord_id: int):
     
     """Fetches a player's document from the Players collection."""
-    if not player_coll:
-        return
     try:
         player_document = await player_coll.find_one({"discord_id": discord_id})
         return player_document
@@ -816,7 +814,7 @@ async def tracking(
         await interaction.response.send_message(e)
 
     
-def setup(client: discord.Client, mongo_client: AsyncmongoClient | None):
+def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     if mongo_client == None:
         return
     global mongo, db, if_coll, ic_coll, template_coll, player_coll
