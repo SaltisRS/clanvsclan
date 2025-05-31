@@ -6,7 +6,8 @@ import io
 import httpx
 from loguru import logger
 from dotenv import load_dotenv
-from typing import Dict, Any, List, Literal
+from typing import Dict, Any, List, Literal, Optional
+from pymongo import AsyncMongoClient
 
 
 load_dotenv()
@@ -366,14 +367,14 @@ async def milestone_update():
         
             logger.info("Finished a full cycle of metric milestone updates. Starting next cycle.")
 
-from pymongo import AsyncMongoClient
 
 
 
-db = MONGO["Frenzy"]
-player_coll = db["Players"]
-ironfoundry_template_coll = db["ironfoundry"] # Correct collection for IF templates
-ironclad_template_coll = db["ironclad"]   # Correct collection for IC templates
+
+db = Optional
+player_coll = Optional
+ironfoundry_template_coll = Optional
+ironclad_template_coll = Optional
 
 # Mapping clan names to their template collections
 CLAN_TEMPLATE_COLLS = {
@@ -521,8 +522,13 @@ async def activity_update():
 async def trackers(mongo_client: AsyncMongoClient | None):
     if not mongo_client:
         return
-    global MONGO
-    MONGO = mongo_client
+    global mongo, db, player_coll, ironclad_template_coll, ironfoundry_template_coll
+    mongo = mongo_client
+    db = mongo["Frenzy"]
+    player_coll = db["Players"] # type: ignore
+    ironclad_template_coll = db["ironclad"] # type: ignore
+    ironfoundry_template_coll = db["ironfoundry"] # type: ignore
+    
     await activity_update()
     await milestone_update()
 
