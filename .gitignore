@@ -179,3 +179,5 @@ venv*
 .vscode
 
 backup.json
+milestone_updater.py
+activity_updater.py

@@ -15,7 +15,7 @@
         :style="{ top: tooltipY + 'px', left: tooltipX + 'px' }"
       >
         <div v-for="(tierPoints, tier) in tiers" :key="tier">
-          <span class="font-bold">{{ tier }}:</span> {{ tierPoints }} points
+          <span class="font-bold">{{ tier }}:</span> {{ tierPoints.toPrecision(6) }} points
         </div>
       </div>
     </div>

@@ -109,11 +109,95 @@ const activeData = ref<Template>({
   milestones: {},
 });
 
+interface ActivityOrMilestone {
+  name: string;
+  current_value: number;
+  point_step: number;
+  tier1: number;
+  tier2: number;
+  tier3: number;
+  tier4: number;
+  multiplier: number;
+  unit: string;
+  req_factor: number; // Assuming req_factor applies to tier thresholds
+}
+
+const calculateEntryPoints = (entry: ActivityOrMilestone): number => {
+  const currentValue = entry.current_value;
+  const pointStep = entry.point_step;
+  const tier1 = entry.tier1 * entry.req_factor;
+  const tier2 = entry.tier2 * entry.req_factor;
+  const tier3 = entry.tier3 * entry.req_factor;
+  const tier4 = entry.tier4 * entry.req_factor;
+  const multiplier = entry.multiplier;
+
+  let pointsEarnedFromTiers = 0;
+
+  // Calculate points earned from reaching each tier (cumulative)
+  if (currentValue >= tier1) {
+    pointsEarnedFromTiers += pointStep;
+  }
+  if (currentValue >= tier2) {
+    pointsEarnedFromTiers += pointStep;
+  }
+  if (currentValue >= tier3) {
+    pointsEarnedFromTiers += pointStep;
+  }
+  if (currentValue >= tier4) {
+    pointsEarnedFromTiers += pointStep;
+  }
+
+  let totalPoints = pointsEarnedFromTiers;
+
+  // Apply additional multiplier bonus if Tier 4 is reached
+  if (currentValue >= tier4) {
+    totalPoints += (multiplier - 1) * pointStep;
+  }
+
+  return totalPoints;
+};
+
+// Computed property to calculate total points from Activities
+const totalActivityPoints = computed(() => {
+  if (!activeData.value || !activeData.value.activities) return 0;
+
+  let total = 0;
+  for (const activity of activeData.value.activities) {
+    total += calculateEntryPoints(activity);
+  }
+  return total;
+});
+
+// Computed property to calculate total points from Milestones
+const totalMilestonePoints = computed(() => {
+  if (!activeData.value || !activeData.value.milestones) return 0;
+
+  let total = 0;
+  // Milestones are nested by category
+  for (const categoryName in activeData.value.milestones) {
+    const milestonesInCategory = activeData.value.milestones[categoryName];
+    if (milestonesInCategory && milestonesInCategory.length > 0) {
+      for (const milestone of milestonesInCategory) {
+        total += calculateEntryPoints(milestone);
+      }
+    }
+  }
+  return total;
+});
+
+const combinedTotalPoints = computed(() => {
+  // activeData.value.total_gained is points from Sources
+  return (
+    activeData.value.total_gained +
+    totalActivityPoints.value +
+    totalMilestonePoints.value
+  );
+});
+
 const team_uris = ["ironfoundry", "ironclad"];
 const selectedTier = ref<keyof Template["tiers"]>("Easy");
 const selectedTable = ref<string>(team_uris[0]);
 const loading = ref<boolean>(false);
-const points = ref<number>(0);
 const tierPoints = ref<Record<string, number>>({});
 const tooltip = ref<{ text: string; x: number; y: number } | null>(null);
 const isCollapsedActivities = ref<boolean>(true);
@@ -204,16 +288,38 @@ const fetchTable = async (table: string) => {
       _data[0].tiers
     )[0] as keyof Template["tiers"];
 
-    // ✅ Set total points
-    points.value = activeData.value.total_gained;
-
-    // ✅ Extract per-tier points
     tierPoints.value = Object.fromEntries(
       Object.entries(activeData.value.tiers).map(([tier, data]) => [
         tier,
         (data as { points_gained: number }).points_gained,
       ])
     );
+
+if (activeData.value) {
+      // Total points from all Activities
+      const totalActivities = totalActivityPoints.value;
+      if (totalActivities > 0) {
+          tierPoints.value["Activities"] = totalActivities;
+      }
+
+
+      // Total points for each Milestone category
+      for (const categoryName in activeData.value.milestones) {
+        const milestonesInCategory = activeData.value.milestones[categoryName];
+        if (milestonesInCategory && milestonesInCategory.length > 0) {
+          let categoryTotal = 0;
+          for (const milestone of milestonesInCategory) {
+            categoryTotal += calculateEntryPoints(milestone);
+          }
+          if (categoryTotal > 0) {
+            const displayCategoryName = getDisplayCategoryName(categoryName);
+            tierPoints.value[displayCategoryName] = categoryTotal; // Append category total
+          }
+        }
+      }
+    }
+
+
   } catch (error) {
     console.error("Error fetching table data:", error);
   } finally {
@@ -378,7 +484,7 @@ const hideTooltip = () => {
 
     <div v-if="!loading" class="z-50">
       <PointsTooltip :position="'top'" :tiers="tierPoints">
-        <PointBox :points="points" />
+        <PointBox :points="combinedTotalPoints" />
       </PointsTooltip>
     </div>
 
