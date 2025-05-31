@@ -6,7 +6,7 @@ import pandas as pd
 import asyncio
 
 from loguru import logger
-from pymongo import AsyncmongoClient
+from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 from httpx import AsyncClient
 from discord import Embed, Object
@@ -381,7 +381,7 @@ async def update_player_clans(interaction: discord.Interaction):
     logger.info(f"Update player clans command finished. Updated: {updated_count}, Created: {created_count}, Errors: {errors_count}.")
     
 
-async def setup(client: discord.Client, mongo_client: AsyncmongoClient | None):
+async def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     if mongo_client == None:
         return
     global mongo, db, players
