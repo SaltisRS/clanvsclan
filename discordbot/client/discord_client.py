@@ -4,11 +4,15 @@ import os
 from loguru import logger
 from discord import app_commands
 from dotenv import load_dotenv
+from pymongo import AsyncMongoClient
+from discord.ext.tasks import loop
 
 
 from .commands.template import setup as TemplateTools
 from .commands.development import setup as DevSetup
 from .commands.submit import setup as SubmitSetup
+
+from .modules.trackables import trackers
 
 
 
@@ -22,9 +26,20 @@ class DiscordClient(discord.Client):
         self.preset_guild_id = os.getenv("GUILD_ID")
         self.selected_guild = None
         
-    
-    
-    
+        self.mongo_client = None
+
+        MONGO_URI = os.getenv("MONGO_URI")
+        if not MONGO_URI:
+            logger.error("MONGO_URI not found in environment variables! Database will not be connected.")
+        else:
+            try:
+                self.mongo_client = AsyncMongoClient(host=MONGO_URI)
+                logger.info("MongoDB connection initialized successfully.")
+
+            except Exception as e:
+                logger.error(f"Failed to initialize MongoDB connection: {e}", exc_info=True)
+                self.mongo_client = None
+        
     async def set_guild(self):
         try:
             self.selected_guild = await self.fetch_guild(self.preset_guild_id) # type: ignore
@@ -36,14 +51,17 @@ class DiscordClient(discord.Client):
             return
         logger.info(f"Guild set to {self.selected_guild}")
     
+    @loop(minutes=10)
+    async def event_tracking(self):
+        await trackers(mongo_client=self.mongo_client)
     
     async def load_modules(self):
         ...
         
     async def load_commands(self):
-        TemplateTools(self)
-        SubmitSetup(self)
-        await DevSetup(self)
+        TemplateTools(self, mongo_client=self.mongo_client)
+        SubmitSetup(self, mongo_client=self.mongo_client)
+        await DevSetup(self, mongo_client=self.mongo_client)
         commands = await self.tree.sync(guild=self.selected_guild)
         logger.info(f"Loading commands: {commands}")
         
@@ -60,3 +78,4 @@ class DiscordClient(discord.Client):
     async def on_ready(self):
         logger.info("Bot is ready as {0.user}".format(self))
         await self.setup_hook()
+        await self.event_tracking.start()

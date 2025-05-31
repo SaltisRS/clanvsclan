@@ -23,8 +23,7 @@ headers = {
 }
 
 urls = ("https://api.wiseoldman.net/v2/groups/1500/csv", "https://api.wiseoldman.net/v2/groups/9403/csv")
-mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
-db = mongo["Frenzy"]
+db = MONGO["Frenzy"]
 players = db["Players"]
 verify_set = set()
 linked_role_id = 1369434992714842205
@@ -382,7 +381,11 @@ async def update_player_clans(interaction: discord.Interaction):
     logger.info(f"Update player clans command finished. Updated: {updated_count}, Created: {created_count}, Errors: {errors_count}.")
     
 
-async def setup(client: discord.Client):
+async def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
+    if mongo_client == None:
+        return
+    global MONGO
+    MONGO = mongo_client
     await populate_verify_set()
     client.tree.add_command(group, guild=client.selected_guild) 
     client.add_view(LinkView())

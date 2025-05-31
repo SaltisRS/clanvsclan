@@ -10,14 +10,15 @@ from typing import Optional, Literal, Dict, List, Any, Union, Tuple
 from pymongo import AsyncMongoClient
 from dotenv import load_dotenv
 
+from discordbot.client.commands.development import MONGO
+
 
 from .groups.template import TemplateGroup
 
 
 load_dotenv()
 group = TemplateGroup()
-mongo = AsyncMongoClient(host=os.getenv("MONGO_URI"))
-db = mongo["Frenzy"]
+db = MONGO["Frenzy"]
 coll = db["Templates"]
 autocomplete_cache = TTLCache(maxsize=512, ttl=30) 
     
@@ -173,5 +174,9 @@ async def parse_tier(source: str) -> str: # type: ignore
                 return tier_name  # Return the tier name instead of the whole tier object
         
 
-def setup(client: discord.Client):
+def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
+    if mongo_client == None:
+        return
+    global MONGO
+    MONGO = mongo_client
     client.tree.add_command(group, guild=client.selected_guild) # type: ignore
