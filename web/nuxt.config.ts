@@ -9,6 +9,24 @@ export default defineNuxtConfig({
       port: 80,
       host: "0.0.0.0"
     }
+  },
+  app: {
+    head: {
+      title: "Ironclad vs Ironfoundry",
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/ironfoundry.ico'
+        }
+      ],
+      meta: [
+            { property: 'og:title', content: 'Clad vs Foundry' },
+            { property: 'og:description', content: 'Frenzy Tracker' },
+            { property: 'og:image', content: 'https://ironfoundry.cc/frenzyvs.png' },
+            { property: 'og:url', content: 'https://ironfoundry.cc' },
+            { property: 'og:type', content: 'website' },
+          ],
+    }
   }
-}
-)
+});
