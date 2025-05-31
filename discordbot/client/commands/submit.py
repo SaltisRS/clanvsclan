@@ -10,7 +10,6 @@ from pymongo.asynchronous.collection import AsyncCollection
 from pymongo.asynchronous.database import AsyncDatabase
 from cachetools import TTLCache
 
-from discordbot.client.commands.development import mongo
 
 from ..modules.activity_modals import ACTIVITY_MODAL_MAP, get_activity_modal_class, upload_screenshot
 

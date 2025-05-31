@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional
 import discord
-import os
 import io
 import pandas as pd
 import asyncio
