@@ -379,6 +379,196 @@ async def update_player_clans(interaction: discord.Interaction):
     await interaction.followup.send(summary_message)
     logger.info(f"Update player clans command finished. Updated: {updated_count}, Created: {created_count}, Errors: {errors_count}.")
     
+@group.command(name="pet_tally", description="Shows pet statistics for each team.")
+async def pet_tally(interaction: discord.Interaction):
+    logger.info(f"Received /pet_tally from {interaction.user.id} ({interaction.user.name})")
+    await interaction.response.defer() # Defer publicly
+
+    # Get references to the template collections using the global db
+    try:
+        ironfoundry_template_coll = db["ironfoundry"]#type: ignore
+        ironclad_template_coll = db["ironclad"]#type: ignore
+    except Exception as e:
+        logger.error(f"Error getting template collection references from db: {e}", exc_info=True)
+        await interaction.followup.send("Error accessing template data. Please try again later.", ephemeral=True)
+        return
+
+
+    # --- Data Structure to Store Pet Stats ---
+    team_pet_stats = {
+        "ironfoundry": {
+            "total_pets_obtained": 0,
+            "pet_details": {}, # { "PetName": { "count": N, "obtained_by": ["Player1", "Player2"] } }
+        },
+        "ironclad": {
+            "total_pets_obtained": 0,
+            "pet_details": {},
+        }
+    }
+
+    # --- Fetch Template Documents to Identify Pets ---
+    team_templates = {}
+    try:
+        # Fetch the single template document from each clan's collection
+        if_template_doc = await ironfoundry_template_coll.find_one({})
+        if if_template_doc:
+            team_templates["ironfoundry"] = if_template_doc
+            logger.debug("Fetched Ironfoundry template for pet_tally.")
+
+        ic_template_doc = await ironclad_template_coll.find_one({})
+        if ic_template_doc:
+            team_templates["ironclad"] = ic_template_doc
+            logger.debug("Fetched Ironclad template for pet_tally.")
+
+        if not team_templates:
+             logger.warning("No clan template documents found for pet_tally.")
+             await interaction.followup.send("Warning: Could not find clan template data. Cannot identify pets.", ephemeral=True)
+             # We need the templates to identify pets, so return here if none found.
+             return
+
+    except Exception as e:
+        logger.error(f"Error fetching template documents for pet_tally: {e}", exc_info=True)
+        await interaction.followup.send("Error retrieving clan template data. Cannot identify pets.", ephemeral=True)
+        # We need the templates to identify pets, so return here if fetch fails.
+        return
+
+
+    # --- Identify Pets from Templates (Using "Miscellaneous.Pets") ---
+    # Create a set of item keys that are pets for quick lookup
+    pet_item_keys = set()
+    PET_TIER_NAME = "Miscellaneous"
+    PET_SOURCE_NAME = "Pets"
+
+    for clan, template_doc in team_templates.items():
+        tiers = template_doc.get("tiers", {})
+        if isinstance(tiers, dict):
+            tier_data = tiers.get(PET_TIER_NAME)
+            if isinstance(tier_data, dict):
+                sources = tier_data.get("sources", [])
+                if isinstance(sources, list):
+                    for s_data in sources:
+                        if isinstance(s_data, dict) and s_data.get("name") == PET_SOURCE_NAME:
+                             items = s_data.get("items", [])
+                             if isinstance(items, list):
+                                 for i_data in items:
+                                     if isinstance(i_data, dict):
+                                         item_name = i_data.get("name")
+                                         if item_name:
+                                              # Construct the item key for pets
+                                              item_key = f"{PET_TIER_NAME}.{PET_SOURCE_NAME}.{item_name}"
+                                              pet_item_keys.add(item_key)
+                                              logger.debug(f"Identified pet: {item_key}")
+                             break # Found the Pets source, no need to check other sources in this tier
+        else:
+             logger.warning(f"Template for clan {clan} has invalid 'tiers' field (not a dictionary). Cannot identify pets from it.")
+
+
+    if not pet_item_keys:
+         logger.warning(f"No pets identified under {PET_TIER_NAME}.{PET_SOURCE_NAME} across all template documents.")
+         await interaction.followup.send(f"Warning: Could not identify any pets under {PET_TIER_NAME}.{PET_SOURCE_NAME} in the template data.", ephemeral=True)
+         # Continue, but pet counts will be 0 if no pets are found
+
+
+    # --- Fetch All Player Documents ---
+    try:
+        # Use the global players collection
+        all_players_cursor = players.find({})
+        all_players = await all_players_cursor.to_list(length=None)
+        logger.debug(f"Fetched {len(all_players)} player documents for pet_tally.")
+    except Exception as e:
+        logger.error(f"Error fetching player documents for pet_tally: {e}", exc_info=True)
+        await interaction.followup.send("Error retrieving player data. Please try again later.", ephemeral=True)
+        return
+
+    # --- Process Player Obtained Items for Pets ---
+    for player_doc in all_players:
+        player_clan = player_doc.get("clan")
+        if player_clan not in team_pet_stats:
+            logger.debug(f"Player {player_doc.get('discord_id')} has unknown or no clan ('{player_clan}'). Skipping for pet tally.")
+            continue
+
+        player_rsn = player_doc.get("rsn", f"User {player_doc.get('discord_id')}") # Get RSN or use Discord ID
+        obtained_items = player_doc.get("obtained_items", {})
+
+        if not isinstance(obtained_items, dict):
+             logger.warning(f"Player {player_doc.get('discord_id')} in clan {player_clan} has invalid 'obtained_items' field (not a dictionary). Skipping for pet tally.")
+             continue
+
+        # Iterate through player's obtained items and check if they are pets
+        for item_key, count in obtained_items.items():
+            # Ensure item_key is string and count is integer > 0
+            if isinstance(item_key, str) and isinstance(count, int) and count > 0:
+                # Check if this item key is in our identified pet list
+                if item_key in pet_item_keys:
+                    pet_name = item_key.split(".")[-1] # Extract item name as pet name
+
+                    # Initialize pet details for the clan if needed
+                    if pet_name not in team_pet_stats[player_clan]["pet_details"]:
+                        team_pet_stats[player_clan]["pet_details"][pet_name] = {
+                            "count": 0,
+                            "obtained_by": []
+                        }
+
+                    # Add the obtained count for this pet to the clan's total and specific pet count
+                    team_pet_stats[player_clan]["total_pets_obtained"] += count # Sum the count (if players can get multiple of same pet)
+                    team_pet_stats[player_clan]["pet_details"][pet_name]["count"] += count
+
+                    # Add the player's name to the list of those who obtained this pet (if they obtained at least one)
+                    # Avoid adding duplicates of the same player for the same pet type
+                    if player_rsn not in team_pet_stats[player_clan]["pet_details"][pet_name]["obtained_by"]:
+                         team_pet_stats[player_clan]["pet_details"][pet_name]["obtained_by"].append(player_rsn)
+
+
+    # --- Build and Send Embed ---
+    embed = Embed(title="Team Pet Tally", color=discord.Color.gold())
+
+    for clan, stats in team_pet_stats.items():
+        clan_name = clan.replace("iron", "Iron ").title() # Format clan name
+
+        embed.add_field(
+            name=f"__**{clan_name}**__",
+            value=f"Total Pets Obtained: **{stats['total_pets_obtained']}**",
+            inline=False # Use inline=False for main clan field
+        )
+
+        # Sort pets alphabetically by name for consistent display
+        sorted_pet_names = sorted(stats['pet_details'].keys())
+
+        if sorted_pet_names:
+            pet_breakdown_value = ""
+            for pet_name in sorted_pet_names:
+                details = stats['pet_details'][pet_name]
+                obtained_by_list = ", ".join(details['obtained_by'])
+                # Only list players if there are any
+                obtained_by_display = f" by {obtained_by_list}" if obtained_by_list else ""
+                pet_breakdown_value += f"- **{pet_name}**: {details['count']} received{obtained_by_display}\n"
+
+            # Ensure the value is not empty if no pets were found
+            if pet_breakdown_value:
+                 embed.add_field(
+                     name="Pet Breakdown:",
+                     value=pet_breakdown_value,
+                     inline=False
+                 )
+            else:
+                 embed.add_field(
+                      name="Pet Breakdown:",
+                      value="No pets obtained yet.",
+                      inline=False
+                 )
+        else:
+            embed.add_field(
+                 name="Pet Breakdown:",
+                 value="No pets obtained yet.",
+                 inline=False
+            )
+
+
+    embed.set_footer(text="Counts reflect the total number of times each pet type was obtained by players in the clan.")
+    embed.set_author(name=interaction.guild.name if interaction.guild else "Server")
+
+    await interaction.followup.send(embed=embed)
+    
 
 async def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     if mongo_client == None:
