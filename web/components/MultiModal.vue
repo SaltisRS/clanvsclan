@@ -1,7 +1,7 @@
 <template>
-
     <div v-if="isVisible" class="fixed inset-16 bg-dc-accent bg-opacity-95 flex justify-center items-center z-50">
       <div class="bg-dc-background p-6 rounded-lg w-full max-w-full max-h-full overflow-y-auto">
+        <!-- This loop now correctly knows 'multiplier' is a Multiplier object -->
         <div v-if="multipliers && multipliers.length > 0">
             <div class="pb-4 mb-4">
                 <div class="font-bold text-xl">Frenzy Multiplier</div>
@@ -18,8 +18,20 @@
                  {{ multiplier.unlocked ? 'Yes' : 'No' }}
                </span>
             </div>
-             <div class="text-sm text-white mt-1">Affects: {{ multiplier.affects.join(',\n') }}</div>
-             <div class="text-sm text-white mt-1">Requirements: {{ multiplier.requirement.join(',\n') }}</div>
+             <div class="text-sm text-white mt-1">Affects: {{ multiplier.affects.join(', ') }}</div>
+
+             <!-- Display Requirements with highlighting -->
+             <div v-if="multiplier.requirement && multiplier.requirement.length > 0" class="text-sm text-white mt-1">
+                Requirements:
+                <span v-for="(req_item_name, req_index) in multiplier.requirement" :key="req_index">
+                    <!-- Apply class based on whether the item is obtained -->
+                    <span :class="isRequirementObtained(req_item_name) ? 'text-green-500 font-bold' : 'text-red-500'">
+                        {{ req_item_name }}
+                    </span>
+                    <span v-if="req_index < multiplier.requirement.length - 1">, </span>
+                </span>
+             </div>
+
           </div>
         </div>
         <div v-else>
@@ -34,18 +46,30 @@
       </div>
     </div>
   </template>
-  
+
   <script setup lang="ts">
   import type { Multiplier } from '../pages/index.vue';
-  
-  // Define the props the component accepts
-  const props = defineProps<{
-    isVisible: boolean; // Boolean to control modal visibility
-    multipliers: Multiplier[]; // Array of Multiplier objects to display
-  }>();
-  
+  import type { PropType } from 'vue';
+
+  const props = defineProps({
+    isVisible: Boolean,
+    multipliers: {
+        type: Object as PropType<Multiplier[]>,
+        default: () => [],
+    },
+    teamObtainedItems: {
+      type: Object as PropType<Record<string, number>>,
+      default: () => ({}),
+    },
+  });
+
   // Define the custom events the component can emit
   const emit = defineEmits(['close']);
-  
-  // No need for local showMultipliersModal state here, it's controlled by the parent
+
+  // Helper function to check if a requirement item is obtained (remains the same)
+  const isRequirementObtained = (item_name: string): boolean => {
+    // Check if the item name exists in the teamObtainedItems data and its count is > 0
+    return props.teamObtainedItems[item_name] > 0;
+  };
+
   </script>

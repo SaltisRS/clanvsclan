@@ -580,3 +580,4 @@ async def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     await populate_verify_set()
     client.tree.add_command(group, guild=client.selected_guild) 
     client.add_view(LinkView())
+    client.add_view(RoleView())

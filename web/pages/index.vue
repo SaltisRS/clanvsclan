@@ -265,6 +265,28 @@ const getDuplicateObtainedDisplay = (item: Item): string => {
   }
 };
 
+const teamItemObtainedCounts = computed<Record<string, number>>(() => {
+  const obtainedMap: Record<string, number> = {};
+  if (!activeData.value || !activeData.value.tiers) return obtainedMap;
+
+  // Iterate through all items in the template structure
+  for (const tierName in activeData.value.tiers) {
+    const tierData = activeData.value.tiers[tierName];
+    if (tierData && tierData.sources) {
+      for (const source of tierData.sources) {
+        if (source.items) {
+          for (const item of source.items) {
+            if (item.name) {
+              obtainedMap[item.name] = item.obtained; // Store obtained count by item name
+            }
+          }
+        }
+      }
+    }
+  }
+  return obtainedMap;
+});
+
 const toggleCollapseActivities = () => {
   isCollapsedActivities.value = !isCollapsedActivities.value;
 };
@@ -476,9 +498,10 @@ const hideTooltip = () => {
       </div>
     </div>
 
-    <MultiModal
+<MultiModal
       :isVisible="showMultipliersModal"
       :multipliers="activeData?.multipliers || []"
+      :teamObtainedItems="teamItemObtainedCounts"
       @close="showMultipliersModal = false"
     />
 
