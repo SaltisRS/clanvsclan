@@ -26,6 +26,7 @@ export default defineNuxtConfig({
             { property: 'og:image', content: 'https://ironfoundry.cc/frenzyvs.png' },
             { property: 'og:url', content: 'https://ironfoundry.cc' },
             { property: 'og:type', content: 'website' },
+            {property: 'twitter:card', content: 'summary_large_image'}
           ],
     }
   }
