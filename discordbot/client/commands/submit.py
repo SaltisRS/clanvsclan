@@ -405,7 +405,7 @@ class SubmissionView(discord.ui.View):
                     # Calculate base item points first
                     item_total_points_base = get_total_points_for_item_no_flags(i_data)
                     if template_doc["associated_team"] == "ironclad":
-                        item_total_points_base *= 1.2
+                        item_total_points_base *= 1.15
 
                     # Apply the effective multiplier
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
