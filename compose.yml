@@ -1,3 +1,5 @@
+# docker-compose.yml
+
 services:
   backend:
     container_name: cvc-backend
@@ -9,6 +11,8 @@ services:
     networks:
       - cvc-network
       - vps
+    depends_on: # Add dependency on mongodb
+      - mongodb
 
   discord:
     container_name: cvc-discord
@@ -18,15 +22,33 @@ services:
     networks:
       - cvc-network
       - vps
+    depends_on:
+      - mongodb
 
   web:
     container_name: cvc-web
     build: ./web
     ports:
-    - "8000:3000"
+      - "8000:3000"
     networks:
-    - cvc-network
-    - vps
+      - cvc-network
+      - vps
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: cvc-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db 
+    networks:
+      - cvc-network
+      - vps
 
 networks:
   cvc-network:
@@ -35,3 +57,7 @@ networks:
     name: vps
     driver: bridge
     external: true
+
+volumes:
+  mongodb_data:
+    driver: local
