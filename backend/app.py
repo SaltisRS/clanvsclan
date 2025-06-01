@@ -18,8 +18,8 @@ COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
 
 
-client = MongoClient(MONGO_URI)
-async_client = AsyncMongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
+async_client = AsyncMongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 db = client[DATABASE_NAME]
 if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]

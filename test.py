@@ -371,7 +371,7 @@ async def milestone_update():
         # No need for the "Finished a full cycle" log here, the end of the tqdm bar indicates completion
 
 
-mongo_client = AsyncMongoClient(MONGO_URI)
+mongo_client = AsyncMongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 db = mongo_client["Frenzy"]
 player_coll = db["Players"]
 ironclad_template_coll = db["ironclad"]
