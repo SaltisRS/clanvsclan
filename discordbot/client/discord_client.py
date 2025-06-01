@@ -31,7 +31,7 @@ class DiscordClient(discord.Client):
             logger.error("MONGO_URI not found in environment variables! Database will not be connected.")
         else:
             try:
-                self.mongo_client = AsyncMongoClient(host=MONGO_URI)
+                self.mongo_client = AsyncMongoClient(host=MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
                 logger.info("MongoDB connection initialized successfully.")
 
             except Exception as e:
