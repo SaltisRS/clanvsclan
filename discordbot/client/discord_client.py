@@ -5,14 +5,12 @@ from loguru import logger
 from discord import app_commands
 from dotenv import load_dotenv
 from pymongo import AsyncMongoClient
-from discord.ext.tasks import loop
 
 
 from .commands.template import setup as TemplateTools
 from .commands.development import setup as DevSetup
 from .commands.submit import setup as SubmitSetup
 
-from .modules.trackables import trackers
 
 
 
@@ -51,10 +49,6 @@ class DiscordClient(discord.Client):
             return
         logger.info(f"Guild set to {self.selected_guild}")
     
-    @loop(minutes=10)
-    async def event_tracking(self):
-        if self.mongo_client:
-            await trackers(mongo_client=self.mongo_client)
     
     async def load_modules(self):
         ...
@@ -79,4 +73,4 @@ class DiscordClient(discord.Client):
     async def on_ready(self):
         logger.info("Bot is ready as {0.user}".format(self))
         await self.setup_hook()
-        await self.event_tracking.start()
+

@@ -6,9 +6,9 @@ import io
 import httpx
 from loguru import logger
 from dotenv import load_dotenv
-from typing import Dict, Any, List, Literal, Optional
+from typing import Dict, Any, List, Literal
 from pymongo import AsyncMongoClient
-
+from tqdm.asyncio import tqdm
 
 
 load_dotenv()
@@ -50,7 +50,7 @@ MILSTONES_DATA = {
         {"name": "Nex"}, {"name": "Nightmare"}, {"name": "Obor"}, "Phantom Muspah",
         {"name": "Phosani's Nightmare"}, "Royal Titans", "Sarachnis", "Scorpia",
         "Scurrius", "Skotizo", "Sol Heredit", "Spindel", "Tempoross",
-        "Theatre of Blood", "Theatre of Blood (HM)", "Thermonuclear Smoke Devil",
+        "Theatre of Blood", "Theatre of Blood (HM ক্যামেরون)", "Thermonuclear Smoke Devil",
         "Tombs of Amascut", "Tombs of Amascut (Expert Mode)", "Tzkal-Zuk", "TzTok-Jad",
         "Vardorvis", "Venenatis", "Vet'ion", "Vorkath", "Whisperer", "Wintertodt",
         "Yama", "Zalcano", "Zulrah"
@@ -147,7 +147,7 @@ INTERNAL_NAME_TO_WOM_METRIC: Dict[str, wom.Metric] = {
     "Tombs of Amascut": wom.Metric.TombsOfAmascut,
     "Tombs of Amascut (Expert Mode)": wom.Metric.TombsOfAmascutExpert,
     "Tzkal-Zuk": wom.Metric.TzKalZuk,
-    "TzTok-Jad": wom.Metric.TzTokJad,
+    "TzTokJad": wom.Metric.TzTokJad,
     "Vardorvis": wom.Metric.Vardorvis,
     "Venenatis": wom.Metric.Venenatis,
     "Vet'ion": wom.Metric.Vetion,
@@ -173,6 +173,7 @@ ACTUAL_HEADERS = ["Rank", "Username", "Team", "Start", "End", "Gained", "Last Up
 MILSTONES_ENDPOINT = "https://frenzy.ironfoundry.cc/milestones"
 
 DELAY_BETWEEN_METRICS = 7
+CYCLE_SLEEP_TIME = 600 # Example: 10 minutes sleep between full cycles
 
 # Mapping for internal metric categories
 METRIC_CATEGORIES: Dict[wom.Metric, Literal["cluescroll", "experience", "killcount"]] = {
@@ -282,17 +283,19 @@ async def update_milestones_for_metric(metric: wom.Metric, http_client: httpx.As
     # Map the WOM metric name to internal database name
     internal_metric_name = WOM_METRIC_NAME_TO_INTERNAL_NAME.get(wom_metric_name)
     if internal_metric_name is None:
+        # Keep warnings for missing mappings
         logger.warning(f"Internal mapping missing for WOM metric name: {wom_metric_name}. Skipping.")
         return
 
     # Determine the category for this metric (cluescroll, experience, killcount)
     metric_category = METRIC_CATEGORIES.get(metric)
     if metric_category is None:
+        # Keep warnings for missing categories
         logger.warning(f"Metric category missing for WOM metric: {wom_metric_name}. Skipping.")
         return
 
-
-    logger.info(f"Fetching data for {wom_metric_name} (Category: {metric_category}, Mapped to: {internal_metric_name})...")
+    # Tqdm description will handle the current metric name
+    # logger.info(f"Fetching data for {wom_metric_name} (Category: {metric_category}, Mapped to: {internal_metric_name})...")
 
     data_for_milestones: Dict[str, Dict[str, Dict[str, int]]] = {
         "ironfoundry": {metric_category: {internal_metric_name: 0}},
@@ -305,6 +308,7 @@ async def update_milestones_for_metric(metric: wom.Metric, http_client: httpx.As
         csv_data = await client.competitions.get_details_csv(COMPETITION_ID, metric=metric.value) # type: ignore
 
         if not csv_data:
+             # Keep info for no data
              logger.info(f"No data returned for {wom_metric_name}.")
              return data_for_milestones
 
@@ -316,41 +320,38 @@ async def update_milestones_for_metric(metric: wom.Metric, http_client: httpx.As
             names=ACTUAL_HEADERS,
             dtype={'Gained': int, 'Start': int, 'End': int}
         )
-
+        
         if not df.empty:
-             # Filter for players in the desired clans
              filtered_df = df[df['Team'].isin(['Iron Foundry', 'Ironclad'])]
-
+             
              if not filtered_df.empty:
-                # Aggregate the 'Gained' column by 'Team'
                 clan_gains = filtered_df.groupby('Team')['Gained'].sum()
-
-                # Update the data_for_milestones dictionary
+                
                 for clan_name_csv, total_gained in clan_gains.items():
-                    # Map CSV clan names to dictionary keys
                     if clan_name_csv == "Iron Foundry":
                         data_for_milestones["ironfoundry"][metric_category][internal_metric_name] = int(total_gained)
                     elif clan_name_csv == "Ironclad":
                         data_for_milestones["ironclad"][metric_category][internal_metric_name] = int(total_gained)
 
 
-        logger.info(f"Aggregated data for {internal_metric_name}: {data_for_milestones}")
 
-        async with httpx.AsyncClient() as inner_http_client:
-            try:
-                logger.info(f"Sending data for {internal_metric_name} to {MILSTONES_ENDPOINT}")
-                response = await inner_http_client.post(MILSTONES_ENDPOINT, json=data_for_milestones)
-                response.raise_for_status()
-                logger.info(f"Successfully sent data for {internal_metric_name}. Status: {response.status_code}")
-            except httpx.RequestError as e:
-                 logger.error(f"An error occurred while requesting {e.request.url} for {internal_metric_name}: {e}")
-            except httpx.HTTPStatusError as e:
-                 logger.error(f"HTTP error {e.response.status_code} when sending data for {internal_metric_name}: {e.response.text}")
-            except Exception as e:
-                 logger.error(f"An unexpected error occurred while sending data for {internal_metric_name}: {e}")
+        try:
+            # Tqdm description handles sending info
+            # logger.info(f"Sending data for {internal_metric_name} to {MILSTONES_ENDPOINT}")
+            response = await http_client.post(MILSTONES_ENDPOINT, json=data_for_milestones)
+            response.raise_for_status()
+            # Optional: Keep a successful send log if needed, but could make output busy
+            # logger.info(f"Successfully sent data for {internal_metric_name}. Status: {response.status_code}")
+        except httpx.RequestError as e:
+             logger.error(f"An error occurred while requesting {e.request.url} for {internal_metric_name}: {e}")
+        except httpx.HTTPStatusError as e:
+             logger.error(f"HTTP error {e.response.status_code} when sending data for {internal_metric_name}: {e.response.text}")
+        except Exception as e:
+             logger.error(f"An unexpected error occurred while sending data for {internal_metric_name}: {e}")
 
 
     except Exception as e:
+        # Keep error logging
         logger.error(f"Error fetching or processing data for {wom_metric_name}: {e}", exc_info=True)
 
     return data_for_milestones
@@ -361,22 +362,20 @@ async def milestone_update():
     await client.start()
 
     async with httpx.AsyncClient() as http_client:
-        for metric in METRICS_TO_TRACK:
+        # Wrap the loop with tqdm.asyncio for milestones
+        for metric in tqdm(METRICS_TO_TRACK, desc="Updating Milestones", unit="metric"):
             await update_milestones_for_metric(metric, http_client)
-            logger.info(f"Waiting {DELAY_BETWEEN_METRICS} seconds before fetching next metric.")
-            await asyncio.sleep(DELAY_BETWEEN_METRICS)
 
-        
-            logger.info("Finished a full cycle of metric milestone updates. Starting next cycle.")
+            await asyncio.sleep(7) # Keep a small sleep
 
+        # No need for the "Finished a full cycle" log here, the end of the tqdm bar indicates completion
 
 
-
-
-db = Optional
-player_coll = Optional
-ironfoundry_template_coll = Optional
-ironclad_template_coll = Optional
+mongo_client = AsyncMongoClient(MONGO_URI)
+db = mongo_client["Frenzy"]
+player_coll = db["Players"]
+ironclad_template_coll = db["ironclad"]
+ironfoundry_template_coll = db["ironfoundry"]
 
 # Mapping clan names to their template collections
 CLAN_TEMPLATE_COLLS = {
@@ -385,22 +384,27 @@ CLAN_TEMPLATE_COLLS = {
 }
 
 async def aggregate_activity_data():
-    logger.info("Starting activity data aggregation script.")
+    # Tqdm description for the overall activity aggregation
+    # logger.info("Starting activity data aggregation script.")
 
-    for clan_name, template_coll in CLAN_TEMPLATE_COLLS.items(): # template_coll here is the specific clan collection
-        logger.info(f"Aggregating data for clan: {clan_name}")
+    # Wrap the outer loop (per clan) with tqdm
+    for clan_name, template_coll in tqdm(CLAN_TEMPLATE_COLLS.items(), desc="Aggregating Activity Data (Clans)", unit="clan"):
+        # Tqdm description will indicate the current clan
+        # logger.info(f"Aggregating data for clan: {clan_name}")
 
         try:
             # Fetch the clan's template document from the specific clan collection
             # Assuming there's only one template document per clan collection
             template_doc = await template_coll.find_one({})
             if not template_doc:
+                # Keep error logging
                 logger.error(f"Template document not found in collection '{template_coll.name}' for clan '{clan_name}'. Cannot aggregate activity totals.")
                 continue # Move to the next clan
 
             # Get the activities array from the template
             template_activities = template_doc.get("activities", [])
             if not isinstance(template_activities, list):
+                 # Keep error logging
                  logger.error(f"Template document in '{template_coll.name}' for '{clan_name}' has an invalid 'activities' field (not a list). Skipping aggregation for this clan.")
                  continue
 
@@ -413,6 +417,7 @@ async def aggregate_activity_data():
                 if act_name and act_unit:
                     template_activity_map[f"{act_name}:{act_unit}"] = activity_entry
                 else:
+                    # Keep warnings
                     logger.warning(f"Activity entry in template in '{template_coll.name}' for '{clan_name}' is missing 'name' or 'unit': {activity_entry}")
 
 
@@ -423,20 +428,26 @@ async def aggregate_activity_data():
             # Fetch all player documents for this clan
             players_cursor = player_coll.find({"clan": clan_name}) # Assuming player documents have 'clan' field
             clan_players = await players_cursor.to_list(length=None)
-            logger.info(f"Fetched {len(clan_players)} players for clan {clan_name}.")
+            # Optional: Keep a log for the number of players fetched if useful
+            # logger.info(f"Fetched {len(clan_players)} players for clan {clan_name}.")
 
         except Exception as e:
+            # Keep error logging
             logger.error(f"Error fetching template or players for clan {clan_name}: {e}", exc_info=True)
             continue # Move to the next clan
 
         # --- Process each player's tracking entries ---
-        for player_doc in clan_players:
+        # Wrap this loop with tqdm for player processing
+        for player_doc in tqdm(clan_players, desc=f"Processing Players for {clan_name}", leave=False, unit="player"):
             # Ensure 'tracking' field exists and is a list
             tracking_entries = player_doc.get("tracking", [])
             if not isinstance(tracking_entries, list):
+                # Keep warnings
                 logger.warning(f"Player {player_doc.get('discord_id')} in clan {clan_name} has invalid 'tracking' field (not a list). Skipping.")
                 continue
 
+            # Optionally wrap this inner loop if tracking_entries are very long
+            # for entry in tqdm(tracking_entries, desc=f"Tracking for {player_doc.get('discord_id')}", leave=False):
             for entry in tracking_entries:
                 activity_name = entry.get("name")
                 start_data = entry.get("start")
@@ -466,11 +477,13 @@ async def aggregate_activity_data():
 
                                  aggregated_diffs[activity_name][metric_name] += difference
                              except (ValueError, TypeError):
+                                 # Keep warnings
                                  logger.warning(f"Non-numeric start or end value for metric '{metric_name}' in activity '{activity_name}' for player {player_doc.get('discord_id')} in clan {clan_name}. Skipping aggregation for this metric.")
                                  continue # Skip this metric
 
 
-        logger.info(f"Finished processing player tracking entries for clan {clan_name}. Calculated differences: {aggregated_diffs}")
+        # Tqdm progress indicates completion, no need for this log
+        # logger.info(f"Finished processing player tracking entries for clan {clan_name}. Calculated differences: {aggregated_diffs}")
 
 
         # --- Update the clan's template document with aggregated values ---
@@ -487,11 +500,14 @@ async def aggregate_activity_data():
                     try:
                         template_activity_entry["current_value"] = float(total_difference) # Ensure numeric addition
                         template_modified = True
+                        # Keep debug if needed for detailed updates, otherwise remove
                         logger.debug(f"Updated current_value for '{activity_name}' ({metric_name}) in template for '{clan_name}' by {total_difference}. New value: {template_activity_entry['current_value']}")
                     except (ValueError, TypeError):
+                         # Keep error logging
                          logger.error(f"Could not convert current_value or total_difference to float for '{activity_name}' ({metric_name}) in template for '{clan_name}'. Skipping update for this metric.")
                          continue
                 else:
+                    # Keep warnings
                     logger.warning(f"Matching activity entry not found in template in '{template_coll.name}' for '{clan_name}' for tracking data: '{activity_name}' ({metric_name}). Skipping update for this metric.")
 
         # Save the updated template document if any changes were made
@@ -504,35 +520,42 @@ async def aggregate_activity_data():
                 )
 
                 if update_result.modified_count > 0:
+                    # Optional: Keep a successful save log
                     logger.info(f"Successfully saved updated template document for clan '{clan_name}'.")
                 else:
+                    # Keep warning if no changes reported
                     logger.warning(f"Template document for clan '{clan_name}' was not modified despite aggregation (replace_one didn't report changes).")
 
             except Exception as e:
+                # Keep error logging
                 logger.error(f"Error saving updated template document for clan {clan_name}: {e}", exc_info=True)
         else:
-            logger.info(f"No activity current_values were updated in the template for clan '{clan_name}'.")
+            # Optional: Keep a log if no updates were needed
+            # logger.info(f"No activity current_values were updated in the template for clan '{clan_name}'.")
+            pass # Use pass to fully remove the log
 
-
-    logger.info("Activity data aggregation script finished.")
+    # Tqdm progress indicates completion, no need for this log
+    # logger.info("Activity data aggregation script finished.")
 
 
 async def activity_update():
+    # No need for an outer tqdm here, as the per-clan bar is sufficient
     await aggregate_activity_data()
-    
-    
-async def trackers(mongo_client: AsyncMongoClient | None):
-    if not mongo_client:
-        return
-    global mongo, db, player_coll, ironclad_template_coll, ironfoundry_template_coll
-    mongo = mongo_client
-    db = mongo["Frenzy"]
-    player_coll = db["Players"] # type: ignore
-    ironclad_template_coll = db["ironclad"] # type: ignore
-    ironfoundry_template_coll = db["ironfoundry"] # type: ignore
-    
-    await activity_update()
-    await milestone_update()
+
+
+async def trackers():
+    while True: # Infinite loop for continuous operation
+        # Main trackers process
+        await activity_update()
+        await milestone_update()
+
+        # Sleep timer between full cycles, using tqdm
+        for _ in tqdm(range(CYCLE_SLEEP_TIME), desc=f"Sleeping for {CYCLE_SLEEP_TIME} seconds until next cycle", unit="s"):
+            await asyncio.sleep(1) # Sleep for 1 second at a time to update the bar
 
 if __name__ == "__main__":
-    asyncio.run(trackers(AsyncMongoClient(MONGO_URI)))
+    try:
+        asyncio.run(trackers())
+    except KeyboardInterrupt:
+        logger.info("Tracker stopped manually.")
+

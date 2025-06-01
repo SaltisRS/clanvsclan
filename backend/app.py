@@ -44,7 +44,7 @@ async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
     event_data = list(if_coll.find({}))
     logger.info(f"Data retrieved.")
-    return event_data # type: ignore
+    return event_data
 
 @app.get("/ironclad")
 async def get_ic_data() -> List[Dict]:
