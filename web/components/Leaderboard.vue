@@ -1,62 +1,82 @@
-<!-- <template>
-  <div class="bg-dc-accent p-4 rounded-lg shadow-md">
-    <h2 class="text-lg font-bold text-white text-center border-b border-dc-bg">
-      {{ title }}
-    </h2>
-    <table class="w-full border-collapse">
-      <tbody>
-        <tr
-          v-for="(entry, index) in displayedData"
-          :key="index"
-          class="border-b border-dc-bg text-blurple"
-        >
-          <td class="p-2 font-bold">#{{ index + 1 }}</td>
-          <td class="p-2 cursor-pointer hover:brightness-125"
-          @click="redirectToWiseOldMan(entry.rsn)"
-          >{{ entry.rsn }}</td>
-          <td class="p-2 text-right">{{ entry.value }}</td>
-          <td class="p-2">
-            <img
-              v-if="entry.team === 'IF'"
-              src="public/ironfoundry.png"
-              alt="IF Team Icon"
-              class="w-6 h-6"
-            />
-            <img
-              v-if="entry.team === 'IC'"
-              src="public/ironclad.png"
-              alt="IC Team Icon"
-              class="w-6 h-6"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { computed } from "vue";
+import { defineProps } from "vue";
 
-type LeaderboardEntry = { rsn: string; value: number, team: string };
-
-const redirectToWiseOldMan = (rsn: string) => {
-  const url = `https://wiseoldman.net/players/${rsn}`;
-  window.open(url, "_blank");
-};
+interface RowData {
+  index: number;
+  rsn: string;
+  value: number;
+  profile_link: string;
+  icon_link: string;
+}
 
 const props = defineProps({
-  title: String,
-  data: { type: Array as () => LeaderboardEntry[], default: () => [] },
-  maxRows: { type: Number, default: Infinity },
+  title: {
+    type: String,
+    required: true,
+  },
+  data: {
+    type: Array as () => RowData[],
+    required: true,
+  },
+  metricPage: {
+    type: String,
+    required: false,
+    default: "",
+  },
 });
 
-const sortedData = computed(() =>
-  [...props.data].sort((a, b) => b.value - a.value)
-);
-
-const displayedData = computed(() => sortedData.value.slice(0, props.maxRows));
-</script> -->
+const formatValue = (value: number): string => {
+  return value.toLocaleString();
+};
+</script>
 <template>
-  <h3>Coming Soon</h3>
+  <div class="leaderboard-card bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm sm:max-w-md lg:max-w-lg">
+    <h2 class="text-2xl font-bold text-white mb-4 text-center">
+      {{ title }}
+      <a v-if="metricPage" :href="metricPage" target="_blank" rel="noopener noreferrer" class="ml-2 text-blue-400 hover:text-blue-300 text-base align-middle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+          <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+        </svg>
+      </a>
+    </h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-700">
+        <thead class="bg-gray-700">
+          <tr>
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider rounded-tl-lg">
+              Rank
+            </th>
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+              Player
+            </th>
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider rounded-tr-lg">
+              Value
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-gray-800 divide-y divide-gray-700">
+          <tr v-for="row in data" :key="row.index" class="hover:bg-gray-700 transition-colors duration-200">
+            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-100">
+              {{ row.index }}
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
+              <a :href="row.profile_link" target="_blank" rel="noopener noreferrer" class="flex items-center text-blue-400 hover:text-blue-300">
+                <img v-if="row.icon_link" :src="row.icon_link" :alt="`${row.rsn} icon`" class="w-6 h-6 rounded-full mr-2 object-cover" />
+                {{ row.rsn }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 opacity-75" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                  <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                </svg>
+              </a>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
+              {{ formatValue(row.value) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>

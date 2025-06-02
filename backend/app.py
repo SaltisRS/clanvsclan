@@ -4,12 +4,13 @@ from typing import Any, List, Dict, Optional
 from loguru import logger
 import os
 from dotenv import load_dotenv
+import wom
+import asyncio
+from contextlib import asynccontextmanager
 
 
 
 load_dotenv()
-            
-app = FastAPI()
 
 MONGO_URI = os.getenv("MONGO_URI")
 DATABASE_NAME = "Frenzy"
@@ -24,7 +25,103 @@ db = client[DATABASE_NAME]
 if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
+foundry_link = "https://i.imgur.com/IQuSdoi.png"
+clad_link = "https://i.imgur.com/a0DB45h.png"
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    logger.info("FastAPI application startup initiated.")
+    try:
+        app.state.wom_client = wom.Client(api_key=os.getenv("WOM_API"), user_agent="@saltis.") # Initialize WOM client
+        await app.state.wom_client.start()
+        logger.info("WOM Client started successfully via Lifespan.")
+    except RuntimeError as e:
+        logger.warning(f"WOM Client already started or encountered an issue during lifespan startup: {e}")
+    except Exception as e:
+        logger.error(f"Failed to start WOM Client during lifespan startup: {e}")
+    yield
+
+    logger.info("FastAPI application shutdown initiated.")
+    if hasattr(app.state, 'wom_client') and app.state.wom_client:
+        try:
+            await app.state.wom_client.close()
+            logger.info("WOM Client closed successfully via Lifespan.")
+        except Exception as e:
+            logger.error(f"Failed to close WOM Client during lifespan shutdown: {e}")
+            
+app = FastAPI(lifespan=lifespan)
+
+async def _get_wom_leaderboards_data_helper() -> List[Dict]:
+    """
+    Fetches competition data from Wiseoldman and formats it into
+    the frontend's expected leaderboard structure.
+    """
+    logger.info("Fetching Wiseoldman competition data for leaderboards.")
+    competition_id = 90513
+    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb]
+    
+    wom_leaderboards: List[Dict] = []
+
+    try:
+        current_wom_client: wom.Client = app.state.wom_client
+
+        for metric in metrics:
+            logger.info(f"Fetching data for metric: {metric.name} from WOM.")
+            response: wom.Result = await current_wom_client.competitions.get_details(
+                id=competition_id, metric=metric
+            )
+
+            if response.is_ok:
+                result_data = response.to_dict()
+                
+                leaderboard_title = f"{metric.name.replace('_', ' ').title()}"
+                
+                leaderboard_rows = []
+                sorted_players = sorted(
+                    result_data.get('participants', []),
+                    key=lambda p: p.get('progress', {}).get('gained', 0),
+                    reverse=True
+                )
+
+                for i, participant in enumerate(sorted_players):
+                    player_data = participant.get('player', {})
+                    progress_data = participant.get('progress', {})
+
+                    rsn = player_data.get('displayName') or player_data.get('username', 'N/A')
+                    value = progress_data.get('gained', 0)
+                    
+                    profile_username = player_data.get('username')
+                    profile_link = f"https://wiseoldman.net/players/{profile_username}" if profile_username else "#"
+                    
+                    icon_link = foundry_link if result_data.get("teamName") == "Iron Foundry" else clad_link
+
+                    leaderboard_rows.append({
+                        "index": i + 1,
+                        "rsn": rsn,
+                        "value": value,
+                        "profile_link": profile_link,
+                        "icon_link": icon_link
+                    })
+                
+                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}?preview={metric.name.lower()}"
+                
+                wom_leaderboards.append({
+                    "title": leaderboard_title,
+                    "metric_page": competition_page_url,
+                    "data": leaderboard_rows
+                })
+            else:
+                logger.error(f"Failed to fetch {metric.name} competition details from WOM: {response.error_message}")
+            
+            await asyncio.sleep(5)
+
+        return wom_leaderboards
+
+    except Exception as e:
+        logger.error(f"Error in _get_wom_leaderboards_data_helper: {e}", exc_info=True)
+        raise
+            
 
 def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_name: str) -> Optional[Dict[str, Any]]:
     milestones_data = template_doc.get("milestones", {})
@@ -37,8 +134,30 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
             return milestone
     return None
 
-    
+@app.get("/leaderboards")
+async def get_combined_leaderboards():
+    """
+    Combines leaderboard data from various sources (e.g., Wiseoldman, MongoDB)
+    and returns it in the format expected by the frontend.
+    """
+    logger.info("Starting to combine leaderboard data from multiple sources.")
+    combined_leaderboards: List[Dict] = []
 
+    try:
+        wom_data = await _get_wom_leaderboards_data_helper()
+        combined_leaderboards.extend(wom_data)
+        logger.info(f"Finished combining leaderboards. Total: {len(combined_leaderboards)}.")
+        return {"Data": combined_leaderboards}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"An unexpected error occurred in get_combined_leaderboards: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to compile all leaderboard data: {e}"
+        )
+    
 @app.get("/ironfoundry")
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")

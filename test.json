@@ -1,0 +1,825 @@
+469.9929298492884, 'ehb': 387.90201, 'ttm': 465.5158699904187, 'tt200m': 11414.36502739823, 'registeredAt': '2023-12-14T00: 32: 18.412000Z', 'updatedAt': '2025-06-02T21: 19: 00.016000Z', 'lastChangedAt': '2025-06-02T21: 19: 00.016000Z', 'lastImportedAt': None
+}, 'progress': {'start': 217973182, 'end': 223712204, 'gained': 5739022
+}, 'levels': {'start': 2082, 'end': 2086, 'gained': 4
+}
+},
+{'playerId': 266183, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 11: 49.727000Z', 'player': {'id': 266183, 'username': 'ironesca', 'displayName': 'ironesca', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 513691575, 'ehp': 2235.291926065836, 'ehb': 589.1658900000002, 'ttm': 0.0, 'tt200m': 17462.29050156341, 'registeredAt': '2021-05-31T15: 36: 07.377000Z', 'updatedAt': '2025-06-02T22: 11: 49.110000Z', 'lastChangedAt': '2025-06-02T22: 11: 49.110000Z', 'lastImportedAt': '2022-06-11T12: 50: 53.847000Z'
+}, 'progress': {'start': 507967643, 'end': 513691575, 'gained': 5723932
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 724119, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 59: 20.533000Z', 'player': {'id': 724119, 'username': 'luckiepenny', 'displayName': 'LuckiePenny', 'type': 'ironman', 'build': 'main', 'country': 'US', 'status': 'active', 'exp': 181583340, 'ehp': 943.6394890776531, 'ehb': 184.40023, 'ttm': 776.3762558302067, 'tt200m': 18753.94293855159, 'registeredAt': '2022-08-23T01: 15: 18.528000Z', 'updatedAt': '2025-06-02T20: 59: 20.327000Z', 'lastChangedAt': '2025-06-02T20: 59: 20.327000Z', 'lastImportedAt': '2023-07-10T11: 20: 17.218000Z'
+}, 'progress': {'start': 175985736, 'end': 181583340, 'gained': 5597604
+}, 'levels': {'start': 2093, 'end': 2104, 'gained': 11
+}
+},
+{'playerId': 1055955, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 53: 19.686000Z', 'player': {'id': 1055955, 'username': 'inkul', 'displayName': 'Inkul', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 292997232, 'ehp': 468.6742700958911, 'ehb': 516.9047999999998, 'ttm': 465.710346191274, 'tt200m': 11415.68368715163, 'registeredAt': '2023-06-20T01: 40: 16.473000Z', 'updatedAt': '2025-06-02T21: 53: 19.572000Z', 'lastChangedAt': '2025-06-02T21: 53: 19.572000Z', 'lastImportedAt': None
+}, 'progress': {'start': 287414692, 'end': 292997232, 'gained': 5582540
+}, 'levels': {'start': 2094, 'end': 2096, 'gained': 2
+}
+},
+{'playerId': 1131627, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T15: 09: 10.605000Z', 'player': {'id': 1131627, 'username': 'rocket ship', 'displayName': 'Rocket Ship', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 200991700, 'ehp': 380.6365254984434, 'ehb': 291.1738799999999, 'ttm': 533.089302152948, 'tt200m': 11503.72143174908, 'registeredAt': '2023-08-25T02: 18: 12.862000Z', 'updatedAt': '2025-06-02T15: 09: 10.540000Z', 'lastChangedAt': '2025-06-02T15: 09: 10.540000Z', 'lastImportedAt': None
+}, 'progress': {'start': 195467621, 'end': 200991700, 'gained': 5524079
+}, 'levels': {'start': 2078, 'end': 2079, 'gained': 1
+}
+},
+{'playerId': 698184, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 12: 32.522000Z', 'player': {'id': 698184, 'username': 'tobaks', 'displayName': 'tobaks', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 239565597, 'ehp': 1131.961433823724, 'ehb': 428.4612300000001, 'ttm': 603.7731258967613, 'tt200m': 18565.62099380552, 'registeredAt': '2022-07-29T18: 18: 58.214000Z', 'updatedAt': '2025-06-02T21: 12: 32.025000Z', 'lastChangedAt': '2025-06-02T21: 12: 32.025000Z', 'lastImportedAt': '2023-05-17T19: 08: 54.634000Z'
+}, 'progress': {'start': 234219393, 'end': 239565597, 'gained': 5346204
+}, 'levels': {'start': 2146, 'end': 2147, 'gained': 1
+}
+},
+{'playerId': 1212362, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 49: 33.343000Z', 'player': {'id': 1212362, 'username': 'mitochondiva', 'displayName': 'mitochondiva', 'type': 'regular', 'build': 'main', 'country': 'US', 'status': 'active', 'exp': 216811001, 'ehp': 439.2244592173608, 'ehb': 357.15421, 'ttm': 470.4150714237785, 'tt200m': 11445.13349803016, 'registeredAt': '2023-10-30T16: 35: 40.674000Z', 'updatedAt': '2025-06-02T22: 49: 33.252000Z', 'lastChangedAt': '2025-06-02T22: 49: 33.252000Z', 'lastImportedAt': None
+}, 'progress': {'start': 211529853, 'end': 216811001, 'gained': 5281148
+}, 'levels': {'start': 2106, 'end': 2107, 'gained': 1
+}
+},
+{'playerId': 1874372, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T13: 16: 51.418000Z', 'player': {'id': 1874372, 'username': 'the iron waz', 'displayName': 'the iron waz', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 225471777, 'ehp': 991.7311657697139, 'ehb': 497.7027399999999, 'ttm': 729.4350415130783, 'tt200m': 18705.85126185953, 'registeredAt': '2024-05-21T17: 17: 43.861000Z', 'updatedAt': '2025-06-02T13: 16: 51.064000Z', 'lastChangedAt': '2025-06-02T13: 16: 51.064000Z', 'lastImportedAt': None
+}, 'progress': {'start': 220266756, 'end': 225471777, 'gained': 5205021
+}, 'levels': {'start': 2101, 'end': 2104, 'gained': 3
+}
+},
+{'playerId': 849234, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 35: 43.441000Z', 'player': {'id': 849234, 'username': 'goutfather', 'displayName': 'GoutFather', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 154626413, 'ehp': 898.4304551942339, 'ehb': 157.35561, 'ttm': 815.8588005134184, 'tt200m': 18799.15197243501, 'registeredAt': '2022-12-29T15: 55: 29.644000Z', 'updatedAt': '2025-06-02T22: 35: 43.291000Z', 'lastChangedAt': '2025-06-02T22: 35: 43.291000Z', 'lastImportedAt': None
+}, 'progress': {'start': 149429330, 'end': 154626413, 'gained': 5197083
+}, 'levels': {'start': 2056, 'end': 2062, 'gained': 6
+}
+},
+{'playerId': 595651, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 55: 17.651000Z', 'player': {'id': 595651, 'username': 'veek5', 'displayName': 'veek5', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 255011529, 'ehp': 1257.675666859229, 'ehb': 210.0268, 'ttm': 464.1285385423068, 'tt200m': 18439.90676077002, 'registeredAt': '2022-04-15T04: 40: 10.861000Z', 'updatedAt': '2025-06-02T21: 55: 13.974000Z', 'lastChangedAt': '2025-06-02T21: 55: 13.974000Z', 'lastImportedAt': None
+}, 'progress': {'start': 249824342, 'end': 255011529, 'gained': 5187187
+}, 'levels': {'start': 2187, 'end': 2188, 'gained': 1
+}
+},
+{'playerId': 1203077, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T19: 40: 43.703000Z', 'player': {'id': 1203077, 'username': 'gim ferron', 'displayName': 'gim ferron', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 163124091, 'ehp': 350.6544543835926, 'ehb': 161.68767, 'ttm': 549.4028480766224, 'tt200m': 11533.70350286393, 'registeredAt': '2023-10-22T22: 13: 00.463000Z', 'updatedAt': '2025-06-02T19: 40: 43.481000Z', 'lastChangedAt': '2025-06-02T19: 40: 43.481000Z', 'lastImportedAt': None
+}, 'progress': {'start': 158022416, 'end': 163124091, 'gained': 5101675
+}, 'levels': {'start': 2061, 'end': 2064, 'gained': 3
+}
+},
+{'playerId': 103782, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 20: 08.934000Z', 'player': {'id': 103782, 'username': 'panurge', 'displayName': 'Panurge', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 430853963, 'ehp': 1566.170807465891, 'ehb': 834.2383999999997, 'ttm': 349.2897424362066, 'tt200m': 18131.41162016335, 'registeredAt': '2020-12-04T13: 03: 45.238000Z', 'updatedAt': '2025-06-02T22: 20: 07.754000Z', 'lastChangedAt': '2025-06-02T22: 20: 07.754000Z', 'lastImportedAt': '2023-07-09T21: 40: 28.309000Z'
+}, 'progress': {'start': 425811484, 'end': 430853963, 'gained': 5042479
+}, 'levels': {'start': 2219, 'end': 2219, 'gained': 0
+}
+},
+{'playerId': 980685, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 08: 51.388000Z', 'player': {'id': 980685, 'username': 'wild hoont', 'displayName': 'Wild Hoont', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 220221201, 'ehp': 956.4635189034971, 'ehb': 350.8261799999999, 'ttm': 778.7311302289999, 'tt200m': 18741.11890872575, 'registeredAt': '2023-04-14T06: 23: 15.336000Z', 'updatedAt': '2025-06-02T23: 08: 51.182000Z', 'lastChangedAt': '2025-06-02T23: 08: 51.182000Z', 'lastImportedAt': None
+}, 'progress': {'start': 215194802, 'end': 220221201, 'gained': 5026399
+}, 'levels': {'start': 2089, 'end': 2091, 'gained': 2
+}
+},
+{'playerId': 321434, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 33: 34.831000Z', 'player': {'id': 321434, 'username': 'martyrs', 'displayName': 'Martyrs', 'type': 'ironman', 'build': 'main', 'country': 'GB', 'status': 'active', 'exp': 501297567, 'ehp': 1877.336810292291, 'ehb': 1174.18664, 'ttm': 55.77942549873546, 'tt200m': 17820.24561733695, 'registeredAt': '2021-07-29T00: 35: 01.906000Z', 'updatedAt': '2025-06-02T22: 33: 34.687000Z', 'lastChangedAt': '2025-06-02T22: 33: 34.687000Z', 'lastImportedAt': '2023-07-10T23: 25: 00.157000Z'
+}, 'progress': {'start': 496287260, 'end': 501297567, 'gained': 5010307
+}, 'levels': {'start': 2267, 'end': 2267, 'gained': 0
+}
+},
+{'playerId': 288512, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T15: 11: 30.276000Z', 'player': {'id': 288512, 'username': 'ekats uk', 'displayName': 'ekats uk', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 414018217, 'ehp': 903.1339018331327, 'ehb': 450.4398, 'ttm': 180.47343505331, 'tt200m': 10981.22405541439, 'registeredAt': '2021-06-24T07: 42: 14.979000Z', 'updatedAt': '2025-06-02T15: 11: 30.210000Z', 'lastChangedAt': '2025-06-02T15: 11: 30.210000Z', 'lastImportedAt': '2021-07-03T10: 49: 15.846000Z'
+}, 'progress': {'start': 409042873, 'end': 414018217, 'gained': 4975344
+}, 'levels': {'start': 2227, 'end': 2227, 'gained': 0
+}
+},
+{'playerId': 403181, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T05: 09: 11.618000Z', 'player': {'id': 403181, 'username': 'drouhgo', 'displayName': 'Drouhgo', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 317749370, 'ehp': 650.8414056787266, 'ehb': 385.5762, 'ttm': 276.8055056036774, 'tt200m': 11233.51655156879, 'registeredAt': '2021-10-08T20: 17: 03.943000Z', 'updatedAt': '2025-06-02T05: 09: 11.236000Z', 'lastChangedAt': '2025-06-02T05: 09: 11.236000Z', 'lastImportedAt': '2023-07-11T06: 36: 09.574000Z'
+}, 'progress': {'start': 312830452, 'end': 317749370, 'gained': 4918918
+}, 'levels': {'start': 2189, 'end': 2190, 'gained': 1
+}
+},
+{'playerId': 2323049, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 05: 26.086000Z', 'player': {'id': 2323049, 'username': 'boogtheleech', 'displayName': 'BoogTheLeech', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 65190252, 'ehp': 187.2407089619833, 'ehb': 72.00491000000001, 'ttm': 711.680008439072, 'tt200m': 11697.11724828554, 'registeredAt': '2025-03-22T21: 01: 06.368000Z', 'updatedAt': '2025-06-02T22: 05: 24.165000Z', 'lastChangedAt': '2025-06-02T22: 05: 24.165000Z', 'lastImportedAt': None
+}, 'progress': {'start': 60300253, 'end': 65190252, 'gained': 4889999
+}, 'levels': {'start': 1821, 'end': 1833, 'gained': 12
+}
+},
+{'playerId': 976838, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T17: 39: 23.775000Z', 'player': {'id': 976838, 'username': 'g a v l n', 'displayName': 'G A V l N', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 139411722, 'ehp': 777.3805820453616, 'ehb': 71.44918999999999, 'ttm': 942.6569537588717, 'tt200m': 18920.20184558388, 'registeredAt': '2023-04-12T14: 15: 05.594000Z', 'updatedAt': '2025-06-02T17: 39: 23.707000Z', 'lastChangedAt': '2025-06-02T17: 39: 23.707000Z', 'lastImportedAt': '2023-04-12T14: 15: 08.768000Z'
+}, 'progress': {'start': 134540991, 'end': 139411722, 'gained': 4870731
+}, 'levels': {'start': 2023, 'end': 2035, 'gained': 12
+}
+},
+{'playerId': 1439983, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 16: 08.936000Z', 'player': {'id': 1439983, 'username': 'baked 5eans', 'displayName': 'Baked 5eans', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 252107967, 'ehp': 949.4548265396058, 'ehb': 614.1784799999999, 'ttm': 779.3845954892814, 'tt200m': 18748.12760108964, 'registeredAt': '2024-01-19T23: 17: 18.605000Z', 'updatedAt': '2025-06-02T22: 16: 08.606000Z', 'lastChangedAt': '2025-06-02T22: 16: 08.606000Z', 'lastImportedAt': None
+}, 'progress': {'start': 247240222, 'end': 252107967, 'gained': 4867745
+}, 'levels': {'start': 2101, 'end': 2103, 'gained': 2
+}
+},
+{'playerId': 637708, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 14: 24.193000Z', 'player': {'id': 637708, 'username': 'irondiq', 'displayName': 'IronDiq', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 445349287, 'ehp': 1063.441835664307, 'ehb': 373.20897, 'ttm': 0.0, 'tt200m': 10820.91612158321, 'registeredAt': '2022-05-28T15: 28: 45.727000Z', 'updatedAt': '2025-06-02T22: 14: 24.077000Z', 'lastChangedAt': '2025-06-02T22: 14: 24.077000Z', 'lastImportedAt': '2023-07-11T02: 09: 09.542000Z'
+}, 'progress': {'start': 440538196, 'end': 445349287, 'gained': 4811091
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 2401023, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 58: 24.918000Z', 'player': {'id': 2401023, 'username': 'moledog', 'displayName': 'MoleDog', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 26460777, 'ehp': 231.1407296283217, 'ehb': 24.26938, 'ttm': 1480.040962067691, 'tt200m': 19466.44169800092, 'registeredAt': '2025-05-11T05: 07: 58.179000Z', 'updatedAt': '2025-06-02T22: 58: 23.452000Z', 'lastChangedAt': '2025-06-02T22: 58: 23.452000Z', 'lastImportedAt': None
+}, 'progress': {'start': 21651681, 'end': 26460777, 'gained': 4809096
+}, 'levels': {'start': 1586, 'end': 1649, 'gained': 63
+}
+},
+{'playerId': 1330559, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 39: 34.145000Z', 'player': {'id': 1330559, 'username': 'ironjelly', 'displayName': 'IronJelly', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 74292434, 'ehp': 417.8920080541056, 'ehb': 99.40862, 'ttm': 1293.495418936025, 'tt200m': 19279.69041957514, 'registeredAt': '2023-12-12T08: 35: 18.846000Z', 'updatedAt': '2025-06-02T22: 39: 33.937000Z', 'lastChangedAt': '2025-06-02T22: 39: 33.937000Z', 'lastImportedAt': None
+}, 'progress': {'start': 69540614, 'end': 74292434, 'gained': 4751820
+}, 'levels': {'start': 1856, 'end': 1874, 'gained': 18
+}
+},
+{'playerId': 2338972, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T23: 04: 00.897000Z', 'player': {'id': 2338972, 'username': 'nerdfighter', 'displayName': 'nerdfighter', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 36979999, 'ehp': 132.9481106548963, 'ehb': 21.82919, 'ttm': 765.972606746159, 'tt200m': 11751.40984659263, 'registeredAt': '2025-04-01T22: 28: 19.577000Z', 'updatedAt': '2025-06-02T23: 03: 59.674000Z', 'lastChangedAt': '2025-06-02T23: 03: 59.674000Z', 'lastImportedAt': None
+}, 'progress': {'start': 32297932, 'end': 36979999, 'gained': 4682067
+}, 'levels': {'start': 1710, 'end': 1735, 'gained': 25
+}
+},
+{'playerId': 1424373, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 57: 31.031000Z', 'player': {'id': 1424373, 'username': 'iron pyke', 'displayName': 'iron pyke', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 317592355, 'ehp': 1439.033555799547, 'ehb': 471.86273, 'ttm': 297.7800129728078, 'tt200m': 18258.5488718297, 'registeredAt': '2024-01-07T21: 33: 33.649000Z', 'updatedAt': '2025-06-02T21: 57: 30.845000Z', 'lastChangedAt': '2025-06-02T21: 57: 30.845000Z', 'lastImportedAt': None
+}, 'progress': {'start': 312910691, 'end': 317592355, 'gained': 4681664
+}, 'levels': {'start': 2223, 'end': 2224, 'gained': 1
+}
+},
+{'playerId': 1833438, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 55: 12.107000Z', 'player': {'id': 1833438, 'username': 'grey wild', 'displayName': 'Grey Wild', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 108013213, 'ehp': 257.6571182660792, 'ehb': 141.40585, 'ttm': 641.5291554374971, 'tt200m': 11626.70083898144, 'registeredAt': '2024-04-17T00: 21: 47.236000Z', 'updatedAt': '2025-06-02T22: 55: 11.979000Z', 'lastChangedAt': '2025-06-02T22: 55: 11.979000Z', 'lastImportedAt': None
+}, 'progress': {'start': 103344707, 'end': 108013213, 'gained': 4668506
+}, 'levels': {'start': 1970, 'end': 1976, 'gained': 6
+}
+},
+{'playerId': 743750, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T03: 23: 58.873000Z', 'player': {'id': 743750, 'username': 'ironmike887', 'displayName': 'IronMike887', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 79926323, 'ehp': 211.6255052265162, 'ehb': 89.43435, 'ttm': 687.2952121745391, 'tt200m': 11672.732452021, 'registeredAt': '2022-09-13T00: 24: 13.989000Z', 'updatedAt': '2025-06-02T03: 23: 58.742000Z', 'lastChangedAt': '2025-06-02T03: 23: 58.742000Z', 'lastImportedAt': None
+}, 'progress': {'start': 75262826, 'end': 79926323, 'gained': 4663497
+}, 'levels': {'start': 1849, 'end': 1862, 'gained': 13
+}
+},
+{'playerId': 1110524, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 27: 36.925000Z', 'player': {'id': 1110524, 'username': 'ble4chy', 'displayName': 'ble4chy', 'type': 'regular', 'build': 'main', 'country': 'LT', 'status': 'active', 'exp': 130981220, 'ehp': 381.004815864054, 'ehb': 101.41479, 'ttm': 533.4509211226909, 'tt200m': 11503.35314138347, 'registeredAt': '2023-08-05T22: 40: 47.415000Z', 'updatedAt': '2025-06-02T21: 27: 36.797000Z', 'lastChangedAt': '2025-06-02T21: 27: 36.797000Z', 'lastImportedAt': None
+}, 'progress': {'start': 126336212, 'end': 130981220, 'gained': 4645008
+}, 'levels': {'start': 2007, 'end': 2015, 'gained': 8
+}
+},
+{'playerId': 1317450, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 16: 07.618000Z', 'player': {'id': 1317450, 'username': 'i kunaii', 'displayName': 'I Kunaii', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 138685243, 'ehp': 652.4363591560691, 'ehb': 141.23785, 'ttm': 1058.762284106979, 'tt200m': 19045.14606847318, 'registeredAt': '2023-12-10T20: 21: 10.256000Z', 'updatedAt': '2025-06-02T22: 16: 07.347000Z', 'lastChangedAt': '2025-06-01T22: 13: 12.245000Z', 'lastImportedAt': None
+}, 'progress': {'start': 134135628, 'end': 138685243, 'gained': 4549615
+}, 'levels': {'start': 2012, 'end': 2018, 'gained': 6
+}
+},
+{'playerId': 2386464, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 04: 45.096000Z', 'player': {'id': 2386464, 'username': 'pagasm', 'displayName': 'PagasM', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 29321350, 'ehp': 111.191458367184, 'ehb': 38.91332000000001, 'ttm': 787.7292590338714, 'tt200m': 11773.16649888034, 'registeredAt': '2025-05-02T07: 24: 50.515000Z', 'updatedAt': '2025-06-02T22: 04: 43.600000Z', 'lastChangedAt': '2025-06-02T22: 04: 43.600000Z', 'lastImportedAt': None
+}, 'progress': {'start': 24854019, 'end': 29321350, 'gained': 4467331
+}, 'levels': {'start': 1602, 'end': 1665, 'gained': 63
+}
+},
+{'playerId': 987703, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 17: 53.890000Z', 'player': {'id': 987703, 'username': 't a n n 11', 'displayName': 'T A N N 11', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 134447230, 'ehp': 620.5446615033342, 'ehb': 263.78287, 'ttm': 1093.813140207793, 'tt200m': 19077.03776612591, 'registeredAt': '2023-04-20T17: 04: 17.996000Z', 'updatedAt': '2025-06-02T19: 17: 53.364000Z', 'lastChangedAt': '2025-06-02T19: 17: 53.364000Z', 'lastImportedAt': None
+}, 'progress': {'start': 130040730, 'end': 134447230, 'gained': 4406500
+}, 'levels': {'start': 1964, 'end': 1966, 'gained': 2
+}
+},
+{'playerId': 1127844, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 12: 48.123000Z', 'player': {'id': 1127844, 'username': 'sliqknot', 'displayName': 'Sliqknot', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 194996633, 'ehp': 377.3635121969751, 'ehb': 233.49131, 'ttm': 537.5237448276516, 'tt200m': 11506.99444505055, 'registeredAt': '2023-08-21T13: 58: 47.815000Z', 'updatedAt': '2025-06-02T23: 12: 47.877000Z', 'lastChangedAt': '2025-06-02T23: 12: 47.877000Z', 'lastImportedAt': None
+}, 'progress': {'start': 190610551, 'end': 194996633, 'gained': 4386082
+}, 'levels': {'start': 2043, 'end': 2048, 'gained': 5
+}
+},
+{'playerId': 121540, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 45: 04.348000Z', 'player': {'id': 121540, 'username': 'android iron', 'displayName': 'Android Iron', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 595432298, 'ehp': 2197.652584632234, 'ehb': 1110.89392, 'ttm': 0.0, 'tt200m': 17499.92984299701, 'registeredAt': '2020-12-28T02: 38: 02.623000Z', 'updatedAt': '2025-06-02T22: 45: 03.413000Z', 'lastChangedAt': '2025-06-02T22: 45: 03.413000Z', 'lastImportedAt': '2023-06-24T01: 24: 49.954000Z'
+}, 'progress': {'start': 591092911, 'end': 595432298, 'gained': 4339387
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 703401, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T17: 02: 12.117000Z', 'player': {'id': 703401, 'username': 'abigfatkitty', 'displayName': 'aBigFatKitty', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 361945518, 'ehp': 1583.761837736604, 'ehb': 455.2432200000001, 'ttm': 229.9523324811744, 'tt200m': 18113.82058989264, 'registeredAt': '2022-08-03T14: 52: 41.546000Z', 'updatedAt': '2025-06-02T17: 02: 03.208000Z', 'lastChangedAt': '2025-06-02T17: 02: 03.208000Z', 'lastImportedAt': None
+}, 'progress': {'start': 357618068, 'end': 361945518, 'gained': 4327450
+}, 'levels': {'start': 2233, 'end': 2234, 'gained': 1
+}
+},
+{'playerId': 729932, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 25: 08.691000Z', 'player': {'id': 729932, 'username': 'gimp waz', 'displayName': 'Gimp Waz', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 256125882, 'ehp': 681.3651981275509, 'ehb': 164.12854, 'ttm': 236.6684381452737, 'tt200m': 11202.99275911997, 'registeredAt': '2022-08-29T21: 30: 55.536000Z', 'updatedAt': '2025-06-02T21: 25: 06.990000Z', 'lastChangedAt': '2025-06-02T21: 25: 06.990000Z', 'lastImportedAt': '2023-07-09T01: 47: 27.682000Z'
+}, 'progress': {'start': 251817180, 'end': 256125882, 'gained': 4308702
+}, 'levels': {'start': 2178, 'end': 2180, 'gained': 2
+}
+},
+{'playerId': 729029, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T23: 00: 35.114000Z', 'player': {'id': 729029, 'username': 'lerby', 'displayName': 'Lerby', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 165787221, 'ehp': 809.1422186490834, 'ehb': 271.19074, 'ttm': 908.3254512951484, 'tt200m': 18888.44020898016, 'registeredAt': '2022-08-29T01: 47: 02.129000Z', 'updatedAt': '2025-06-02T23: 00: 27.046000Z', 'lastChangedAt': '2025-06-02T23: 00: 27.046000Z', 'lastImportedAt': '2022-11-02T14: 07: 31.289000Z'
+}, 'progress': {'start': 161682978, 'end': 165787221, 'gained': 4104243
+}, 'levels': {'start': 2034, 'end': 2037, 'gained': 3
+}
+},
+{'playerId': 2081627, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T03: 02: 55.826000Z', 'player': {'id': 2081627, 'username': 'whiskey q p', 'displayName': 'Whiskey q p', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 36406275, 'ehp': 156.4047351549802, 'ehb': 0.58824, 'ttm': 742.5364320476, 'tt200m': 11727.95322209254, 'registeredAt': '2024-09-29T18: 44: 46.612000Z', 'updatedAt': '2025-06-02T03: 02: 54.696000Z', 'lastChangedAt': '2025-06-02T03: 02: 54.696000Z', 'lastImportedAt': None
+}, 'progress': {'start': 32365792, 'end': 36406275, 'gained': 4040483
+}, 'levels': {'start': 1488, 'end': 1501, 'gained': 13
+}
+},
+{'playerId': 2190912, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 52: 30.447000Z', 'player': {'id': 2190912, 'username': 'positiviteit', 'displayName': 'POSITIVITEIT', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 45188558, 'ehp': 141.777736311336, 'ehb': 32.86058000000001, 'ttm': 757.1429810897192, 'tt200m': 11742.58022093618, 'registeredAt': '2024-12-30T19: 36: 54.370000Z', 'updatedAt': '2025-06-02T20: 52: 28.686000Z', 'lastChangedAt': '2025-06-02T20: 52: 28.686000Z', 'lastImportedAt': None
+}, 'progress': {'start': 41166736, 'end': 45188558, 'gained': 4021822
+}, 'levels': {'start': 1742, 'end': 1762, 'gained': 20
+}
+},
+{'playerId': 1985542, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 49: 56.803000Z', 'player': {'id': 1985542, 'username': 'shark 33', 'displayName': 'SHARK 33', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 151882796, 'ehp': 177.8310882522155, 'ehb': 2.15081, 'ttm': 738.5674824546134, 'tt200m': 11706.5268689953, 'registeredAt': '2024-08-07T01: 42: 34.905000Z', 'updatedAt': '2025-06-01T23: 49: 56.419000Z', 'lastChangedAt': '2025-06-01T23: 49: 56.419000Z', 'lastImportedAt': None
+}, 'progress': {'start': 147899543, 'end': 151882796, 'gained': 3983253
+}, 'levels': {'start': 1632, 'end': 1688, 'gained': 56
+}
+},
+{'playerId': 727040, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 05: 18.601000Z', 'player': {'id': 727040, 'username': 'btwspoon', 'displayName': 'BTWspoon', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 146172988, 'ehp': 780.8513347993642, 'ehb': 135.38293, 'ttm': 930.3490492777552, 'tt200m': 18916.73109282988, 'registeredAt': '2022-08-26T20: 49: 32.255000Z', 'updatedAt': '2025-06-02T23: 05: 17.411000Z', 'lastChangedAt': '2025-06-02T23: 05: 17.411000Z', 'lastImportedAt': '2023-01-06T01: 25: 57.100000Z'
+}, 'progress': {'start': 142208072, 'end': 146172988, 'gained': 3964916
+}, 'levels': {'start': 2058, 'end': 2062, 'gained': 4
+}
+},
+{'playerId': 369268, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T02: 25: 00.881000Z', 'player': {'id': 369268, 'username': 'kretsky', 'displayName': 'kretsky', 'type': 'ironman', 'build': 'main', 'country': 'CA', 'status': 'active', 'exp': 208870163, 'ehp': 941.5446879096412, 'ehb': 303.702, 'ttm': 788.309743902679, 'tt200m': 18756.0377397196, 'registeredAt': '2021-09-13T21: 34: 46.039000Z', 'updatedAt': '2025-06-02T02: 25: 00.479000Z', 'lastChangedAt': '2025-06-02T02: 25: 00.479000Z', 'lastImportedAt': None
+}, 'progress': {'start': 204945434, 'end': 208870163, 'gained': 3924729
+}, 'levels': {'start': 2070, 'end': 2072, 'gained': 2
+}
+},
+{'playerId': 1059881, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 36: 39.129000Z', 'player': {'id': 1059881, 'username': 'hcknchnkeres', 'displayName': 'hcknchnkeres', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 139952565, 'ehp': 763.9002135018641, 'ehb': 57.35848, 'ttm': 948.7841479181554, 'tt200m': 18933.68221412738, 'registeredAt': '2023-06-23T19: 43: 10.281000Z', 'updatedAt': '2025-06-02T20: 36: 39.057000Z', 'lastChangedAt': '2025-06-02T20: 36: 39.057000Z', 'lastImportedAt': None
+}, 'progress': {'start': 136145669, 'end': 139952565, 'gained': 3806896
+}, 'levels': {'start': 2044, 'end': 2052, 'gained': 8
+}
+},
+{'playerId': 1468112, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T14: 44: 49.157000Z', 'player': {'id': 1468112, 'username': 'kerandel', 'displayName': 'Kerandel', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 53195199, 'ehp': 343.2464154827445, 'ehb': 57.88372, 'ttm': 1367.935276213268, 'tt200m': 19354.3360121465, 'registeredAt': '2024-01-28T14: 53: 14.207000Z', 'updatedAt': '2025-06-02T14: 44: 49Z', 'lastChangedAt': '2025-06-02T14: 44: 49Z', 'lastImportedAt': None
+}, 'progress': {'start': 49470534, 'end': 53195199, 'gained': 3724665
+}, 'levels': {'start': 1816, 'end': 1825, 'gained': 9
+}
+},
+{'playerId': 2279639, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 40: 38.566000Z', 'player': {'id': 2279639, 'username': 'squiddknee', 'displayName': 'SquiddKnee', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 17796915, 'ehp': 65.69137312257357, 'ehb': 0.11667, 'ttm': 833.2293442784817, 'tt200m': 11818.66658412495, 'registeredAt': '2025-03-08T05: 52: 55.168000Z', 'updatedAt': '2025-06-02T20: 40: 35.561000Z', 'lastChangedAt': '2025-06-02T20: 40: 35.561000Z', 'lastImportedAt': None
+}, 'progress': {'start': 14128277, 'end': 17796915, 'gained': 3668638
+}, 'levels': {'start': 1432, 'end': 1467, 'gained': 35
+}
+},
+{'playerId': 278855, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 44: 35.059000Z', 'player': {'id': 278855, 'username': 'bussy good', 'displayName': 'Bussy Good', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 244904022, 'ehp': 1188.560363554196, 'ehb': 167.62085, 'ttm': 529.1356133597742, 'tt200m': 18509.02206407505, 'registeredAt': '2021-06-13T17: 31: 09.142000Z', 'updatedAt': '2025-06-02T21: 44: 34.955000Z', 'lastChangedAt': '2025-06-02T21: 44: 34.955000Z', 'lastImportedAt': None
+}, 'progress': {'start': 241263552, 'end': 244904022, 'gained': 3640470
+}, 'levels': {'start': 2159, 'end': 2162, 'gained': 3
+}
+},
+{'playerId': 109487, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T12: 10: 35.009000Z', 'player': {'id': 109487, 'username': 'rheon', 'displayName': 'Rheon', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 459701151, 'ehp': 1938.944502275304, 'ehb': 567.0110199999999, 'ttm': 0.0, 'tt200m': 17758.63792535394, 'registeredAt': '2020-12-12T03: 17: 17.432000Z', 'updatedAt': '2025-06-02T12: 10: 34.739000Z', 'lastChangedAt': '2025-06-02T12: 10: 34.739000Z', 'lastImportedAt': '2022-02-11T08: 12: 28.263000Z'
+}, 'progress': {'start': 456065245, 'end': 459701151, 'gained': 3635906
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 1682685, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T03: 18: 02.083000Z', 'player': {'id': 1682685, 'username': '1wub', 'displayName': '1WUB', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 84518366, 'ehp': 423.9910139725039, 'ehb': 169.77086, 'ttm': 1287.190677723509, 'tt200m': 19273.59141365674, 'registeredAt': '2024-03-10T01: 44: 57.526000Z', 'updatedAt': '2025-06-02T03: 18: 01.563000Z', 'lastChangedAt': '2025-06-02T03: 18: 01.563000Z', 'lastImportedAt': None
+}, 'progress': {'start': 80889798, 'end': 84518366, 'gained': 3628568
+}, 'levels': {'start': 1901, 'end': 1908, 'gained': 7
+}
+},
+{'playerId': 531455, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T07: 10: 59.801000Z', 'player': {'id': 531455, 'username': 'irond4nny', 'displayName': 'Irond4nny', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 447818247, 'ehp': 1840.874193680713, 'ehb': 981.04696, 'ttm': 5.147026719727364, 'tt200m': 17856.70823394853, 'registeredAt': '2022-01-25T02: 40: 05.928000Z', 'updatedAt': '2025-06-02T07: 10: 59.592000Z', 'lastChangedAt': '2025-06-02T07: 10: 59.592000Z', 'lastImportedAt': '2023-06-20T00: 10: 30.589000Z'
+}, 'progress': {'start': 444240461, 'end': 447818247, 'gained': 3577786
+}, 'levels': {'start': 2272, 'end': 2276, 'gained': 4
+}
+},
+{'playerId': 1041705, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T10: 37: 57.485000Z', 'player': {'id': 1041705, 'username': '1jz vl', 'displayName': '1JZ VL', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 183838117, 'ehp': 947.6943106962386, 'ehb': 159.82518, 'ttm': 763.6951074559813, 'tt200m': 18749.88811693301, 'registeredAt': '2023-06-05T13: 49: 58.083000Z', 'updatedAt': '2025-06-02T10: 37: 57.351000Z', 'lastChangedAt': '2025-06-02T10: 37: 57.351000Z', 'lastImportedAt': None
+}, 'progress': {'start': 180279269, 'end': 183838117, 'gained': 3558848
+}, 'levels': {'start': 2118, 'end': 2124, 'gained': 6
+}
+},
+{'playerId': 2247949, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 53: 10.901000Z', 'player': {'id': 2247949, 'username': 'lady inkul', 'displayName': 'Lady Inkul', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 46795696, 'ehp': 154.6873131310942, 'ehb': 24.46287, 'ttm': 744.233404269961, 'tt200m': 11729.67064411643, 'registeredAt': '2025-02-13T04: 58: 20.585000Z', 'updatedAt': '2025-06-02T21: 53: 10.772000Z', 'lastChangedAt': '2025-06-02T21: 53: 10.772000Z', 'lastImportedAt': None
+}, 'progress': {'start': 43239805, 'end': 46795696, 'gained': 3555891
+}, 'levels': {'start': 1774, 'end': 1792, 'gained': 18
+}
+},
+{'playerId': 1566911, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T01: 54: 55.614000Z', 'player': {'id': 1566911, 'username': 'ptolemaic', 'displayName': 'Ptolemaic', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 308007080, 'ehp': 554.8887569525324, 'ehb': 106.81543, 'ttm': 370.4652357756706, 'tt200m': 11329.46920029499, 'registeredAt': '2024-02-11T16: 14: 55.426000Z', 'updatedAt': '2025-06-02T01: 54: 55.562000Z', 'lastChangedAt': '2025-06-02T01: 54: 55.562000Z', 'lastImportedAt': None
+}, 'progress': {'start': 304483249, 'end': 308007080, 'gained': 3523831
+}, 'levels': {'start': 2155, 'end': 2156, 'gained': 1
+}
+},
+{'playerId': 1110519, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T19: 35: 17.247000Z', 'player': {'id': 1110519, 'username': 'drippy gash', 'displayName': 'Drippy Gash', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 125548785, 'ehp': 692.1025302223147, 'ehb': 200.09664, 'ttm': 1019.113437223422, 'tt200m': 19005.47989740693, 'registeredAt': '2023-08-05T22: 40: 47.415000Z', 'updatedAt': '2025-06-02T19: 35: 12.472000Z', 'lastChangedAt': '2025-06-01T19: 30: 08.932000Z', 'lastImportedAt': None
+}, 'progress': {'start': 122160416, 'end': 125548785, 'gained': 3388369
+}, 'levels': {'start': 2036, 'end': 2040, 'gained': 4
+}
+},
+{'playerId': 1203081, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 47: 45.688000Z', 'player': {'id': 1203081, 'username': 'kaetif', 'displayName': 'kaetif', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 238593962, 'ehp': 600.9461832368082, 'ehb': 218.73052, 'ttm': 358.6904800445342, 'tt200m': 11283.41177401071, 'registeredAt': '2023-10-22T22: 13: 00.463000Z', 'updatedAt': '2025-06-02T21: 47: 45.316000Z', 'lastChangedAt': '2025-06-02T21: 47: 45.316000Z', 'lastImportedAt': None
+}, 'progress': {'start': 235236516, 'end': 238593962, 'gained': 3357446
+}, 'levels': {'start': 2122, 'end': 2126, 'gained': 4
+}
+},
+{'playerId': 470654, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 31: 16.517000Z', 'player': {'id': 470654, 'username': 'gfe zanothe', 'displayName': 'gFE Zanothe', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 372664981, 'ehp': 650.7504541992527, 'ehb': 624.8782100000001, 'ttm': 340.679231083171, 'tt200m': 11233.60750304827, 'registeredAt': '2021-11-29T21: 50: 33.460000Z', 'updatedAt': '2025-06-02T21: 31: 08.517000Z', 'lastChangedAt': '2025-06-02T21: 31: 08.517000Z', 'lastImportedAt': '2023-06-24T01: 24: 50.764000Z'
+}, 'progress': {'start': 369323500, 'end': 372664981, 'gained': 3341481
+}, 'levels': {'start': 2181, 'end': 2181, 'gained': 0
+}
+},
+{'playerId': 1589248, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 19: 13.877000Z', 'player': {'id': 1589248, 'username': 'nikki nugz', 'displayName': 'Nikki Nugz', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 260842245, 'ehp': 685.5366287856898, 'ehb': 129.06191, 'ttm': 266.1115874448819, 'tt200m': 11198.82132846183, 'registeredAt': '2024-02-17T11: 45: 21.123000Z', 'updatedAt': '2025-06-02T21: 19: 13.535000Z', 'lastChangedAt': '2025-06-02T21: 19: 13.535000Z', 'lastImportedAt': None
+}, 'progress': {'start': 257581238, 'end': 260842245, 'gained': 3261007
+}, 'levels': {'start': 2169, 'end': 2169, 'gained': 0
+}
+},
+{'playerId': 703367, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 49: 30.960000Z', 'player': {'id': 703367, 'username': 'goth feet', 'displayName': 'Goth Feet', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 177499936, 'ehp': 850.9785191170058, 'ehb': 95.48418, 'ttm': 877.8503500658546, 'tt200m': 18846.60390851224, 'registeredAt': '2022-08-03T14: 05: 22.981000Z', 'updatedAt': '2025-06-02T21: 49: 30.746000Z', 'lastChangedAt': '2025-06-02T21: 49: 30.746000Z', 'lastImportedAt': '2023-07-10T07: 01: 01.875000Z'
+}, 'progress': {'start': 174245292, 'end': 177499936, 'gained': 3254644
+}, 'levels': {'start': 2084, 'end': 2090, 'gained': 6
+}
+},
+{'playerId': 539956, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 07: 35.598000Z', 'player': {'id': 539956, 'username': 'gm zak', 'displayName': 'GM ZAK', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 279412310, 'ehp': 601.2648464514275, 'ehb': 329.4793199999999, 'ttm': 368.1550392075713, 'tt200m': 11283.09311079609, 'registeredAt': '2022-02-02T18: 29: 00.185000Z', 'updatedAt': '2025-06-02T21: 07: 35.441000Z', 'lastChangedAt': '2025-06-01T20: 58: 23.053000Z', 'lastImportedAt': None
+}, 'progress': {'start': 276160101, 'end': 279412310, 'gained': 3252209
+}, 'levels': {'start': 2163, 'end': 2164, 'gained': 1
+}
+},
+{'playerId': 2357997, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 55: 39.093000Z', 'player': {'id': 2357997, 'username': 'exiledmagpie', 'displayName': 'ExiledMagpie', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 9328413, 'ehp': 148.8419871059631, 'ehb': 0.0, 'ttm': 1562.33970459005, 'tt200m': 19548.74044052328, 'registeredAt': '2025-04-15T03: 00: 06.879000Z', 'updatedAt': '2025-06-02T19: 55: 38.977000Z', 'lastChangedAt': '2025-06-02T19: 55: 38.977000Z', 'lastImportedAt': None
+}, 'progress': {'start': 6114073, 'end': 9328413, 'gained': 3214340
+}, 'levels': {'start': 1173, 'end': 1344, 'gained': 171
+}
+},
+{'playerId': 1122439, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 39: 20.657000Z', 'player': {'id': 1122439, 'username': 'small moment', 'displayName': 'small moment', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 56977789, 'ehp': 161.7640982775786, 'ehb': 65.3672, 'ttm': 737.1566191234767, 'tt200m': 11722.59385896994, 'registeredAt': '2023-08-16T20: 36: 58.339000Z', 'updatedAt': '2025-06-02T21: 39: 20.599000Z', 'lastChangedAt': '2025-06-02T21: 39: 20.599000Z', 'lastImportedAt': None
+}, 'progress': {'start': 53811822, 'end': 56977789, 'gained': 3165967
+}, 'levels': {'start': 1806, 'end': 1815, 'gained': 9
+}
+},
+{'playerId': 852770, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T03: 48: 40.945000Z', 'player': {'id': 852770, 'username': 'ron redberry', 'displayName': 'ron redberry', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 163427868, 'ehp': 746.3808577954492, 'ehb': 271.76353, 'ttm': 967.3580362661311, 'tt200m': 18951.2015698338, 'registeredAt': '2023-01-01T15: 55: 23.761000Z', 'updatedAt': '2025-06-02T03: 48: 40.740000Z', 'lastChangedAt': '2025-06-02T03: 48: 40.740000Z', 'lastImportedAt': None
+}, 'progress': {'start': 160310966, 'end': 163427868, 'gained': 3116902
+}, 'levels': {'start': 2045, 'end': 2047, 'gained': 2
+}
+},
+{'playerId': 607817, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T10: 54: 49.429000Z', 'player': {'id': 607817, 'username': 'awwgasmic', 'displayName': 'AwwGasmic', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 578297773, 'ehp': 1074.031594252041, 'ehb': 674.19342, 'ttm': 121.1529935156677, 'tt200m': 10810.32636299548, 'registeredAt': '2022-04-27T15: 51: 47.970000Z', 'updatedAt': '2025-06-02T10: 54: 49.268000Z', 'lastChangedAt': '2025-06-02T10: 54: 49.268000Z', 'lastImportedAt': None
+}, 'progress': {'start': 575190240, 'end': 578297773, 'gained': 3107533
+}, 'levels': {'start': 2232, 'end': 2232, 'gained': 0
+}
+},
+{'playerId': 798180, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 49: 49.966000Z', 'player': {'id': 798180, 'username': 'prayergim', 'displayName': 'PrayerGIM', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 254487771, 'ehp': 522.295469351687, 'ehb': 383.88501, 'ttm': 440.7662489955535, 'tt200m': 11362.06248789583, 'registeredAt': '2022-11-08T21: 30: 16.860000Z', 'updatedAt': '2025-06-02T00: 49: 49.842000Z', 'lastChangedAt': '2025-06-02T00: 49: 49.842000Z', 'lastImportedAt': None
+}, 'progress': {'start': 251386528, 'end': 254487771, 'gained': 3101243
+}, 'levels': {'start': 2112, 'end': 2113, 'gained': 1
+}
+},
+{'playerId': 640702, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-28T01: 35: 32.934000Z', 'updatedAt': '2025-06-02T20: 15: 58.435000Z', 'player': {'id': 640702, 'username': 'drinkh2opls', 'displayName': 'DrinkH2Opls', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 262403866, 'ehp': 1163.706559281793, 'ehb': 323.17518, 'ttm': 578.1059878203414, 'tt200m': 18533.87586834745, 'registeredAt': '2022-05-31T20: 50: 55.367000Z', 'updatedAt': '2025-06-02T20: 15: 58.159000Z', 'lastChangedAt': '2025-06-02T20: 15: 58.159000Z', 'lastImportedAt': None
+}, 'progress': {'start': 259377586, 'end': 262403866, 'gained': 3026280
+}, 'levels': {'start': 2144, 'end': 2144, 'gained': 0
+}
+},
+{'playerId': 520174, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T18: 35: 18.314000Z', 'player': {'id': 520174, 'username': 'ajcaw', 'displayName': 'ajcaw', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 167179294, 'ehp': 594.6751401954104, 'ehb': 48.53811000000001, 'ttm': 314.1927197140785, 'tt200m': 11289.68281705211, 'registeredAt': '2022-01-14T21: 38: 16.020000Z', 'updatedAt': '2025-06-02T18: 35: 08.186000Z', 'lastChangedAt': '2025-06-02T18: 35: 08.186000Z', 'lastImportedAt': None
+}, 'progress': {'start': 164177176, 'end': 167179294, 'gained': 3002118
+}, 'levels': {'start': 2106, 'end': 2110, 'gained': 4
+}
+},
+{'playerId': 1978717, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 23: 08.554000Z', 'player': {'id': 1978717, 'username': 'dropdead', 'displayName': 'Dropdead', 'type': 'regular', 'build': 'lvl3', 'country': None, 'status': 'active', 'exp': 118359649, 'ehp': 348.6913216414854, 'ehb': 0.0, 'ttm': 444.0287868168685, 'tt200m': 10457.73835063214, 'registeredAt': '2024-08-02T16: 41: 25.958000Z', 'updatedAt': '2025-06-02T21: 23: 08.477000Z', 'lastChangedAt': '2025-06-02T21: 23: 08.477000Z', 'lastImportedAt': None
+}, 'progress': {'start': 115377197, 'end': 118359649, 'gained': 2982452
+}, 'levels': {'start': 1428, 'end': 1435, 'gained': 7
+}
+},
+{'playerId': 2065676, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T01: 50: 13.352000Z', 'player': {'id': 2065676, 'username': 'gim xandore2', 'displayName': 'gim xandore2', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 131139600, 'ehp': 305.8226564882583, 'ehb': 39.75169, 'ttm': 595.5574363761531, 'tt200m': 11578.53530075926, 'registeredAt': '2024-09-17T19: 01: 42.215000Z', 'updatedAt': '2025-06-02T01: 50: 08.716000Z', 'lastChangedAt': '2025-06-01T01: 45: 31.995000Z', 'lastImportedAt': None
+}, 'progress': {'start': 128158086, 'end': 131139600, 'gained': 2981514
+}, 'levels': {'start': 2018, 'end': 2020, 'gained': 2
+}
+},
+{'playerId': 193575, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 19: 33.244000Z', 'player': {'id': 193575, 'username': 'stovete', 'displayName': 'Stovete', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 211061093, 'ehp': 1023.081154567349, 'ehb': 249.6029199999999, 'ttm': 710.8390104325664, 'tt200m': 18674.50127306189, 'registeredAt': '2021-03-12T07: 17: 07.360000Z', 'updatedAt': '2025-06-02T22: 19: 32.982000Z', 'lastChangedAt': '2025-06-02T22: 19: 32.982000Z', 'lastImportedAt': '2022-01-23T01: 24: 12.543000Z'
+}, 'progress': {'start': 208082760, 'end': 211061093, 'gained': 2978333
+}, 'levels': {'start': 2097, 'end': 2097, 'gained': 0
+}
+},
+{'playerId': 345950, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T13: 54: 20.117000Z', 'player': {'id': 345950, 'username': 'dunar luxion', 'displayName': 'Dunar Luxion', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 121628936, 'ehp': 590.3934470129125, 'ehb': 57.1163, 'ttm': 1121.563700636453, 'tt200m': 19107.18898061633, 'registeredAt': '2021-08-21T22: 51: 15.115000Z', 'updatedAt': '2025-06-02T13: 54: 15.995000Z', 'lastChangedAt': '2025-06-02T13: 54: 15.995000Z', 'lastImportedAt': None
+}, 'progress': {'start': 118688580, 'end': 121628936, 'gained': 2940356
+}, 'levels': {'start': 1996, 'end': 2002, 'gained': 6
+}
+},
+{'playerId': 273353, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 20: 16.412000Z', 'player': {'id': 273353, 'username': 'myfrequency', 'displayName': 'myfrequency', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 259909927, 'ehp': 1125.65269277222, 'ehb': 245.55951, 'ttm': 595.8216367103532, 'tt200m': 18571.92973485703, 'registeredAt': '2021-06-07T23: 09: 31.720000Z', 'updatedAt': '2025-06-02T22: 20: 15.718000Z', 'lastChangedAt': '2025-06-02T22: 20: 15.718000Z', 'lastImportedAt': '2023-06-15T10: 25: 50.556000Z'
+}, 'progress': {'start': 256974102, 'end': 259909927, 'gained': 2935825
+}, 'levels': {'start': 2180, 'end': 2181, 'gained': 1
+}
+},
+{'playerId': 994967, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T16: 40: 15.947000Z', 'player': {'id': 994967, 'username': 'gha rack', 'displayName': 'gha rack', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 285013180, 'ehp': 1385.071658665321, 'ehb': 407.10498, 'ttm': 360.3852367215561, 'tt200m': 18312.51076896392, 'registeredAt': '2023-04-26T13: 41: 43.307000Z', 'updatedAt': '2025-06-02T16: 40: 15.815000Z', 'lastChangedAt': '2025-05-31T16: 33: 06.219000Z', 'lastImportedAt': None
+}, 'progress': {'start': 282082120, 'end': 285013180, 'gained': 2931060
+}, 'levels': {'start': 2184, 'end': 2187, 'gained': 3
+}
+},
+{'playerId': 1110525, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 38: 25.430000Z', 'player': {'id': 1110525, 'username': 'prof friede', 'displayName': 'Prof Friede', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 120441562, 'ehp': 587.7262465058113, 'ehb': 162.98609, 'ttm': 1125.940918272209, 'tt200m': 19109.85618112343, 'registeredAt': '2023-08-05T22: 40: 47.415000Z', 'updatedAt': '2025-06-02T22: 38: 25.302000Z', 'lastChangedAt': '2025-06-02T22: 38: 25.302000Z', 'lastImportedAt': None
+}, 'progress': {'start': 117521921, 'end': 120441562, 'gained': 2919641
+}, 'levels': {'start': 1973, 'end': 1975, 'gained': 2
+}
+},
+{'playerId': 2077002, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 21: 46.736000Z', 'player': {'id': 2077002, 'username': 'avory', 'displayName': 'Avory', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 97427930, 'ehp': 483.228272315527, 'ehb': 142.0118, 'ttm': 1227.964989770486, 'tt200m': 19214.35415531372, 'registeredAt': '2024-09-26T02: 58: 55.192000Z', 'updatedAt': '2025-06-02T21: 21: 46.678000Z', 'lastChangedAt': '2025-06-02T21: 21: 46.678000Z', 'lastImportedAt': None
+}, 'progress': {'start': 94518170, 'end': 97427930, 'gained': 2909760
+}, 'levels': {'start': 1890, 'end': 1896, 'gained': 6
+}
+},
+{'playerId': 732184, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T02: 05: 51.053000Z', 'player': {'id': 732184, 'username': 'fat cnut', 'displayName': 'Fat Cnut', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 182838259, 'ehp': 821.8322527649643, 'ehb': 278.31415, 'ttm': 894.601794866623, 'tt200m': 18875.75017486428, 'registeredAt': '2022-09-01T01: 40: 06.853000Z', 'updatedAt': '2025-06-02T02: 05: 50.904000Z', 'lastChangedAt': '2025-06-02T02: 05: 50.904000Z', 'lastImportedAt': '2022-09-01T01: 40: 10.192000Z'
+}, 'progress': {'start': 180010047, 'end': 182838259, 'gained': 2828212
+}, 'levels': {'start': 2073, 'end': 2073, 'gained': 0
+}
+},
+{'playerId': 2170844, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 37: 48.949000Z', 'player': {'id': 2170844, 'username': 'cyanne', 'displayName': 'Cyanne', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 170189131, 'ehp': 470.4588184506924, 'ehb': 222.21505, 'ttm': 435.6710481092705, 'tt200m': 11413.89913879683, 'registeredAt': '2024-12-09T15: 19: 02.763000Z', 'updatedAt': '2025-06-02T22: 37: 48.873000Z', 'lastChangedAt': '2025-06-02T22: 37: 48.873000Z', 'lastImportedAt': None
+}, 'progress': {'start': 167386519, 'end': 170189131, 'gained': 2802612
+}, 'levels': {'start': 2073, 'end': 2075, 'gained': 2
+}
+},
+{'playerId': 1230631, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 02: 16.411000Z', 'player': {'id': 1230631, 'username': 'loafcrumbs', 'displayName': 'LoafCrumbs', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 39489151, 'ehp': 307.6058144664482, 'ehb': 7.310499999999999, 'ttm': 1673.889688429499, 'tt200m': 23884.93539293971, 'registeredAt': '2023-11-09T23: 58: 21.885000Z', 'updatedAt': '2025-06-02T22: 02: 08.302000Z', 'lastChangedAt': '2025-06-02T22: 02: 08.302000Z', 'lastImportedAt': None
+}, 'progress': {'start': 36690759, 'end': 39489151, 'gained': 2798392
+}, 'levels': {'start': 1587, 'end': 1633, 'gained': 46
+}
+},
+{'playerId': 71095, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 39: 23.064000Z', 'player': {'id': 71095, 'username': 'thefeodyssey', 'displayName': 'TheFeOdyssey', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 1172087893, 'ehp': 3163.398530799787, 'ehb': 3106.983459999999, 'ttm': 0.0, 'tt200m': 16534.18389682946, 'registeredAt': '2020-11-02T00: 34: 14.295000Z', 'updatedAt': '2025-06-02T22: 39: 22.236000Z', 'lastChangedAt': '2025-06-02T22: 39: 22.236000Z', 'lastImportedAt': '2023-06-27T23: 49: 07.203000Z'
+}, 'progress': {'start': 1169337106, 'end': 1172087893, 'gained': 2750787
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 1968797, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 20: 56.117000Z', 'player': {'id': 1968797, 'username': 'gim pabby', 'displayName': 'Gim Pabby', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 53228718, 'ehp': 167.1893484470216, 'ehb': 15.34917, 'ttm': 733.5013588012519, 'tt200m': 11717.1686088005, 'registeredAt': '2024-07-27T01: 38: 44.074000Z', 'updatedAt': '2025-06-02T23: 20: 55.698000Z', 'lastChangedAt': '2025-06-02T23: 20: 55.698000Z', 'lastImportedAt': None
+}, 'progress': {'start': 50501925, 'end': 53228718, 'gained': 2726793
+}, 'levels': {'start': 1757, 'end': 1779, 'gained': 22
+}
+},
+{'playerId': 1914284, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 20: 03.919000Z', 'player': {'id': 1914284, 'username': 'drbeefcakemd', 'displayName': 'drbeefcakemd', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 73748015, 'ehp': 189.0030359540059, 'ehb': 80.59383, 'ttm': 710.9105322470494, 'tt200m': 11695.35492129352, 'registeredAt': '2024-06-19T17: 44: 53.106000Z', 'updatedAt': '2025-06-02T20: 20: 03.280000Z', 'lastChangedAt': '2025-06-01T20: 17: 49.936000Z', 'lastImportedAt': None
+}, 'progress': {'start': 71037425, 'end': 73748015, 'gained': 2710590
+}, 'levels': {'start': 1863, 'end': 1872, 'gained': 9
+}
+},
+{'playerId': 1209113, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T15: 10: 56.839000Z', 'player': {'id': 1209113, 'username': 'yung leyo', 'displayName': 'Yung Leyo', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 79005618, 'ehp': 243.221805578451, 'ehb': 59.28435999999999, 'ttm': 655.6989118226043, 'tt200m': 11641.13615166907, 'registeredAt': '2023-10-27T21: 08: 16.013000Z', 'updatedAt': '2025-06-02T15: 10: 56.613000Z', 'lastChangedAt': '2025-06-02T15: 10: 56.613000Z', 'lastImportedAt': None
+}, 'progress': {'start': 76319763, 'end': 79005618, 'gained': 2685855
+}, 'levels': {'start': 1881, 'end': 1888, 'gained': 7
+}
+},
+{'playerId': 1280525, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 51: 34.652000Z', 'player': {'id': 1280525, 'username': 'smol scooby', 'displayName': 'Smol Scooby', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 232410536, 'ehp': 1082.011195503249, 'ehb': 337.0627500000001, 'ttm': 651.5600865178205, 'tt200m': 18615.571232126, 'registeredAt': '2023-11-25T03: 24: 05.630000Z', 'updatedAt': '2025-06-02T00: 51: 34.399000Z', 'lastChangedAt': '2025-06-02T00: 51: 34.399000Z', 'lastImportedAt': None
+}, 'progress': {'start': 229844979, 'end': 232410536, 'gained': 2565557
+}, 'levels': {'start': 2124, 'end': 2127, 'gained': 3
+}
+},
+{'playerId': 2315014, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T06: 29: 56.058000Z', 'player': {'id': 2315014, 'username': 'zpereghost', 'displayName': 'zPereghost', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 21038988, 'ehp': 222.6685923559785, 'ehb': 2.5207, 'ttm': 1488.513099340034, 'tt200m': 19474.91383527327, 'registeredAt': '2025-03-18T21: 48: 20.094000Z', 'updatedAt': '2025-06-02T06: 29: 55.977000Z', 'lastChangedAt': '2025-06-02T06: 29: 55.977000Z', 'lastImportedAt': None
+}, 'progress': {'start': 18496547, 'end': 21038988, 'gained': 2542441
+}, 'levels': {'start': 1522, 'end': 1567, 'gained': 45
+}
+},
+{'playerId': 2212369, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T16: 53: 13.764000Z', 'player': {'id': 2212369, 'username': '28scape', 'displayName': '28scape', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 46464323, 'ehp': 340.8142918220575, 'ehb': 54.30556, 'ttm': 1640.871722369733, 'tt200m': 23851.72691558411, 'registeredAt': '2025-01-17T06: 01: 19.355000Z', 'updatedAt': '2025-06-02T16: 53: 13.646000Z', 'lastChangedAt': '2025-06-02T16: 53: 13.646000Z', 'lastImportedAt': None
+}, 'progress': {'start': 43936384, 'end': 46464323, 'gained': 2527939
+}, 'levels': {'start': 1688, 'end': 1702, 'gained': 14
+}
+},
+{'playerId': 991333, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 01: 58.492000Z', 'player': {'id': 991333, 'username': 'rng rally', 'displayName': 'RNG Rally', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 363536662, 'ehp': 553.664119319808, 'ehb': 639.19625, 'ttm': 465.5278915734239, 'tt200m': 11330.69383792771, 'registeredAt': '2023-04-23T19: 39: 45.463000Z', 'updatedAt': '2025-06-02T21: 01: 35.473000Z', 'lastChangedAt': '2025-06-02T21: 01: 35.473000Z', 'lastImportedAt': None
+}, 'progress': {'start': 361059754, 'end': 363536662, 'gained': 2476908
+}, 'levels': {'start': 2117, 'end': 2117, 'gained': 0
+}
+},
+{'playerId': 584834, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T17: 40: 07.942000Z', 'player': {'id': 584834, 'username': 'vil', 'displayName': 'vil', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 279421398, 'ehp': 1417.388141337458, 'ehb': 260.52023, 'ttm': 632.2607731166763, 'tt200m': 22775.15306606871, 'registeredAt': '2022-04-03T14: 32: 44.887000Z', 'updatedAt': '2025-06-02T17: 40: 07.494000Z', 'lastChangedAt': '2025-06-02T17: 40: 07.494000Z', 'lastImportedAt': '2023-07-10T22: 00: 07.654000Z'
+}, 'progress': {'start': 276959601, 'end': 279421398, 'gained': 2461797
+}, 'levels': {'start': 2162, 'end': 2163, 'gained': 1
+}
+},
+{'playerId': 2336846, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 46: 43.804000Z', 'player': {'id': 2336846, 'username': 'kingsbluue', 'displayName': 'KingsBluue', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 419595836, 'ehp': 1128.046290236937, 'ehb': 382.74841, 'ttm': 0.0, 'tt200m': 10756.31166701058, 'registeredAt': '2025-04-01T02: 08: 41.940000Z', 'updatedAt': '2025-06-02T20: 46: 43.715000Z', 'lastChangedAt': '2025-06-02T20: 46: 43.715000Z', 'lastImportedAt': None
+}, 'progress': {'start': 417143239, 'end': 419595836, 'gained': 2452597
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 1427769, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 41: 43.157000Z', 'player': {'id': 1427769, 'username': 'felchie', 'displayName': 'Felchie', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 338654826, 'ehp': 926.0169055610877, 'ehb': 259.19776, 'ttm': 14.59392595902966, 'tt200m': 10958.34105168643, 'registeredAt': '2024-01-10T22: 15: 16.736000Z', 'updatedAt': '2025-06-02T21: 41: 41.399000Z', 'lastChangedAt': '2025-06-02T21: 41: 41.399000Z', 'lastImportedAt': None
+}, 'progress': {'start': 336259266, 'end': 338654826, 'gained': 2395560
+}, 'levels': {'start': 2269, 'end': 2269, 'gained': 0
+}
+},
+{'playerId': 411955, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T02: 59: 44.112000Z', 'player': {'id': 411955, 'username': 'irongarchomp', 'displayName': 'IronGarchomp', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 106528066, 'ehp': 529.2056188285236, 'ehb': 115.06718, 'ttm': 1185.16374155261, 'tt200m': 19168.37680880072, 'registeredAt': '2021-10-13T02: 10: 24.844000Z', 'updatedAt': '2025-06-02T02: 59: 43.939000Z', 'lastChangedAt': '2025-06-02T02: 59: 43.939000Z', 'lastImportedAt': '2023-07-11T00: 06: 35.909000Z'
+}, 'progress': {'start': 104137332, 'end': 106528066, 'gained': 2390734
+}, 'levels': {'start': 1933, 'end': 1939, 'gained': 6
+}
+},
+{'playerId': 1302554, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 42: 56.750000Z', 'player': {'id': 1302554, 'username': 'cederupnext', 'displayName': 'CederUpnext', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 154287313, 'ehp': 747.9065996077844, 'ehb': 45.84885000000001, 'ttm': 963.9435462275912, 'tt200m': 18949.67582802146, 'registeredAt': '2023-12-04T18: 38: 44.482000Z', 'updatedAt': '2025-06-02T00: 42: 56.603000Z', 'lastChangedAt': '2025-06-02T00: 42: 56.603000Z', 'lastImportedAt': None
+}, 'progress': {'start': 151921224, 'end': 154287313, 'gained': 2366089
+}, 'levels': {'start': 2048, 'end': 2050, 'gained': 2
+}
+},
+{'playerId': 2179174, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 01: 02.495000Z', 'player': {'id': 2179174, 'username': 'notyourironn', 'displayName': 'NotYourIronn', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 25138015, 'ehp': 241.9461534866145, 'ehb': 11.62556, 'ttm': 1469.235538209398, 'tt200m': 19455.63627414263, 'registeredAt': '2024-12-18T18: 51: 41.479000Z', 'updatedAt': '2025-06-02T22: 00: 55.600000Z', 'lastChangedAt': '2025-06-02T22: 00: 55.600000Z', 'lastImportedAt': None
+}, 'progress': {'start': 22772014, 'end': 25138015, 'gained': 2366001
+}, 'levels': {'start': 1586, 'end': 1629, 'gained': 43
+}
+},
+{'playerId': 1780540, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T16: 10: 51.158000Z', 'player': {'id': 1780540, 'username': 'goopy willy', 'displayName': 'Goopy Willy', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 43283680, 'ehp': 231.8613467296356, 'ehb': 26.28516, 'ttm': 667.0609784762976, 'tt200m': 11652.49661051788, 'registeredAt': '2024-03-26T23: 56: 59.343000Z', 'updatedAt': '2025-06-02T16: 10: 48.092000Z', 'lastChangedAt': '2025-06-02T16: 10: 48.092000Z', 'lastImportedAt': None
+}, 'progress': {'start': 40936070, 'end': 43283680, 'gained': 2347610
+}, 'levels': {'start': 1668, 'end': 1697, 'gained': 29
+}
+},
+{'playerId': 2363753, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 30: 57.876000Z', 'player': {'id': 2363753, 'username': 'iron suggsy', 'displayName': 'iron suggsy', 'type': 'hardcore', 'build': 'main', 'country': None, 'status': 'active', 'exp': 10289326, 'ehp': 63.3665765485426, 'ehb': 0.0, 'ttm': 1647.81511514747, 'tt200m': 19634.2158510807, 'registeredAt': '2025-04-19T18: 27: 17.247000Z', 'updatedAt': '2025-06-01T23: 30: 46Z', 'lastChangedAt': '2025-06-01T23: 30: 46Z', 'lastImportedAt': None
+}, 'progress': {'start': 7987172, 'end': 10289326, 'gained': 2302154
+}, 'levels': {'start': 868, 'end': 947, 'gained': 79
+}
+},
+{'playerId': 828065, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T16: 52: 20.857000Z', 'player': {'id': 828065, 'username': 'im molter', 'displayName': 'IM Molter', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 94549545, 'ehp': 470.6869901110481, 'ehb': 29.13659, 'ttm': 1240.597389733754, 'tt200m': 19226.8954375182, 'registeredAt': '2022-12-10T00: 39: 53.300000Z', 'updatedAt': '2025-06-02T16: 52: 20.504000Z', 'lastChangedAt': '2025-06-02T16: 52: 20.504000Z', 'lastImportedAt': None
+}, 'progress': {'start': 92273665, 'end': 94549545, 'gained': 2275880
+}, 'levels': {'start': 1932, 'end': 1946, 'gained': 14
+}
+},
+{'playerId': 1895209, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T09: 56: 11.390000Z', 'player': {'id': 1895209, 'username': 'baby jolteon', 'displayName': 'Baby Jolteon', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 102708232, 'ehp': 262.8986503930497, 'ehb': 148.34152, 'ttm': 636.419307430118, 'tt200m': 11621.45930685447, 'registeredAt': '2024-06-07T03: 01: 11.044000Z', 'updatedAt': '2025-06-02T09: 56: 11.308000Z', 'lastChangedAt': '2025-06-02T09: 56: 11.308000Z', 'lastImportedAt': None
+}, 'progress': {'start': 100448219, 'end': 102708232, 'gained': 2260013
+}, 'levels': {'start': 1900, 'end': 1905, 'gained': 5
+}
+},
+{'playerId': 1496998, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 06: 20.728000Z', 'player': {'id': 1496998, 'username': 'gim nitwit', 'displayName': 'GIM Nitwit', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 115243929, 'ehp': 278.0737402844427, 'ehb': 261.45584, 'ttm': 626.235172492747, 'tt200m': 11606.28421696308, 'registeredAt': '2024-01-30T14: 30: 51.182000Z', 'updatedAt': '2025-06-02T20: 05: 59.671000Z', 'lastChangedAt': '2025-06-02T20: 05: 59.671000Z', 'lastImportedAt': None
+}, 'progress': {'start': 113003716, 'end': 115243929, 'gained': 2240213
+}, 'levels': {'start': 1982, 'end': 1986, 'gained': 4
+}
+},
+{'playerId': 1101988, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T01: 58: 45.086000Z', 'player': {'id': 1101988, 'username': 'minusmoney', 'displayName': 'minusmoney', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 112506186, 'ehp': 257.1877735001094, 'ehb': 152.08023, 'ttm': 645.2760667230048, 'tt200m': 11627.17018374741, 'registeredAt': '2023-07-30T00: 12: 38.144000Z', 'updatedAt': '2025-06-02T01: 58: 44.910000Z', 'lastChangedAt': '2025-06-02T01: 58: 44.910000Z', 'lastImportedAt': None
+}, 'progress': {'start': 110303320, 'end': 112506186, 'gained': 2202866
+}, 'levels': {'start': 1908, 'end': 1909, 'gained': 1
+}
+},
+{'playerId': 2138529, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 07: 54.238000Z', 'player': {'id': 2138529, 'username': 'gielinorwide', 'displayName': 'gielinorWide', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 21521046, 'ehp': 197.5443676642888, 'ehb': 0.0, 'ttm': 1783.951135231658, 'tt200m': 23994.99683974187, 'registeredAt': '2024-11-10T23: 32: 54.638000Z', 'updatedAt': '2025-06-02T23: 07: 54.132000Z', 'lastChangedAt': '2025-06-02T23: 07: 54.132000Z', 'lastImportedAt': None
+}, 'progress': {'start': 19331715, 'end': 21521046, 'gained': 2189331
+}, 'levels': {'start': 1529, 'end': 1545, 'gained': 16
+}
+},
+{'playerId': 1573078, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 01: 18.515000Z', 'player': {'id': 1573078, 'username': 'agent clunk', 'displayName': 'Agent Clunk', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 374007811, 'ehp': 834.9637065119978, 'ehb': 502.1201, 'ttm': 176.1990976868008, 'tt200m': 11049.39425073552, 'registeredAt': '2024-02-13T18: 19: 58.106000Z', 'updatedAt': '2025-06-02T20: 00: 51.247000Z', 'lastChangedAt': '2025-06-02T20: 00: 51.247000Z', 'lastImportedAt': None
+}, 'progress': {'start': 371856477, 'end': 374007811, 'gained': 2151334
+}, 'levels': {'start': 2224, 'end': 2224, 'gained': 0
+}
+},
+{'playerId': 224988, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 10: 37.693000Z', 'player': {'id': 224988, 'username': 'bryggkaffe', 'displayName': 'Bryggkaffe', 'type': 'ironman', 'build': 'main', 'country': 'SE', 'status': 'active', 'exp': 133209015, 'ehp': 706.730043279513, 'ehb': 155.88877, 'ttm': 1005.484060768485, 'tt200m': 18990.85238434973, 'registeredAt': '2021-04-13T12: 46: 16.183000Z', 'updatedAt': '2025-06-02T20: 10: 36.119000Z', 'lastChangedAt': '2025-06-02T20: 10: 36.119000Z', 'lastImportedAt': '2023-02-26T10: 14: 56.498000Z'
+}, 'progress': {'start': 131075615, 'end': 133209015, 'gained': 2133400
+}, 'levels': {'start': 2030, 'end': 2034, 'gained': 4
+}
+},
+{'playerId': 1074819, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 40: 49.380000Z', 'player': {'id': 1074819, 'username': 'to memory', 'displayName': 'To Memory', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 301990911, 'ehp': 1397.61069081554, 'ehb': 177.18281, 'ttm': 333.5954110849473, 'tt200m': 18299.9717368137, 'registeredAt': '2023-07-06T21: 59: 20.292000Z', 'updatedAt': '2025-06-02T20: 40: 48.728000Z', 'lastChangedAt': '2025-06-02T20: 40: 48.728000Z', 'lastImportedAt': None
+}, 'progress': {'start': 299880962, 'end': 301990911, 'gained': 2109949
+}, 'levels': {'start': 2207, 'end': 2208, 'gained': 1
+}
+},
+{'playerId': 1346907, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 38: 52.056000Z', 'player': {'id': 1346907, 'username': 'tamedharok69', 'displayName': 'tamedharok69', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 78502661, 'ehp': 464.8209008125352, 'ehb': 78.04104, 'ttm': 1246.360790883477, 'tt200m': 19232.76152681671, 'registeredAt': '2023-12-13T14: 54: 58.711000Z', 'updatedAt': '2025-06-01T23: 38: 51.844000Z', 'lastChangedAt': '2025-06-01T23: 38: 51.844000Z', 'lastImportedAt': None
+}, 'progress': {'start': 76408886, 'end': 78502661, 'gained': 2093775
+}, 'levels': {'start': 1819, 'end': 1824, 'gained': 5
+}
+},
+{'playerId': 1110518, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T18: 38: 33.910000Z', 'updatedAt': '2025-06-02T19: 20: 45.619000Z', 'player': {'id': 1110518, 'username': 'chad truths', 'displayName': 'Chad Truths', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 173107425, 'ehp': 387.3925829573462, 'ehb': 338.2496499999999, 'ttm': 523.1090988416082, 'tt200m': 11496.96537429018, 'registeredAt': '2023-08-05T22: 40: 47.415000Z', 'updatedAt': '2025-06-02T19: 20: 38.957000Z', 'lastChangedAt': '2025-06-02T19: 20: 38.957000Z', 'lastImportedAt': None
+}, 'progress': {'start': 171040942, 'end': 173107425, 'gained': 2066483
+}, 'levels': {'start': 2051, 'end': 2052, 'gained': 1
+}
+},
+{'playerId': 980485, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T07: 35: 12.986000Z', 'player': {'id': 980485, 'username': '0johncena0', 'displayName': '0johncena0', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 43649403, 'ehp': 143.3429572036215, 'ehb': 15.52445, 'ttm': 755.7435333933101, 'tt200m': 11741.0150000439, 'registeredAt': '2023-04-14T01: 38: 51.344000Z', 'updatedAt': '2025-06-02T07: 35: 12.709000Z', 'lastChangedAt': '2025-06-02T07: 35: 12.709000Z', 'lastImportedAt': None
+}, 'progress': {'start': 41603438, 'end': 43649403, 'gained': 2045965
+}, 'levels': {'start': 1701, 'end': 1714, 'gained': 13
+}
+},
+{'playerId': 968136, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 31: 19.243000Z', 'player': {'id': 968136, 'username': 'gim jrdndude', 'displayName': 'GIM Jrdndude', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 82874589, 'ehp': 202.1969606529773, 'ehb': 146.71294, 'ttm': 696.7288268980781, 'tt200m': 11682.16099659454, 'registeredAt': '2023-04-05T20: 20: 20.665000Z', 'updatedAt': '2025-06-02T20: 31: 16.042000Z', 'lastChangedAt': '2025-06-01T20: 28: 02.716000Z', 'lastImportedAt': None
+}, 'progress': {'start': 80843996, 'end': 82874589, 'gained': 2030593
+}, 'levels': {'start': 1848, 'end': 1849, 'gained': 1
+}
+},
+{'playerId': 787827, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-01T23: 22: 55.661000Z', 'player': {'id': 787827, 'username': 'olmanvayren', 'displayName': 'olmanvayren', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 209290153, 'ehp': 470.3516455792847, 'ehb': 273.48061, 'ttm': 453.8693689881058, 'tt200m': 11414.00631166824, 'registeredAt': '2022-10-29T10: 25: 19.056000Z', 'updatedAt': '2025-06-01T23: 22: 54.733000Z', 'lastChangedAt': '2025-06-01T23: 22: 54.733000Z', 'lastImportedAt': None
+}, 'progress': {'start': 207306920, 'end': 209290153, 'gained': 1983233
+}, 'levels': {'start': 2092, 'end': 2092, 'gained': 0
+}
+},
+{'playerId': 1853707, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T16: 58: 32.443000Z', 'player': {'id': 1853707, 'username': 'ayndrew iii', 'displayName': 'Ayndrew III', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 145537162, 'ehp': 785.1381398634138, 'ehb': 138.21934, 'ttm': 927.8604634909668, 'tt200m': 18912.44428776583, 'registeredAt': '2024-05-04T14: 58: 40.392000Z', 'updatedAt': '2025-06-02T16: 58: 32.342000Z', 'lastChangedAt': '2025-06-02T16: 58: 32.342000Z', 'lastImportedAt': None
+}, 'progress': {'start': 143680212, 'end': 145537162, 'gained': 1856950
+}, 'levels': {'start': 2039, 'end': 2042, 'gained': 3
+}
+},
+{'playerId': 976266, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T02: 21: 47.200000Z', 'player': {'id': 976266, 'username': 'tech ton', 'displayName': 'Tech Ton', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 58122554, 'ehp': 476.2471617835233, 'ehb': 9.950000000000001, 'ttm': 1505.393760264672, 'tt200m': 23716.29404562264, 'registeredAt': '2023-04-12T12: 18: 49.425000Z', 'updatedAt': '2025-06-02T02: 21: 47.144000Z', 'lastChangedAt': '2025-06-02T02: 21: 47.144000Z', 'lastImportedAt': '2023-04-12T12: 22: 01.513000Z'
+}, 'progress': {'start': 56294953, 'end': 58122554, 'gained': 1827601
+}, 'levels': {'start': 1789, 'end': 1802, 'gained': 13
+}
+},
+{'playerId': 1350030, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T02: 32: 11.608000Z', 'player': {'id': 1350030, 'username': 'damp labias', 'displayName': 'Damp Labias', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 44530496, 'ehp': 292.901235234619, 'ehb': 13.91015, 'ttm': 1418.280456461394, 'tt200m': 19404.68119239463, 'registeredAt': '2023-12-13T19: 45: 46.260000Z', 'updatedAt': '2025-06-02T02: 32: 10.100000Z', 'lastChangedAt': '2025-06-02T02: 32: 10.100000Z', 'lastImportedAt': None
+}, 'progress': {'start': 42744204, 'end': 44530496, 'gained': 1786292
+}, 'levels': {'start': 1755, 'end': 1765, 'gained': 10
+}
+},
+{'playerId': 1916603, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T00: 50: 57.525000Z', 'player': {'id': 1916603, 'username': 'lrockyy', 'displayName': 'lRockyy', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 73884059, 'ehp': 235.7647039352163, 'ehb': 58.85948, 'ttm': 664.0848938297013, 'tt200m': 11648.59325331231, 'registeredAt': '2024-06-21T13: 10: 35.479000Z', 'updatedAt': '2025-06-02T00: 50: 56.482000Z', 'lastChangedAt': '2025-06-02T00: 50: 56.482000Z', 'lastImportedAt': None
+}, 'progress': {'start': 72131382, 'end': 73884059, 'gained': 1752677
+}, 'levels': {'start': 1867, 'end': 1874, 'gained': 7
+}
+},
+{'playerId': 1317028, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 20: 41.978000Z', 'player': {'id': 1317028, 'username': 'bdrigg btw', 'displayName': 'bdrigg btw', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 98472052, 'ehp': 555.151807072244, 'ehb': 94.17933, 'ttm': 1157.76513943473, 'tt200m': 19142.430620557, 'registeredAt': '2023-12-10T19: 51: 30.279000Z', 'updatedAt': '2025-06-02T23: 20: 41.361000Z', 'lastChangedAt': '2025-06-02T23: 20: 41.361000Z', 'lastImportedAt': None
+}, 'progress': {'start': 96755762, 'end': 98472052, 'gained': 1716290
+}, 'levels': {'start': 1929, 'end': 1939, 'gained': 10
+}
+},
+{'playerId': 463862, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T14: 41: 41.680000Z', 'player': {'id': 463862, 'username': 'mrjackow123', 'displayName': 'Mrjackow123', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 166199163, 'ehp': 1129.817269398568, 'ehb': 0.0, 'ttm': 916.7530587192966, 'tt200m': 23062.7239380076, 'registeredAt': '2021-11-22T23: 03: 49.500000Z', 'updatedAt': '2025-06-02T14: 41: 41.065000Z', 'lastChangedAt': '2025-06-02T14: 41: 41.065000Z', 'lastImportedAt': '2023-07-10T15: 17: 50.535000Z'
+}, 'progress': {'start': 164527754, 'end': 166199163, 'gained': 1671409
+}, 'levels': {'start': 2020, 'end': 2025, 'gained': 5
+}
+},
+{'playerId': 937296, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T03: 50: 07.274000Z', 'player': {'id': 937296, 'username': 'no tweezers', 'displayName': 'No Tweezers', 'type': 'ironman', 'build': 'main', 'country': 'BE', 'status': 'active', 'exp': 240891271, 'ehp': 1051.611489612361, 'ehb': 512.439, 'ttm': 686.7518636162538, 'tt200m': 18645.97093801688, 'registeredAt': '2023-03-10T17: 06: 33.871000Z', 'updatedAt': '2025-06-02T03: 50: 03.945000Z', 'lastChangedAt': '2025-06-01T03: 45: 20.268000Z', 'lastImportedAt': '2023-07-03T22: 37: 26.342000Z'
+}, 'progress': {'start': 239289552, 'end': 240891271, 'gained': 1601719
+}, 'levels': {'start': 2106, 'end': 2110, 'gained': 4
+}
+},
+{'playerId': 2107182, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 20: 20.875000Z', 'player': {'id': 2107182, 'username': 'gimcluwuless', 'displayName': 'gimcluwuless', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 61821541, 'ehp': 195.8953973422222, 'ehb': 38.82399, 'ttm': 703.0253200588331, 'tt200m': 11688.4625599053, 'registeredAt': '2024-10-18T04: 43: 57.140000Z', 'updatedAt': '2025-06-01T23: 20: 20.173000Z', 'lastChangedAt': '2025-06-01T23: 20: 20.173000Z', 'lastImportedAt': None
+}, 'progress': {'start': 60239081, 'end': 61821541, 'gained': 1582460
+}, 'levels': {'start': 1840, 'end': 1849, 'gained': 9
+}
+},
+{'playerId': 975893, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T22: 01: 44.894000Z', 'player': {'id': 975893, 'username': 'eepr0m', 'displayName': 'eepr0m', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 269716658, 'ehp': 1163.832563028731, 'ehb': 362.1718000000001, 'ttm': 561.6881148025213, 'tt200m': 18533.74986460051, 'registeredAt': '2023-04-12T02: 05: 15.809000Z', 'updatedAt': '2025-06-02T22: 01: 38.304000Z', 'lastChangedAt': '2025-06-02T22: 01: 38.304000Z', 'lastImportedAt': None
+}, 'progress': {'start': 268138738, 'end': 269716658, 'gained': 1577920
+}, 'levels': {'start': 2185, 'end': 2186, 'gained': 1
+}
+},
+{'playerId': 1010708, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 03: 05.500000Z', 'player': {'id': 1010708, 'username': 'rizz w tizz', 'displayName': 'Rizz W Tizz', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 122030901, 'ehp': 266.8390152121355, 'ehb': 155.23916, 'ttm': 634.366967701861, 'tt200m': 11617.51894203539, 'registeredAt': '2023-05-08T07: 37: 19.361000Z', 'updatedAt': '2025-06-02T23: 03: 04.264000Z', 'lastChangedAt': '2025-06-02T23: 03: 04.264000Z', 'lastImportedAt': '2023-05-24T08: 12: 23.797000Z'
+}, 'progress': {'start': 120459625, 'end': 122030901, 'gained': 1571276
+}, 'levels': {'start': 1975, 'end': 1977, 'gained': 2
+}
+},
+{'playerId': 757474, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T13: 14: 56.541000Z', 'player': {'id': 757474, 'username': 'ulyzarus', 'displayName': 'uLyzarus', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 58902445, 'ehp': 492.2165245382579, 'ehb': 47.30662, 'ttm': 1489.278978357689, 'tt200m': 23700.32468286791, 'registeredAt': '2022-09-27T05: 45: 44.722000Z', 'updatedAt': '2025-06-02T13: 14: 56.482000Z', 'lastChangedAt': '2025-06-02T13: 14: 56.482000Z', 'lastImportedAt': None
+}, 'progress': {'start': 57411047, 'end': 58902445, 'gained': 1491398
+}, 'levels': {'start': 1844, 'end': 1852, 'gained': 8
+}
+},
+{'playerId': 2203368, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 58: 42.734000Z', 'player': {'id': 2203368, 'username': 'nieverlucky', 'displayName': 'NieverLucky', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 35367354, 'ehp': 262.2704677873567, 'ehb': 15.46425, 'ttm': 1448.974753320421, 'tt200m': 19435.31195984189, 'registeredAt': '2025-01-09T21: 18: 08.731000Z', 'updatedAt': '2025-06-02T21: 58: 42.671000Z', 'lastChangedAt': '2025-06-02T21: 58: 42.671000Z', 'lastImportedAt': None
+}, 'progress': {'start': 33888160, 'end': 35367354, 'gained': 1479194
+}, 'levels': {'start': 1668, 'end': 1680, 'gained': 12
+}
+},
+{'playerId': 360550, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T05: 23: 15.773000Z', 'player': {'id': 360550, 'username': 'learn2combat', 'displayName': 'learn2combat', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 36880976, 'ehp': 314.0707203621852, 'ehb': 1.36537, 'ttm': 1397.110971333827, 'tt200m': 19383.51170726706, 'registeredAt': '2021-09-06T00: 22: 28.459000Z', 'updatedAt': '2025-06-02T05: 23: 15.623000Z', 'lastChangedAt': '2025-06-02T05: 23: 15.623000Z', 'lastImportedAt': '2022-10-31T00: 43: 04.322000Z'
+}, 'progress': {'start': 35463211, 'end': 36880976, 'gained': 1417765
+}, 'levels': {'start': 1707, 'end': 1716, 'gained': 9
+}
+},
+{'playerId': 157142, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 45: 07.435000Z', 'player': {'id': 157142, 'username': 'fandoza', 'displayName': 'FandoZa', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 74458373, 'ehp': 379.3785319139084, 'ehb': 56.84268, 'ttm': 1331.803159782104, 'tt200m': 19318.20389571533, 'registeredAt': '2021-02-03T23: 38: 25.799000Z', 'updatedAt': '2025-06-02T19: 45: 05.231000Z', 'lastChangedAt': '2025-06-02T19: 45: 05.231000Z', 'lastImportedAt': None
+}, 'progress': {'start': 73078236, 'end': 74458373, 'gained': 1380137
+}, 'levels': {'start': 1875, 'end': 1878, 'gained': 3
+}
+},
+{'playerId': 2392217, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T05: 26: 25.200000Z', 'player': {'id': 2392217, 'username': 'violetaether', 'displayName': 'violetaether', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 20770483, 'ehp': 102.9451602871896, 'ehb': 1.3898, 'ttm': 795.9755571138656, 'tt200m': 11781.41279696033, 'registeredAt': '2025-05-06T03: 54: 53.992000Z', 'updatedAt': '2025-06-02T05: 26: 24.876000Z', 'lastChangedAt': '2025-06-02T05: 26: 24.876000Z', 'lastImportedAt': None
+}, 'progress': {'start': 19540223, 'end': 20770483, 'gained': 1230260
+}, 'levels': {'start': 1575, 'end': 1587, 'gained': 12
+}
+},
+{'playerId': 1267351, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T00: 50: 04.442000Z', 'player': {'id': 1267351, 'username': 'firemonk', 'displayName': 'Firemonk', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 132222856, 'ehp': 823.4198101535908, 'ehb': 48.71219, 'ttm': 1191.20334760123, 'tt200m': 23369.12139725257, 'registeredAt': '2023-11-20T02: 30: 29.315000Z', 'updatedAt': '2025-06-02T00: 50: 04.257000Z', 'lastChangedAt': '2025-06-02T00: 50: 04.257000Z', 'lastImportedAt': None
+}, 'progress': {'start': 130999756, 'end': 132222856, 'gained': 1223100
+}, 'levels': {'start': 1991, 'end': 1993, 'gained': 2
+}
+},
+{'playerId': 2060368, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T05: 00: 46.707000Z', 'player': {'id': 2060368, 'username': 'bour bon w', 'displayName': 'Bour bon W', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 26799574, 'ehp': 112.7400931944129, 'ehb': 0.57647, 'ttm': 786.1848466586194, 'tt200m': 11771.61786405311, 'registeredAt': '2024-09-14T20: 07: 33.020000Z', 'updatedAt': '2025-06-02T05: 00: 40.166000Z', 'lastChangedAt': '2025-06-02T05: 00: 40.166000Z', 'lastImportedAt': None
+}, 'progress': {'start': 25586819, 'end': 26799574, 'gained': 1212755
+}, 'levels': {'start': 1435, 'end': 1479, 'gained': 44
+}
+},
+{'playerId': 1282743, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 55: 05.337000Z', 'player': {'id': 1282743, 'username': 'little toni0', 'displayName': 'Little Toni0', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 155936288, 'ehp': 775.5491017186363, 'ehb': 218.35654, 'ttm': 936.0919363247401, 'tt200m': 18922.03332591061, 'registeredAt': '2023-11-25T21: 00: 27.719000Z', 'updatedAt': '2025-06-02T22: 55: 05.123000Z', 'lastChangedAt': '2025-06-02T22: 55: 05.123000Z', 'lastImportedAt': None
+}, 'progress': {'start': 154753973, 'end': 155936288, 'gained': 1182315
+}, 'levels': {'start': 2009, 'end': 2009, 'gained': 0
+}
+},
+{'playerId': 1203076, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 31: 29.063000Z', 'player': {'id': 1203076, 'username': 'i dont talk', 'displayName': 'I dont talk', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 364494016, 'ehp': 710.5949558979966, 'ehb': 716.8710799999999, 'ttm': 339.6616380950328, 'tt200m': 11173.76300134952, 'registeredAt': '2023-10-22T22: 13: 00.463000Z', 'updatedAt': '2025-06-02T00: 31: 27.592000Z', 'lastChangedAt': '2025-06-02T00: 31: 27.592000Z', 'lastImportedAt': None
+}, 'progress': {'start': 363325979, 'end': 364494016, 'gained': 1168037
+}, 'levels': {'start': 2140, 'end': 2144, 'gained': 4
+}
+},
+{'playerId': 562821, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 15: 22.745000Z', 'player': {'id': 562821, 'username': 'boomer handz', 'displayName': 'Boomer Handz', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 122873267, 'ehp': 699.9924032357139, 'ehb': 34.42627, 'ttm': 1012.336294389152, 'tt200m': 18997.59002439353, 'registeredAt': '2022-03-04T17: 53: 46.924000Z', 'updatedAt': '2025-06-02T21: 15: 17.852000Z', 'lastChangedAt': '2025-05-30T21: 03: 42.617000Z', 'lastImportedAt': '2023-07-10T20: 37: 33.140000Z'
+}, 'progress': {'start': 121715734, 'end': 122873267, 'gained': 1157533
+}, 'levels': {'start': 2009, 'end': 2010, 'gained': 1
+}
+},
+{'playerId': 1450163, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T23: 10: 10.866000Z', 'player': {'id': 1450163, 'username': 'low on brews', 'displayName': 'Low On Brews', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 168397664, 'ehp': 689.8910064748399, 'ehb': 446.4278199999999, 'ttm': 1032.099856043701, 'tt200m': 19007.6914211544, 'registeredAt': '2024-01-27T02: 20: 07.164000Z', 'updatedAt': '2025-06-02T23: 10: 10.647000Z', 'lastChangedAt': '2025-05-31T22: 59: 37.976000Z', 'lastImportedAt': None
+}, 'progress': {'start': 167289180, 'end': 168397664, 'gained': 1108484
+}, 'levels': {'start': 2005, 'end': 2005, 'gained': 0
+}
+},
+{'playerId': 2295254, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T18: 18: 14.045000Z', 'player': {'id': 2295254, 'username': 'tpf honey', 'displayName': 'tpf honey', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 53569377, 'ehp': 167.0457029800735, 'ehb': 30.565, 'ttm': 731.8750144209818, 'tt200m': 11717.31225426745, 'registeredAt': '2025-03-15T23: 04: 38.232000Z', 'updatedAt': '2025-06-02T18: 17: 35.545000Z', 'lastChangedAt': '2025-06-02T18: 17: 35.545000Z', 'lastImportedAt': None
+}, 'progress': {'start': 52487385, 'end': 53569377, 'gained': 1081992
+}, 'levels': {'start': 1824, 'end': 1829, 'gained': 5
+}
+},
+{'playerId': 256650, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T02: 10: 47.869000Z', 'player': {'id': 256650, 'username': 'elven feet', 'displayName': 'Elven Feet', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 120120971, 'ehp': 661.0042845276232, 'ehb': 83.5825, 'ttm': 1050.179628058389, 'tt200m': 19036.57814310162, 'registeredAt': '2021-05-21T18: 48: 02.675000Z', 'updatedAt': '2025-06-02T02: 10: 46.841000Z', 'lastChangedAt': '2025-06-02T02: 10: 46.841000Z', 'lastImportedAt': None
+}, 'progress': {'start': 119057278, 'end': 120120971, 'gained': 1063693
+}, 'levels': {'start': 2011, 'end': 2014, 'gained': 3
+}
+},
+{'playerId': 2268862, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T11: 02: 20.039000Z', 'player': {'id': 2268862, 'username': 'schmeckleton', 'displayName': 'Schmeckleton', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 20718936, 'ehp': 98.65455135268351, 'ehb': 4.85902, 'ttm': 800.2661660483718, 'tt200m': 11785.70340589484, 'registeredAt': '2025-02-28T16: 41: 12.974000Z', 'updatedAt': '2025-06-02T11: 02: 19.750000Z', 'lastChangedAt': '2025-06-02T11: 02: 19.750000Z', 'lastImportedAt': None
+}, 'progress': {'start': 19659439, 'end': 20718936, 'gained': 1059497
+}, 'levels': {'start': 1537, 'end': 1574, 'gained': 37
+}
+},
+{'playerId': 54095, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T14: 25: 11.219000Z', 'player': {'id': 54095, 'username': 'dag kings', 'displayName': 'Dag Kings', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 592739661, 'ehp': 1998.874523506295, 'ehb': 1334.17984, 'ttm': 0.0, 'tt200m': 17698.70790412295, 'registeredAt': '2020-10-22T08: 25: 06.455000Z', 'updatedAt': '2025-06-02T14: 25: 10.009000Z', 'lastChangedAt': '2025-06-01T14: 23: 16.148000Z', 'lastImportedAt': '2023-06-14T16: 25: 52.010000Z'
+}, 'progress': {'start': 591680438, 'end': 592739661, 'gained': 1059223
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 272219, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T21: 16: 00.541000Z', 'player': {'id': 272219, 'username': 'dunkies', 'displayName': 'Dunkies', 'type': 'regular', 'build': 'main', 'country': 'US', 'status': 'active', 'exp': 424453861, 'ehp': 1042.440647558895, 'ehb': 90.88992000000002, 'ttm': 0.0, 'tt200m': 10841.91730968863, 'registeredAt': '2021-06-07T02: 30: 08.638000Z', 'updatedAt': '2025-06-02T21: 15: 55.875000Z', 'lastChangedAt': '2025-06-02T21: 15: 55.875000Z', 'lastImportedAt': '2023-07-10T05: 49: 26.600000Z'
+}, 'progress': {'start': 423404475, 'end': 424453861, 'gained': 1049386
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 1288862, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 46: 38.519000Z', 'player': {'id': 1288862, 'username': 'halo 3 br', 'displayName': 'Halo 3 BR', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 152897317, 'ehp': 619.2936232977759, 'ehb': 428.35935, 'ttm': 1100.113139084598, 'tt200m': 19078.28880433147, 'registeredAt': '2023-11-27T15: 46: 21.386000Z', 'updatedAt': '2025-06-02T19: 46: 38.218000Z', 'lastChangedAt': '2025-06-02T19: 46: 38.218000Z', 'lastImportedAt': None
+}, 'progress': {'start': 151871090, 'end': 152897317, 'gained': 1026227
+}, 'levels': {'start': 2001, 'end': 2001, 'gained': 0
+}
+},
+{'playerId': 417786, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T21: 15: 09.241000Z', 'player': {'id': 417786, 'username': 'pleasure gim', 'displayName': 'Pleasure GIM', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 143430083, 'ehp': 311.6639458081114, 'ehb': 182.59027, 'ttm': 600.2451764741836, 'tt200m': 11572.69401143941, 'registeredAt': '2021-10-16T16: 56: 25.201000Z', 'updatedAt': '2025-06-02T21: 15: 08.983000Z', 'lastChangedAt': '2025-06-01T21: 12: 37.745000Z', 'lastImportedAt': None
+}, 'progress': {'start': 142411862, 'end': 143430083, 'gained': 1018221
+}, 'levels': {'start': 1922, 'end': 1924, 'gained': 2
+}
+},
+{'playerId': 1946029, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T20: 10: 09.149000Z', 'player': {'id': 1946029, 'username': 'varrock h4rd', 'displayName': 'varrock h4rd', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 44161083, 'ehp': 186.2990193515356, 'ehb': 26.24166, 'ttm': 712.6216980495196, 'tt200m': 11698.05893789598, 'registeredAt': '2024-07-12T11: 13: 13.867000Z', 'updatedAt': '2025-06-02T20: 10: 07.408000Z', 'lastChangedAt': '2025-06-01T20: 07: 29.657000Z', 'lastImportedAt': None
+}, 'progress': {'start': 43181421, 'end': 44161083, 'gained': 979662
+}, 'levels': {'start': 1763, 'end': 1767, 'gained': 4
+}
+},
+{'playerId': 1877924, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 50: 19.302000Z', 'player': {'id': 1877924, 'username': 'crabalon', 'displayName': 'Crabalon', 'type': 'hardcore', 'build': 'main', 'country': None, 'status': 'active', 'exp': 162243014, 'ehp': 929.0015983332828, 'ehb': 149.71571, 'ttm': 782.1885480938772, 'tt200m': 18768.58082929596, 'registeredAt': '2024-05-24T03: 42: 10.598000Z', 'updatedAt': '2025-06-02T19: 50: 18.813000Z', 'lastChangedAt': '2025-06-02T19: 50: 18.813000Z', 'lastImportedAt': None
+}, 'progress': {'start': 161281592, 'end': 162243014, 'gained': 961422
+}, 'levels': {'start': 2084, 'end': 2087, 'gained': 3
+}
+},
+{'playerId': 1113837, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T20: 50: 07.254000Z', 'player': {'id': 1113837, 'username': 'inviscious', 'displayName': 'Inviscious', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 189592992, 'ehp': 881.8169206119987, 'ehb': 299.12288, 'ttm': 837.6929811929306, 'tt200m': 18815.76550701724, 'registeredAt': '2023-08-08T22: 53: 39.025000Z', 'updatedAt': '2025-06-02T20: 50: 06.905000Z', 'lastChangedAt': '2025-06-02T20: 50: 06.905000Z', 'lastImportedAt': None
+}, 'progress': {'start': 188644471, 'end': 189592992, 'gained': 948521
+}, 'levels': {'start': 2061, 'end': 2061, 'gained': 0
+}
+},
+{'playerId': 739301, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 03: 59.335000Z', 'player': {'id': 739301, 'username': 'levante frog', 'displayName': 'Levante Frog', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 572983076, 'ehp': 2285.691540954805, 'ehb': 734.88329, 'ttm': 0.0, 'tt200m': 17411.89088667444, 'registeredAt': '2022-09-08T13: 26: 18.121000Z', 'updatedAt': '2025-06-02T23: 03: 58.698000Z', 'lastChangedAt': '2025-06-02T23: 03: 58.698000Z', 'lastImportedAt': None
+}, 'progress': {'start': 572063132, 'end': 572983076, 'gained': 919944
+}, 'levels': {'start': 2277, 'end': 2277, 'gained': 0
+}
+},
+{'playerId': 2381689, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 12: 07.839000Z', 'player': {'id': 2381689, 'username': 'hard mach', 'displayName': 'Hard Mach', 'type': 'hardcore', 'build': 'main', 'country': None, 'status': 'active', 'exp': 2364353, 'ehp': 32.66364843897404, 'ehb': 0.0, 'ttm': 1678.518043257039, 'tt200m': 19664.91877919027, 'registeredAt': '2025-04-29T14: 12: 42.872000Z', 'updatedAt': '2025-06-02T19: 12: 07.590000Z', 'lastChangedAt': '2025-06-02T19: 12: 07.590000Z', 'lastImportedAt': None
+}, 'progress': {'start': 1490699, 'end': 2364353, 'gained': 873654
+}, 'levels': {'start': 782, 'end': 903, 'gained': 121
+}
+},
+{'playerId': 217013, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T16: 06: 58.391000Z', 'player': {'id': 217013, 'username': 'ferrambe', 'displayName': 'Ferrambe', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 212540441, 'ehp': 1066.287972162336, 'ehb': 201.09071, 'ttm': 659.5865813871264, 'tt200m': 18631.29445546691, 'registeredAt': '2021-04-05T00: 10: 32.285000Z', 'updatedAt': '2025-06-02T16: 06: 57.881000Z', 'lastChangedAt': '2025-06-02T16: 06: 57.881000Z', 'lastImportedAt': '2022-10-25T18: 50: 09.643000Z'
+}, 'progress': {'start': 211675877, 'end': 212540441, 'gained': 864564
+}, 'levels': {'start': 2128, 'end': 2129, 'gained': 1
+}
+},
+{'playerId': 551687, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T18: 44: 03.500000Z', 'player': {'id': 551687, 'username': 'b33f flaps', 'displayName': 'B33F FLAPS', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 248105837, 'ehp': 556.6174836781074, 'ehb': 181.5115, 'ttm': 350.2859095944609, 'tt200m': 11327.74047356941, 'registeredAt': '2022-02-17T00: 16: 07.019000Z', 'updatedAt': '2025-06-02T18: 43: 46.480000Z', 'lastChangedAt': '2025-06-02T18: 43: 46.480000Z', 'lastImportedAt': '2023-03-25T11: 01: 40.994000Z'
+}, 'progress': {'start': 247346829, 'end': 248105837, 'gained': 759008
+}, 'levels': {'start': 2167, 'end': 2168, 'gained': 1
+}
+},
+{'playerId': 670672, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 51: 49.824000Z', 'player': {'id': 670672, 'username': 'big d rochan', 'displayName': 'Big d rochan', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 201598998, 'ehp': 177.4684636654306, 'ehb': 85.06079, 'ttm': 738.5966886049945, 'tt200m': 11706.88949358209, 'registeredAt': '2022-07-03T18: 31: 48.911000Z', 'updatedAt': '2025-06-02T00: 51: 49.610000Z', 'lastChangedAt': '2025-06-02T00: 51: 49.610000Z', 'lastImportedAt': None
+}, 'progress': {'start': 200847602, 'end': 201598998, 'gained': 751396
+}, 'levels': {'start': 1829, 'end': 1829, 'gained': 0
+}
+},
+{'playerId': 1953552, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T00: 51: 10.715000Z', 'player': {'id': 1953552, 'username': 'irs can smd', 'displayName': 'irs can smd', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 112965343, 'ehp': 515.4209438027357, 'ehb': 203.74149, 'ttm': 1196.259467358931, 'tt200m': 19182.16148382651, 'registeredAt': '2024-07-17T23: 36: 44.929000Z', 'updatedAt': '2025-06-02T00: 51: 10.623000Z', 'lastChangedAt': '2025-06-02T00: 51: 10.623000Z', 'lastImportedAt': None
+}, 'progress': {'start': 112233431, 'end': 112965343, 'gained': 731912
+}, 'levels': {'start': 1938, 'end': 1940, 'gained': 2
+}
+},
+{'playerId': 2419357, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T03: 28: 07.482000Z', 'player': {'id': 2419357, 'username': 'fe toasted', 'displayName': 'Fe Toasted', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 1240346, 'ehp': 20.57438437457381, 'ehb': 0.0, 'ttm': 1690.607307321439, 'tt200m': 19677.00804325467, 'registeredAt': '2025-05-23T21: 10: 19.869000Z', 'updatedAt': '2025-06-02T03: 28: 07.367000Z', 'lastChangedAt': '2025-06-02T03: 28: 07.367000Z', 'lastImportedAt': None
+}, 'progress': {'start': 529111, 'end': 1240346, 'gained': 711235
+}, 'levels': {'start': 556, 'end': 882, 'gained': 326
+}
+},
+{'playerId': 1020838, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 35: 34.987000Z', 'player': {'id': 1020838, 'username': 'fk dazz', 'displayName': 'fk dazz', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 101793861, 'ehp': 303.0907714008357, 'ehb': 111.02906, 'ttm': 595.8299460002196, 'tt200m': 11581.26718584669, 'registeredAt': '2023-05-17T13: 07: 59.289000Z', 'updatedAt': '2025-06-01T23: 35: 34.840000Z', 'lastChangedAt': '2025-05-31T23: 18: 18.201000Z', 'lastImportedAt': '2023-05-17T13: 08: 02.196000Z'
+}, 'progress': {'start': 101153403, 'end': 101793861, 'gained': 640458
+}, 'levels': {'start': 1972, 'end': 1973, 'gained': 1
+}
+},
+{'playerId': 1028067, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T19: 37: 03.558000Z', 'player': {'id': 1028067, 'username': 'gimp tissue', 'displayName': 'Gimp Tissue', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 171950256, 'ehp': 461.9100018745089, 'ehb': 129.25659, 'ttm': 446.2512623281094, 'tt200m': 11422.44795537301, 'registeredAt': '2023-05-23T19: 19: 57.683000Z', 'updatedAt': '2025-06-02T19: 37: 03.477000Z', 'lastChangedAt': '2025-06-02T19: 37: 03.477000Z', 'lastImportedAt': None
+}, 'progress': {'start': 171399017, 'end': 171950256, 'gained': 551239
+}, 'levels': {'start': 2095, 'end': 2096, 'gained': 1
+}
+},
+{'playerId': 2129196, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T11: 27: 48.992000Z', 'player': {'id': 2129196, 'username': 'no afk kate', 'displayName': 'No Afk Kate', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 19031916, 'ehp': 202.6960100533846, 'ehb': 0.46667, 'ttm': 1508.485681642628, 'tt200m': 19494.88641757586, 'registeredAt': '2024-11-03T18: 14: 08.311000Z', 'updatedAt': '2025-06-02T11: 27: 48.899000Z', 'lastChangedAt': '2025-06-02T11: 27: 48.899000Z', 'lastImportedAt': None
+}, 'progress': {'start': 18508740, 'end': 19031916, 'gained': 523176
+}, 'levels': {'start': 1470, 'end': 1484, 'gained': 14
+}
+},
+{'playerId': 1938610, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T16: 31: 49.944000Z', 'player': {'id': 1938610, 'username': 'edgehimville', 'displayName': 'edgehimville', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 29626323, 'ehp': 131.7174588593575, 'ehb': 23.40146, 'ttm': 767.2032585416978, 'tt200m': 11752.64049838816, 'registeredAt': '2024-07-07T08: 09: 08.629000Z', 'updatedAt': '2025-06-02T16: 31: 49.882000Z', 'lastChangedAt': '2025-06-02T16: 31: 49.882000Z', 'lastImportedAt': None
+}, 'progress': {'start': 29104463, 'end': 29626323, 'gained': 521860
+}, 'levels': {'start': 1669, 'end': 1672, 'gained': 3
+}
+},
+{'playerId': 2344910, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T19: 40: 32.021000Z', 'player': {'id': 2344910, 'username': 'igdaa', 'displayName': 'IGDAA', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 7778255, 'ehp': 81.48161282583105, 'ehb': 0.0, 'ttm': 1629.700078870182, 'tt200m': 19616.10081480341, 'registeredAt': '2025-04-05T14: 48: 13.624000Z', 'updatedAt': '2025-06-02T19: 40: 31.946000Z', 'lastChangedAt': '2025-06-02T19: 40: 31.946000Z', 'lastImportedAt': None
+}, 'progress': {'start': 7293481, 'end': 7778255, 'gained': 484774
+}, 'levels': {'start': 1225, 'end': 1249, 'gained': 24
+}
+},
+{'playerId': 2332543, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T00: 39: 18.475000Z', 'player': {'id': 2332543, 'username': 'tedthehusky2', 'displayName': 'tedthehusky2', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 19306383, 'ehp': 138.6079624921957, 'ehb': 5.08485, 'ttm': 1572.573729203817, 'tt200m': 19558.97446513705, 'registeredAt': '2025-03-28T22: 38: 04.104000Z', 'updatedAt': '2025-06-02T00: 39: 18.304000Z', 'lastChangedAt': '2025-05-31T00: 20: 35.881000Z', 'lastImportedAt': None
+}, 'progress': {'start': 18850537, 'end': 19306383, 'gained': 455846
+}, 'levels': {'start': 1438, 'end': 1445, 'gained': 7
+}
+},
+{'playerId': 2078463, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T01: 54: 53.884000Z', 'player': {'id': 2078463, 'username': 'liam0', 'displayName': 'Liam0', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 145988228, 'ehp': 255.5120636097774, 'ehb': 295.27373, 'ttm': 666.3653113943492, 'tt200m': 11628.84589363774, 'registeredAt': '2024-09-27T07: 56: 47.271000Z', 'updatedAt': '2025-06-02T01: 54: 53.317000Z', 'lastChangedAt': '2025-06-02T01: 54: 53.317000Z', 'lastImportedAt': None
+}, 'progress': {'start': 145589903, 'end': 145988228, 'gained': 398325
+}, 'levels': {'start': 1903, 'end': 1903, 'gained': 0
+}
+},
+{'playerId': 19880, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-19T19: 11: 35.297000Z', 'updatedAt': '2025-06-02T17: 30: 03.272000Z', 'player': {'id': 19880, 'username': 'idkbruh', 'displayName': 'idkbruh', 'type': 'regular', 'build': 'main', 'country': 'SE', 'status': 'active', 'exp': 294889118, 'ehp': 697.167684109558, 'ehb': 305.7589100000001, 'ttm': 232.945435405081, 'tt200m': 11187.19027313796, 'registeredAt': '2020-06-30T03: 21: 07.185000Z', 'updatedAt': '2025-06-02T17: 30: 02.731000Z', 'lastChangedAt': '2025-06-01T17: 28: 18.133000Z', 'lastImportedAt': '2023-07-08T19: 57: 07.834000Z'
+}, 'progress': {'start': 294570909, 'end': 294889118, 'gained': 318209
+}, 'levels': {'start': 2218, 'end': 2218, 'gained': 0
+}
+},
+{'playerId': 2327854, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 48: 19.901000Z', 'player': {'id': 2327854, 'username': 'trashpg427', 'displayName': 'TRashPG427', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 12364335, 'ehp': 87.38897882146189, 'ehb': 0.59091, 'ttm': 811.5317385795934, 'tt200m': 11796.96897842606, 'registeredAt': '2025-03-26T07: 59: 05.069000Z', 'updatedAt': '2025-06-02T00: 48: 19.198000Z', 'lastChangedAt': '2025-05-29T00: 15: 17.687000Z', 'lastImportedAt': None
+}, 'progress': {'start': 12075986, 'end': 12364335, 'gained': 288349
+}, 'levels': {'start': 1457, 'end': 1463, 'gained': 6
+}
+},
+{'playerId': 987702, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T17: 07: 18.809000Z', 'player': {'id': 987702, 'username': 'semyeza', 'displayName': 'Semyeza', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 73617303, 'ehp': 432.0313971472452, 'ehb': 49.08058, 'ttm': 1279.150294548767, 'tt200m': 19265.551030482, 'registeredAt': '2023-04-20T17: 04: 17.996000Z', 'updatedAt': '2025-06-02T17: 07: 17.669000Z', 'lastChangedAt': '2025-05-29T16: 46: 03.507000Z', 'lastImportedAt': None
+}, 'progress': {'start': 73345641, 'end': 73617303, 'gained': 271662
+}, 'levels': {'start': 1871, 'end': 1874, 'gained': 3
+}
+},
+{'playerId': 1723306, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 44: 50.830000Z', 'player': {'id': 1723306, 'username': 'gimnullifier', 'displayName': 'GIMNullifier', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 109903415, 'ehp': 258.696941899482, 'ehb': 120.16143, 'ttm': 642.8185691153128, 'tt200m': 11625.66101534804, 'registeredAt': '2024-03-16T11: 22: 10.607000Z', 'updatedAt': '2025-06-02T00: 44: 50.779000Z', 'lastChangedAt': '2025-05-30T18: 32: 11.555000Z', 'lastImportedAt': None
+}, 'progress': {'start': 109644118, 'end': 109903415, 'gained': 259297
+}, 'levels': {'start': 1944, 'end': 1944, 'gained': 0
+}
+},
+{'playerId': 1269522, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 55: 29.956000Z', 'player': {'id': 1269522, 'username': 'nuko miko', 'displayName': 'Nuko Miko', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 171755617, 'ehp': 752.202243243015, 'ehb': 148.43684, 'ttm': 960.3326661287243, 'tt200m': 18945.38018438623, 'registeredAt': '2023-11-21T19: 14: 04.813000Z', 'updatedAt': '2025-06-02T22: 55: 29.709000Z', 'lastChangedAt': '2025-06-02T22: 55: 29.709000Z', 'lastImportedAt': None
+}, 'progress': {'start': 171563314, 'end': 171755617, 'gained': 192303
+}, 'levels': {'start': 2012, 'end': 2012, 'gained': 0
+}
+},
+{'playerId': 1022589, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 04: 32.167000Z', 'player': {'id': 1022589, 'username': 'ripgizloki', 'displayName': 'ripgizloki', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 246328912, 'ehp': 598.1837422302558, 'ehb': 32.329, 'ttm': 330.7077556283384, 'tt200m': 11286.17421501726, 'registeredAt': '2023-05-19T01: 51: 51.056000Z', 'updatedAt': '2025-06-02T23: 04: 31.446000Z', 'lastChangedAt': '2025-05-27T22: 20: 34.713000Z', 'lastImportedAt': None
+}, 'progress': {'start': 246206452, 'end': 246328912, 'gained': 122460
+}, 'levels': {'start': 2150, 'end': 2150, 'gained': 0
+}
+},
+{'playerId': 1022576, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 10: 36.195000Z', 'player': {'id': 1022576, 'username': 'partyhat1971', 'displayName': 'Partyhat1971', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 264175540, 'ehp': 638.3505776806386, 'ehb': 35.67402, 'ttm': 285.3058360153374, 'tt200m': 11246.00737956688, 'registeredAt': '2023-05-19T01: 41: 19.959000Z', 'updatedAt': '2025-06-02T23: 10: 35.552000Z', 'lastChangedAt': '2025-05-26T22: 32: 36.940000Z', 'lastImportedAt': '2023-05-23T22: 54: 14.131000Z'
+}, 'progress': {'start': 264087646, 'end': 264175540, 'gained': 87894
+}, 'levels': {'start': 2178, 'end': 2178, 'gained': 0
+}
+},
+{'playerId': 236166, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 45: 25.134000Z', 'player': {'id': 236166, 'username': 'not so hc', 'displayName': 'Not so HC', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 330264946, 'ehp': 1425.684243994594, 'ehb': 623.3613599999999, 'ttm': 366.8456313025242, 'tt200m': 18271.89818363465, 'registeredAt': '2021-04-26T09: 19: 34.979000Z', 'updatedAt': '2025-06-02T00: 45: 22.801000Z', 'lastChangedAt': '2025-05-26T22: 20: 56.311000Z', 'lastImportedAt': '2023-07-07T11: 26: 07.727000Z'
+}, 'progress': {'start': 330200152, 'end': 330264946, 'gained': 64794
+}, 'levels': {'start': 2202, 'end': 2202, 'gained': 0
+}
+},
+{'playerId': 921572, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T22: 51: 41.221000Z', 'player': {'id': 921572, 'username': 'mostsanegoop', 'displayName': 'mostsanegoop', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 63248708, 'ehp': 267.3725066049258, 'ehb': 24.47701, 'ttm': 631.5482107961295, 'tt200m': 11616.98545064259, 'registeredAt': '2023-02-25T14: 05: 01.113000Z', 'updatedAt': '2025-06-02T22: 51: 40.882000Z', 'lastChangedAt': '2025-05-27T22: 20: 26.535000Z', 'lastImportedAt': None
+}, 'progress': {'start': 63245975, 'end': 63248708, 'gained': 2733
+}, 'levels': {'start': 1860, 'end': 1860, 'gained': 0
+}
+},
+{'playerId': 761648, 'competitionId': 90513, 'teamName': 'Iron Foundry', 'createdAt': '2025-05-24T02: 37: 59.457000Z', 'updatedAt': '2025-06-02T00: 27: 10.417000Z', 'player': {'id': 761648, 'username': 'ironchipmunk', 'displayName': 'IronChipmunk', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 285068264, 'ehp': 1132.964509270209, 'ehb': 426.63069, 'ttm': 642.1342285345702, 'tt200m': 18564.61791835904, 'registeredAt': '2022-10-01T13: 28: 00.204000Z', 'updatedAt': '2025-06-02T00: 27: 10.237000Z', 'lastChangedAt': '2025-05-14T12: 23: 22.489000Z', 'lastImportedAt': '2023-07-07T11: 26: 50.914000Z'
+}, 'progress': {'start': 285068264, 'end': 285068264, 'gained': 0
+}, 'levels': {'start': 2125, 'end': 2125, 'gained': 0
+}
+},
+{'playerId': 874809, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 20: 39.556000Z', 'player': {'id': 874809, 'username': 'fe sango', 'displayName': 'Fe Sango', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 122600270, 'ehp': 655.1803525734862, 'ehb': 143.41634, 'ttm': 1070.177541501874, 'tt200m': 19042.40207505576, 'registeredAt': '2023-01-19T11: 12: 39.858000Z', 'updatedAt': '2025-06-02T23: 20: 38.348000Z', 'lastChangedAt': '2025-05-16T00: 15: 38.983000Z', 'lastImportedAt': '2023-06-01T01: 31: 43.604000Z'
+}, 'progress': {'start': 122600270, 'end': 122600270, 'gained': 0
+}, 'levels': {'start': 1968, 'end': 1968, 'gained': 0
+}
+},
+{'playerId': 1016467, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 06: 18.130000Z', 'player': {'id': 1016467, 'username': 'dae dae 3000', 'displayName': 'dae dae 3000', 'type': 'regular', 'build': 'main', 'country': None, 'status': 'active', 'exp': 115281383, 'ehp': 272.3926041564628, 'ehb': 164.01222, 'ttm': 626.5371923345925, 'tt200m': 11611.96535309106, 'registeredAt': '2023-05-13T10: 59: 49.655000Z', 'updatedAt': '2025-06-02T23: 06: 15.696000Z', 'lastChangedAt': '2025-05-21T00: 45: 45.001000Z', 'lastImportedAt': None
+}, 'progress': {'start': 115281383, 'end': 115281383, 'gained': 0
+}, 'levels': {'start': 1977, 'end': 1977, 'gained': 0
+}
+},
+{'playerId': 189765, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 31: 23.879000Z', 'player': {'id': 189765, 'username': 'cyko', 'displayName': 'Cyko', 'type': 'regular', 'build': 'main', 'country': 'US', 'status': 'active', 'exp': 109339746, 'ehp': 263.4456774577369, 'ehb': 55.86055999999999, 'ttm': 637.5467193247617, 'tt200m': 11620.91227978978, 'registeredAt': '2021-03-08T17: 47: 33.339000Z', 'updatedAt': '2025-06-01T23: 31: 17.811000Z', 'lastChangedAt': '2025-02-25T02: 10: 48.567000Z', 'lastImportedAt': '2023-07-11T00: 06: 43.028000Z'
+}, 'progress': {'start': 109339746, 'end': 109339746, 'gained': 0
+}, 'levels': {'start': 1987, 'end': 1987, 'gained': 0
+}
+},
+{'playerId': 216202, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 51: 53.465000Z', 'player': {'id': 216202, 'username': 'jace solo', 'displayName': 'Jace Solo', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 65248641, 'ehp': 394.5483787756104, 'ehb': 49.39755, 'ttm': 1316.853371311406, 'tt200m': 19303.03404885363, 'registeredAt': '2021-04-04T04: 40: 09.172000Z', 'updatedAt': '2025-06-01T23: 51: 50.355000Z', 'lastChangedAt': '2025-05-08T21: 44: 29.402000Z', 'lastImportedAt': None
+}, 'progress': {'start': 65248641, 'end': 65248641, 'gained': 0
+}, 'levels': {'start': 1851, 'end': 1851, 'gained': 0
+}
+},
+{'playerId': 2277571, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-01T23: 24: 06.297000Z', 'player': {'id': 2277571, 'username': 'gekkiim1', 'displayName': 'gekkiim1', 'type': 'ironman', 'build': 'def1', 'country': None, 'status': 'active', 'exp': 13837115, 'ehp': 43.24600512096759, 'ehb': 0.0, 'ttm': 1667.967838391654, 'tt200m': 19654.33642250828, 'registeredAt': '2025-03-06T18: 05: 56.854000Z', 'updatedAt': '2025-06-01T23: 23: 54.437000Z', 'lastChangedAt': '2025-05-11T20: 25: 04.631000Z', 'lastImportedAt': None
+}, 'progress': {'start': 13837115, 'end': 13837115, 'gained': 0
+}, 'levels': {'start': 440, 'end': 440, 'gained': 0
+}
+},
+{'playerId': 1824047, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 16: 15.503000Z', 'player': {'id': 1824047, 'username': 'chop alone', 'displayName': 'chop alone', 'type': 'ironman', 'build': 'main', 'country': None, 'status': 'active', 'exp': 7221518, 'ehp': 56.05431624036007, 'ehb': 0.11667, 'ttm': 1655.127375455653, 'tt200m': 19641.52811138889, 'registeredAt': '2024-04-09T07: 39: 07.711000Z', 'updatedAt': '2025-06-02T23: 16: 15.326000Z', 'lastChangedAt': '2025-05-16T00: 20: 42.948000Z', 'lastImportedAt': None
+}, 'progress': {'start': 7221518, 'end': 7221518, 'gained': 0
+}, 'levels': {'start': 1246, 'end': 1246, 'gained': 0
+}
+},
+{'playerId': 2125607, 'competitionId': 90513, 'teamName': 'Ironclad', 'createdAt': '2025-05-24T02: 52: 21.650000Z', 'updatedAt': '2025-06-02T23: 20: 26.698000Z', 'player': {'id': 2125607, 'username': 'icemint5k', 'displayName': 'icemint5k', 'type': 'ultimate', 'build': 'main', 'country': None, 'status': 'active', 'exp': 4628995, 'ehp': 53.98216811304478, 'ehb': 0.0, 'ttm': 1927.513334782902, 'tt200m': 24138.55903929312, 'registeredAt': '2024-11-01T00: 18: 15.693000Z', 'updatedAt': '2025-06-02T23: 20: 23.538000Z', 'lastChangedAt': '2025-05-14T00: 05: 18.132000Z', 'lastImportedAt': None
+}, 'progress': {'start': 4628995, 'end': 4628995, 'gained': 0
+}, 'levels': {'start': 1063, 'end': 1063, 'gained': 0
+}
+}
