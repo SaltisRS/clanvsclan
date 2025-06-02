@@ -453,8 +453,9 @@ class SubmissionView(discord.ui.View):
 
         await interaction.followup.send(
             f"Submission for '{self.item_name}' by <@{self.submitter_id}> accepted by {interaction.user.mention}.\n"
-            f"Points Gained from this submission: {points_gained:.2f if points_gained > 0 else '0 Points, visual bug (correctly applied to website.)'}\n"
-            f"Submitter's New Total Points: {player_total_points:.2f}",
+            f"Points Gained from this submission: {points_gained:.2f}\n"
+            f"Submitter's New Total Points: {player_total_points:.2f}\n"
+            f"Sometimes a visual bug occurs that causes 0 points to be displayed, this still applies properly to website!",
             ephemeral=True
         )
         submitter_user = interaction.client.get_user(self.submitter_id)
