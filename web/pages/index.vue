@@ -297,7 +297,6 @@ const fetchTable = async (table: string) => {
   console.log("Fetching table data...");
   loading.value = true;
 
-  const minLoadingTime = 200;
   const startTime = Date.now();
 
   try {
@@ -345,11 +344,7 @@ if (activeData.value) {
   } catch (error) {
     console.error("Error fetching table data:", error);
   } finally {
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = minLoadingTime - elapsedTime;
-    setTimeout(() => {
       loading.value = false;
-    }, remainingTime);
   }
 };
 
