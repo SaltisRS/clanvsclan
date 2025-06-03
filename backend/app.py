@@ -78,74 +78,78 @@ app = FastAPI(lifespan=lifespan)
 
 async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     """
-    Fetches competition data from Wiseoldman and formats it into
-    the frontend's expected leaderboard structure.
-    Uses response.unwrap() then converts objects to dicts using .to_dict().
+    Fetches competition data using wom_client.competitions.get_details_csv()
+    and formats it into the frontend's expected leaderboard structure.
     """
-    logger.info("Fetching Wiseoldman competition data for leaderboards.")
+    logger.info("Fetching Wiseoldman competition CSV data using wom_client.competitions.get_details_csv().")
     competition_id = 90513
-    metrics = [Metric.Overall, Metric.Ehp, Metric.Ehb] # Use Metric enum directly from wom
     
+    # We will assume get_details_csv works with Metric enum value (string)
+    # The output log provides 'Overall', so let's stick with that for one leaderboard.
+    # If there are separate CSVs or distinct columns for EHP/EHB gained in the same CSV,
+    # you'd need to adapt. For now, focus on the single 'Gained' column.
+    metrics_to_process = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value] # The 'Gained' column from the CSV is likely for Overall
+
     wom_leaderboards: List[Dict] = []
 
     try:
         current_wom_client: wom.Client = app.state.wom_client
 
-        for metric in metrics:
-            logger.info(f"Fetching data for metric: {metric.name} from WOM.")
-            response: wom.Result = await current_wom_client.competitions.get_details(
-                id=competition_id, metric=metric
+        # Loop through metrics, even if we only have one 'Gained' column from CSV now
+        for metric in metrics_to_process:
+            logger.info(f"Fetching data for metric: {metric} from WOM CSV endpoint.")
+
+            response: wom.Result = await current_wom_client.competitions.get_details_csv(
+                id=competition_id, metric=metric # type: ignore
             )
 
             if response.is_ok:
-                # 1. Get the CompetitionDetails object
-                competition_details_obj = response.unwrap()
+                csv_rows_data = response.unwrap()
                 
-                # 2. Immediately convert the entire CompetitionDetails object to a dictionary
-                competition_details_dict = competition_details_obj.to_dict() # <--- CRITICAL: Ensures full serialization
+                if not isinstance(csv_rows_data, list):
+                    logger.error(f"WOM client's get_details_csv.unwrap() did not return a list for {metric}.")
+                    raise ValueError("Unexpected data format from WOM CSV client.")
 
-                # Now work with the dictionary version of the data
-                leaderboard_title = f"WOM - {metric.name.replace('_', ' ').title()} Gained"
+                leaderboard_title = f"{metric.replace('_', ' ').title()} Gained (CSV)"
                 
                 leaderboard_rows = []
-                participants_list_from_dict = competition_details_dict.get('participants', [])
-                
-                sorted_players = sorted(
-                    participants_list_from_dict,
-                    key=lambda p: p.get('progress', {}).get('gained', 0), # Access keys in dicts
+                sorted_players_from_csv = sorted(
+                    csv_rows_data,
+                    key=lambda row: float(row.get('Gained', 0)) if row.get('Gained') else 0,
                     reverse=True
                 )
 
-                for i, participant_data in enumerate(sorted_players):
-                    player_data = participant_data.get('player', {})
-                    progress_data = participant_data.get('progress', {})
+                for i, player_row in enumerate(sorted_players_from_csv):
+                    # Access data using CSV column names (case-sensitive!)
+                    rsn = player_row.get('Username', 'N/A')
+                    value_str = player_row.get('Gained', '0') # Get as string first
+                    
+                    try:
+                        value = float(value_str)
+                    except (ValueError, TypeError):
+                        logger.warning(f"Could not convert 'Gained' value '{value_str}' to float for player {rsn}.")
+                        value = 0.0
+                    
 
-                    rsn = player_data.get('display_name') or player_data.get('username', 'N/A')
+                    profile_link = f"https://wiseoldman.net/players/{rsn}"
                     
-                    # RETURNING TO ORIGINAL INTENT: 'value' should be 'number' (int or float)
-                    # The 'gained' is XP, usually int, but Ehp/Ehb are floats.
-                    # Frontend expects 'number', so no forced int() conversion needed if it's a float.
-                    value = progress_data.get('gained', 0) # Retrieve as is (int or float)
-                    
-                    profile_username = player_data.get('username')
-                    profile_link = f"https://wiseoldman.net/players/{profile_username}" if profile_username else "#"
-                    
-                    participant_team_name = participant_data.get('team_name')
+                    player_team_name = player_row.get('Team')
                     player_icon_link = ""
-                    if participant_team_name == "Iron Foundry":
+                    if player_team_name == "Iron Foundry":
                         player_icon_link = foundry_link
-                    elif participant_team_name == "Ironclad":
+                    elif player_team_name == "Ironclad":
                         player_icon_link = clad_link
 
                     leaderboard_rows.append({
                         "index": i + 1,
                         "rsn": rsn,
-                        "value": value, # This will be int or float, which maps to TS 'number'
+                        "value": value,
                         "profile_link": profile_link,
                         "icon_link": player_icon_link
                     })
                 
-                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}?preview={metric.name.lower()}"
+                # Metric page link for the competition overall (might not be specific to CSV view)
+                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
                 
                 wom_leaderboards.append({
                     "title": leaderboard_title,
@@ -153,15 +157,19 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                     "data": leaderboard_rows
                 })
             else:
-                logger.error(f"Failed to fetch {metric.name} competition details from WOM (is_ok=False): {response.error_message}")
+                logger.error(f"Failed to fetch {metric} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
-            await asyncio.sleep(5)
+            await asyncio.sleep(5) # Delay between API calls
 
         return wom_leaderboards
 
     except Exception as e:
-        logger.error(f"Error in _get_wom_leaderboards_data_helper: {e}", exc_info=True)
-        raise
+        logger.error(f"An unexpected error occurred in _get_wom_leaderboards_data_helper (CSV): {e}", exc_info=True)
+        # Re-raise as HTTPException so FastAPI handles it correctly
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate leaderboard data from Wiseoldman CSV: {e}"
+        )
             
 
 def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_name: str) -> Optional[Dict[str, Any]]:

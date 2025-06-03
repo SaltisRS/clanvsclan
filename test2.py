@@ -21,7 +21,7 @@ async def get_wom_metrics():
         logger.info("Client was already started.", e)
         
     for metric in metrics:
-        response: wom.Result = await wom_client.competitions.get_details(id=competition_id, metric=metric)
+        response: wom.Result = await wom_client.competitions.get_details_csv(id=competition_id, metric=metric.value)
         if response.is_ok:
             result = response.unwrap()
             logger.info(result)
