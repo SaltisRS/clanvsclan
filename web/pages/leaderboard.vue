@@ -60,7 +60,7 @@ onMounted(() => {
 
     <!-- This div wraps all the individual leaderboard cards -->
     <div
-      class="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center w-full max-w-7xl pt-20"
+      class="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center w-full max-w-full pt-20"
       v-if="!loading && jsonData.length > 0"
     >
       <!-- Each 'board' is a LeaderboardEntry from your fetched data -->

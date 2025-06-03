@@ -29,7 +29,7 @@ db = client[DATABASE_NAME]
 if_coll = db[COLLECTION_NAME_1]
 ic_coll = db[COLLECTION_NAME_2]
 players = db["Players"]
-foundry_link = "https://i.imgur.com/IQuSdoi.png"
+foundry_link = "https://imgur.com/eVNvP9K.png"
 clad_link = "https://i.imgur.com/a0DB45h.png"
 
 
