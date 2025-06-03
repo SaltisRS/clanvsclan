@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status # Added status for clarity
 from pymongo import AsyncMongoClient, MongoClient
 from typing import Any, List, Dict, Optional
 from loguru import logger
@@ -32,53 +32,87 @@ players = db["Players"]
 foundry_link = "https://imgur.com/eVNvP9K.png"
 clad_link = "https://i.imgur.com/a0DB45h.png"
 
-
+# --- Background Task to periodically refresh data ---
 async def refresh_leaderboards_cache(app: FastAPI):
     REFRESH_INTERVAL_SECONDS = 5 * 60 # 5 minutes
 
-    while True:
+    # Initial fetch (run once before the loop starts)
+    # This block is essential to have data available immediately on startup,
+    # but it must run in a non-blocking way relative to the app's startup.
+    # It's better to manage this outside the infinite loop for initial population.
+    
+    # We will ensure initial population is handled by lifespan before this loop.
+    
+    while True: # Infinite loop for periodic refresh
         logger.info(f"Background task: Attempting to refresh leaderboard data.")
         try:
             wom_data = await _get_wom_leaderboards_data_helper()
             combined_leaderboards_dict = {"Data": wom_data}
             
-
             leaderboards_cache['combined_leaderboards'] = combined_leaderboards_dict
             logger.info(f"Background task: Leaderboard data updated in cache.")
 
         except Exception as e:
             logger.error(f"Background task: Failed to refresh leaderboard data: {e}", exc_info=True)
 
-        await asyncio.sleep(REFRESH_INTERVAL_SECONDS)
+        await asyncio.sleep(REFRESH_INTERVAL_SECONDS) # Wait for next refresh
 
-
+# --- Lifespan Context Manager ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     logger.info("FastAPI application startup initiated.")
     try:
-        app.state.wom_client = wom.Client(api_key=os.getenv("WOM_API"), user_agent="@saltis.") # Initialize WOM client
+        app.state.wom_client = wom.Client(api_key=os.getenv("WOM_API"), user_agent="@saltis.")
         await app.state.wom_client.start()
         logger.info("WOM Client started successfully via Lifespan.")
         
-        app.state.background_task = asyncio.create_task(refresh_leaderboards_cache(app))
+        # --- NEW: Start the background task for *periodic* refresh ---
+        app.state.background_refresh_task = asyncio.create_task(refresh_leaderboards_cache(app))
         logger.info("Background leaderboard refresh task started.")
+
+        # --- NEW: Start a separate task for *initial* cache population ---
+        # This allows the app to yield and respond to requests quickly,
+        # while the first data fetch happens concurrently in the background.
+        app.state.initial_cache_populate_task = asyncio.create_task(
+            _perform_initial_cache_population(app)
+        )
+        logger.info("Initial cache population task started in background.")
+
     except RuntimeError as e:
         logger.warning(f"WOM Client already started or encountered an issue during lifespan startup: {e}")
     except Exception as e:
-        logger.error(f"Failed to start WOM Client during lifespan startup: {e}")
-    logger.info("Initial cache population for leaderboards.")
-    try:
-        wom_data = await _get_wom_leaderboards_data_helper()
-        leaderboards_cache['combined_leaderboards'] = {"Data": wom_data}
-        logger.info("Initial leaderboard cache populated successfully.")
-    except Exception as e:
-        logger.error(f"Failed to perform initial leaderboard cache population: {e}", exc_info=True)    
-        
-        
+        logger.error(f"Failed to start WOM Client or initial background tasks during lifespan startup: {e}")
+        # Optionally, raise an exception to prevent app from starting if initial client setup fails.
+        raise # Re-raise to fail app startup if essential client doesn't start
+
+    # --- Yield control to the application to handle requests ---
+    # The application is now ready to serve endpoints.
+    # The initial cache population is running in a separate task.
+    logger.info("FastAPI application is ready to serve. Yielding control.")
     yield
 
+    # --- Shutdown logic ---
     logger.info("FastAPI application shutdown initiated.")
+    
+    # Cancel the periodic background refresh task
+    if hasattr(app.state, 'background_refresh_task') and not app.state.background_refresh_task.done():
+        app.state.background_refresh_task.cancel()
+        logger.info("Background refresh task cancelled.")
+        try:
+            await app.state.background_refresh_task # Await to ensure graceful cancellation
+        except asyncio.CancelledError:
+            logger.info("Background refresh task successfully cancelled.")
+    
+    # Cancel the initial cache population task if it's still running
+    if hasattr(app.state, 'initial_cache_populate_task') and not app.state.initial_cache_populate_task.done():
+        app.state.initial_cache_populate_task.cancel()
+        logger.info("Initial cache population task cancelled.")
+        try:
+            await app.state.initial_cache_populate_task
+        except asyncio.CancelledError:
+            logger.info("Initial cache population task successfully cancelled.")
+
+    # Close WOM client
     if hasattr(app.state, 'wom_client') and app.state.wom_client:
         try:
             await app.state.wom_client.close()
@@ -86,8 +120,26 @@ async def lifespan(app: FastAPI):
         except Exception as e:
             logger.error(f"Failed to close WOM Client during lifespan shutdown: {e}")
             
+# --- NEW: Helper for initial cache population ---
+async def _perform_initial_cache_population(app: FastAPI):
+    """
+    Performs the first data fetch and populates the cache.
+    Runs as a separate asyncio task on startup.
+    """
+    logger.info("Initial cache population: Starting data fetch.")
+    try:
+        wom_data = await _get_wom_leaderboards_data_helper()
+        leaderboards_cache['combined_leaderboards'] = {"Data": wom_data}
+        logger.info("Initial leaderboard cache populated successfully.")
+    except Exception as e:
+        logger.error(f"Failed to perform initial leaderboard cache population: {e}", exc_info=True)
+        # This will be logged, and the cache will remain empty.
+        # The /leaderboards endpoint will return 503 until the first successful refresh.
+
+
 app = FastAPI(lifespan=lifespan)
 
+# --- Helper for fetching and formatting WOM CSV data ---
 async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     CSV_COLUMN_USERNAME = 'Username'
     CSV_COLUMN_TEAM = 'Team'
@@ -114,17 +166,19 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                 
                 df = pd.read_csv(io.StringIO(csv_content))
                 
+                # Check for empty dataframe after reading to avoid key errors later
+                if df.empty:
+                    logger.warning(f"CSV data for metric {metric} is empty. Skipping leaderboard generation.")
+                    continue # Skip to next metric
+                    
                 df[CSV_COLUMN_GAINED] = pd.to_numeric(df[CSV_COLUMN_GAINED], errors='coerce').fillna(0).astype(float)
                 
-                logger.info(f"Successfully parsed {len(df)} rows from WOM CSV using pandas.")
+                logger.info(f"Successfully parsed {len(df)} rows for {metric} from WOM CSV using pandas.")
 
                 leaderboard_title = f"{metric.replace('_', ' ').title()}"
                 
                 leaderboard_rows = []
-                
-
                 sorted_df = df.sort_values(by=CSV_COLUMN_GAINED, ascending=False)
-
 
                 for i, row in enumerate(sorted_df.itertuples(index=False)): 
                     rsn = getattr(row, CSV_COLUMN_USERNAME, 'N/A')
@@ -158,18 +212,21 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
             else:
                 logger.error(f"Failed to fetch {metric} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
-            await asyncio.sleep(10)
+            # This sleep is inside the loop, it adds a delay between *each* metric's API call.
+            # This is critical for not hitting WOM rate limits.
+            await asyncio.sleep(5) 
 
         return wom_leaderboards
 
     except Exception as e:
         logger.error(f"An unexpected error occurred in _get_wom_leaderboards_data_helper (CSV): {e}", exc_info=True)
+        # Re-raise HTTPException to be caught by the calling task (initial_cache_populate_task or refresh_leaderboards_cache)
         raise HTTPException(
-            status_code=500,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate leaderboard data from Wiseoldman CSV: {e}"
         )
             
-
+# --- Existing Sync MongoDB Helper (No change) ---
 def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_name: str) -> Optional[Dict[str, Any]]:
     milestones_data = template_doc.get("milestones", {})
     category_list = milestones_data.get(category)
@@ -181,13 +238,10 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
             return milestone
     return None
 
+# --- Main /leaderboards endpoint (reads from cache) ---
 @app.get("/leaderboards")
 async def get_leaderboard():
-    """
-    Combines leaderboard data from various sources (e.g., Wiseoldman, MongoDB)
-    and returns it in the format expected by the frontend.
-    """
-    logger.info("Starting to combine leaderboard data from multiple sources.")
+    logger.info("Frontend requested leaderboards. Reading from cache.")
     if 'combined_leaderboards' in leaderboards_cache:
         cached_data = leaderboards_cache['combined_leaderboards']
         logger.info("Returning cached leaderboard data.")
@@ -195,10 +249,11 @@ async def get_leaderboard():
     else:
         logger.warning("Leaderboard data not yet available in cache. Initial fetch might be in progress or failed.")
         raise HTTPException(
-            status_code=503,
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, # Use status constant
             detail="Leaderboard data not yet available. Please try again shortly. (Initial fetch might be in progress or failed.)"
         )
     
+# --- Existing GET /ironfoundry endpoint (No change) ---
 @app.get("/ironfoundry")
 async def get_if_data() -> List[Dict]:
     logger.info("Retrieving data from the first collection")
@@ -206,6 +261,7 @@ async def get_if_data() -> List[Dict]:
     logger.info(f"Data retrieved.")
     return event_data
 
+# --- Existing GET /ironclad endpoint (No change) ---
 @app.get("/ironclad")
 async def get_ic_data() -> List[Dict]:
     logger.info("Retrieving data from the second collection")
@@ -213,7 +269,7 @@ async def get_ic_data() -> List[Dict]:
     logger.info(f"Data retrieved.")
     return event_data # type: ignore
 
-
+# --- Existing POST /milestones endpoint (No change) ---
 @app.post("/milestones")
 async def update_milestones(milestone_data: Dict):
     logger.info(milestone_data)
@@ -259,9 +315,10 @@ async def update_milestones(milestone_data: Dict):
 
     except Exception as e:
         logger.error(f"An unhandled error occurred during milestone update processing: {e}", exc_info=True)
-        return HTTPException(status_code=402, detail="Internal Server Error")
+        return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error") # Use status constant
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    import datetime # type: ignore
+    uvicorn.run(app, host="0.0.0.0", port=8001, reload=True)
