@@ -80,11 +80,11 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     """
     Fetches competition data from Wiseoldman and formats it into
     the frontend's expected leaderboard structure.
-    Uses response.unwrap() directly.
+    Uses response.unwrap() then converts objects to dicts using .to_dict().
     """
     logger.info("Fetching Wiseoldman competition data for leaderboards.")
     competition_id = 90513
-    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb, wom.Metric.ClueScrollsAll]
+    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb]
     
     wom_leaderboards: List[Dict] = []
 
@@ -98,35 +98,42 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
             )
 
             if response.is_ok:
-                competition_details: CompetitionDetail = response.unwrap()
+                # Get the CompetitionDetails object
+                competition_details = response.unwrap() # No explicit type hint, let Python infer
                 
-                
-                leaderboard_title = f"{metric.name.replace('_', ' ').title()}"
+                leaderboard_title = f"{metric.name.replace('_', ' ').title()} Gained"
                 
                 leaderboard_rows = []
-                sorted_players = sorted(
+                sorted_participants = sorted(
                     competition_details.participants,
                     key=lambda p: p.progress.gained,
                     reverse=True
                 )
 
-                for i, participant in enumerate(sorted_players):
-                    rsn = participant.player.display_name or participant.player.username
+                for i, participant_obj in enumerate(sorted_participants):
+
+                    participant_dict = participant_obj.to_dict() 
                     
+                    player_data = participant_dict.get('player', {})
+                    progress_data = participant_dict.get('progress', {})
+
+                    rsn = player_data.get('display_name') or player_data.get('username', 'N/A')
+                    
+                    value_raw = progress_data.get('gained', 0)
                     try:
-                        value = int(participant.progress.gained)
+                        value = int(value_raw)
                     except (ValueError, TypeError):
-                        logger.warning(f"Could not convert 'gained' value '{participant.progress.gained}' to int for player {rsn}.")
+                        logger.warning(f"Could not convert 'gained' value '{value_raw}' to int for player {rsn}.")
                         value = 0
                     
-                    profile_username = participant.player.username
+                    profile_username = player_data.get('username')
                     profile_link = f"https://wiseoldman.net/players/{profile_username}" if profile_username else "#"
                     
-
+                    participant_team_name = participant_dict.get('team_name')
                     player_icon_link = ""
-                    if participant.team_name == "Iron Foundry":
+                    if participant_team_name == "Iron Foundry":
                         player_icon_link = foundry_link
-                    elif participant.team_name == "Ironclad":
+                    elif participant_team_name == "Ironclad":
                         player_icon_link = clad_link
 
                     leaderboard_rows.append({
