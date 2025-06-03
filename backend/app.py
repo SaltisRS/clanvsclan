@@ -24,7 +24,7 @@ COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
 ACTUAL_HEADERS = ["Rank", "Username", "Team", "Start", "End", "Gained", "Last Updated"]
 
-leaderboards_cache = TTLCache(maxsize=1, ttl=300)
+leaderboards_cache = TTLCache(maxsize=1, ttl=600)
 client = MongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 async_client = AsyncMongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 db = client[DATABASE_NAME]

@@ -16,7 +16,6 @@ interface LeaderboardEntry {
   data: RowData[];
 }
 
-// This interface describes the *root* of the JSON response
 interface ApiResponse {
   Data: LeaderboardEntry[];
 }
@@ -47,9 +46,10 @@ onMounted(() => {
 
 <template>
   <main
-    class="flex justify-center items-center p-20 gap-8 select-none min-h-screen"
+    class="flex justify-center items-start p-8 md:p-10 lg:p-12 select-none min-h-screen"
   >
     <div v-if="loading" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+      This may take a moment on data flush...
       <Loading />
     </div>
 
@@ -60,7 +60,7 @@ onMounted(() => {
 
     <!-- This div wraps all the individual leaderboard cards -->
     <div
-      class="flex flex-col sm:flex-row flex-wrap gap-12 justify-center mt-20"
+      class="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center w-full max-w-7xl pt-20"
       v-if="!loading && jsonData.length > 0"
     >
       <!-- Each 'board' is a LeaderboardEntry from your fetched data -->

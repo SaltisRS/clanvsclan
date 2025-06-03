@@ -30,7 +30,7 @@ const formatValue = (value: number): string => {
 };
 </script>
 <template>
-  <div class="leaderboard-card bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm sm:max-w-md lg:max-w-lg">
+  <div class="leaderboard-card bg-dc-accent p-2 rounded-xl shadow-xl w-full max-w-sm sm:max-w-md lg:max-w-lg">
     <h2 class="text-2xl font-bold text-white mb-4 text-center">
       {{ title }}
       <a v-if="metricPage" :href="metricPage" target="_blank" rel="noopener noreferrer" class="ml-2 text-blue-400 hover:text-blue-300 text-base align-middle">
@@ -43,22 +43,22 @@ const formatValue = (value: number): string => {
 
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-700">
-        <thead class="bg-gray-700">
+        <thead class="bg-blurple">
           <tr>
-            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider rounded-tl-lg">
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg">
               Rank
             </th>
-            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider">
               Player
             </th>
-            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider rounded-tr-lg">
+            <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg">
               Value
             </th>
           </tr>
         </thead>
-        <tbody class="bg-gray-800 divide-y divide-gray-700">
+        <tbody class="bg-dc-accent divide-y divide-gray-700">
           <tr v-for="row in data" :key="row.index" class="hover:bg-gray-700 transition-colors duration-200">
-            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-100">
+            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">
               {{ row.index }}
             </td>
             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
@@ -71,7 +71,7 @@ const formatValue = (value: number): string => {
                 </svg>
               </a>
             </td>
-            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">
+            <td class="px-4 py-3 whitespace-nowrap text-sm text-white">
               {{ formatValue(row.value) }}
             </td>
           </tr>
