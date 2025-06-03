@@ -36,20 +36,17 @@ clad_link = "https://i.imgur.com/a0DB45h.png"
 
 def async_cached(cache):
     def decorator(func):
-        async def wrapper(*args, **kwargs):
-            key = (args, frozenset(kwargs.items())) # Create a hashable key for caching
-            
-            # Check if value is in cache
+        async def wrapper(): # Changed from *args, **kwargs to no arguments for get_combined_leaderboards
+            # key = (args, frozenset(kwargs.items())) # Removed this problematic line
+            key = (func.__name__,) # Simple key for a no-argument function
+
             if key in cache:
                 logger.info(f"Cache hit for {func.__name__}")
                 return cache[key]
             
-            # If not in cache, execute the coroutine and get its result
             logger.info(f"Cache miss for {func.__name__}. Executing...")
-            # Schedule the coroutine as a task and await its result
-            result = await func(*args, **kwargs)
+            result = await func() # Call func with no arguments
             
-            # Store the result in cache
             cache[key] = result
             logger.info(f"Result for {func.__name__} cached.")
             return result
