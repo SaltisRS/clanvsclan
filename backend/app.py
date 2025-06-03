@@ -202,7 +202,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                         "icon_link": player_icon_link
                     })
                 
-                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
+                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}?preview={metric.lower().replace(" ", "_")}"
                 
                 wom_leaderboards.append({
                     "title": leaderboard_title,
