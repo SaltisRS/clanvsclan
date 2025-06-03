@@ -9,6 +9,9 @@ from wom import Metric
 import asyncio
 from contextlib import asynccontextmanager
 from cachetools import TTLCache
+import pandas as pd
+import io
+import csv
 
 
 
@@ -84,56 +87,63 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     logger.info("Fetching Wiseoldman competition CSV data using wom_client.competitions.get_details_csv().")
     competition_id = 90513
     
-    # We will assume get_details_csv works with Metric enum value (string)
-    # The output log provides 'Overall', so let's stick with that for one leaderboard.
-    # If there are separate CSVs or distinct columns for EHP/EHB gained in the same CSV,
-    # you'd need to adapt. For now, focus on the single 'Gained' column.
-    metrics_to_process = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value] # The 'Gained' column from the CSV is likely for Overall
+    # Based on your log, metric.value is passed, which is the string version of Metric.Overall
+    metrics_to_process = [Metric.Overall, Metric.Ehb, Metric.Ehp] # Keeping as list of Metric enums for clarity if needed
 
     wom_leaderboards: List[Dict] = []
 
     try:
         current_wom_client: wom.Client = app.state.wom_client
 
-        # Loop through metrics, even if we only have one 'Gained' column from CSV now
-        for metric in metrics_to_process:
-            logger.info(f"Fetching data for metric: {metric} from WOM CSV endpoint.")
-
+        for metric_enum in metrics_to_process: # Iterate through Metric enums
+            metric_value_str = metric_enum.value # Get the string value ('overall')
+            logger.info(f"Fetching data for metric: {metric_value_str} from WOM CSV endpoint.")
+            
             response: wom.Result = await current_wom_client.competitions.get_details_csv(
-                id=competition_id, metric=metric # type: ignore
+                id=competition_id, metric=metric_value_str #type:ignore
             )
 
             if response.is_ok:
-                csv_rows_data = response.unwrap()
+                # Based on your log, response.unwrap() returns the raw CSV string.
+                csv_content: str = response.unwrap()
                 
-                if not isinstance(csv_rows_data, list):
-                    logger.error(f"WOM client's get_details_csv.unwrap() did not return a list for {metric}.")
-                    raise ValueError("Unexpected data format from WOM CSV client.")
+                # Use csv.DictReader to parse the string content
+                csv_file = io.StringIO(csv_content)
+                reader = csv.DictReader(csv_file)
+                
+                all_parsed_data_from_csv: List[Dict[str, Any]] = []
+                for row in reader:
+                    all_parsed_data_from_csv.append(row)
+                
+                logger.info(f"Successfully parsed {len(all_parsed_data_from_csv)} rows from WOM CSV.")
 
-                leaderboard_title = f"{metric.replace('_', ' ').title()} Gained (CSV)"
+                # Assuming the 'Gained' column is for overall XP gained in the competition
+                leaderboard_title = f"WOM - {metric_enum.name.replace('_', ' ').title()} Gained"
                 
                 leaderboard_rows = []
+                # Sort based on the 'Gained' column from the CSV
                 sorted_players_from_csv = sorted(
-                    csv_rows_data,
+                    all_parsed_data_from_csv,
                     key=lambda row: float(row.get('Gained', 0)) if row.get('Gained') else 0,
                     reverse=True
                 )
 
                 for i, player_row in enumerate(sorted_players_from_csv):
-                    # Access data using CSV column names (case-sensitive!)
+                    # Access data using CSV column names (case-sensitive as seen in your log!)
                     rsn = player_row.get('Username', 'N/A')
                     value_str = player_row.get('Gained', '0') # Get as string first
                     
+                    # Safely convert value to float, as frontend expects 'number'
                     try:
                         value = float(value_str)
                     except (ValueError, TypeError):
                         logger.warning(f"Could not convert 'Gained' value '{value_str}' to float for player {rsn}.")
                         value = 0.0
                     
-
-                    profile_link = f"https://wiseoldman.net/players/{rsn}"
+                    profile_username_encoded = rsn.replace(' ', '%20')
+                    profile_link = f"https://wiseoldman.net/players/{profile_username_encoded}"
                     
-                    player_team_name = player_row.get('Team')
+                    player_team_name = player_row.get('Team') # Access 'Team' column from CSV
                     player_icon_link = ""
                     if player_team_name == "Iron Foundry":
                         player_icon_link = foundry_link
@@ -157,7 +167,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                     "data": leaderboard_rows
                 })
             else:
-                logger.error(f"Failed to fetch {metric} competition details from WOM CSV (is_ok=False): {response.error_message}")
+                logger.error(f"Failed to fetch {metric_value_str} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
             await asyncio.sleep(5) # Delay between API calls
 
@@ -165,7 +175,6 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
 
     except Exception as e:
         logger.error(f"An unexpected error occurred in _get_wom_leaderboards_data_helper (CSV): {e}", exc_info=True)
-        # Re-raise as HTTPException so FastAPI handles it correctly
         raise HTTPException(
             status_code=500,
             detail=f"Failed to generate leaderboard data from Wiseoldman CSV: {e}"
