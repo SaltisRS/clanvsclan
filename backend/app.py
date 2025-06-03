@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 from cachetools import TTLCache
 import pandas as pd
 import io
-import csv
+
 
 
 
@@ -22,6 +22,7 @@ DATABASE_NAME = "Frenzy"
 COLLECTION_NAME_1 = "ironfoundry"
 COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
+ACTUAL_HEADERS = ["Rank", "Username", "Team", "Start", "End", "Gained", "Last Updated"]
 
 leaderboards_cache = TTLCache(maxsize=1, ttl=300)
 client = MongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
@@ -81,95 +82,92 @@ app = FastAPI(lifespan=lifespan)
 
 async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     """
-    Fetches competition data using wom_client.competitions.get_details_csv()
-    and formats it into the frontend's expected leaderboard structure.
+    Fetches competition CSV data using wom_client.competitions.get_details_csv(),
+    parses it with pandas, and formats it into the frontend's expected leaderboard structure.
+    This version directly incorporates the working pandas script's pattern.
     """
-    logger.info("Fetching Wiseoldman competition CSV data using wom_client.competitions.get_details_csv().")
+    CSV_COLUMN_USERNAME = 'Username'
+    CSV_COLUMN_TEAM = 'Team'
+    CSV_COLUMN_GAINED = 'Gained'
+    logger.info("Fetching Wiseoldman competition CSV data using wom_client and parsing with pandas.")
     competition_id = 90513
     
-    # Based on your log, metric.value is passed, which is the string version of Metric.Overall
-    metrics_to_process = [Metric.Overall, Metric.Ehb, Metric.Ehp] # Keeping as list of Metric enums for clarity if needed
+    metric_enum = Metric.Overall
+    metric_value_str = metric_enum.value 
 
     wom_leaderboards: List[Dict] = []
 
     try:
         current_wom_client: wom.Client = app.state.wom_client
 
-        for metric_enum in metrics_to_process: # Iterate through Metric enums
-            metric_value_str = metric_enum.value # Get the string value ('overall')
-            logger.info(f"Fetching data for metric: {metric_value_str} from WOM CSV endpoint.")
+        logger.info(f"Fetching data for metric: {metric_value_str} from WOM CSV endpoint.")
+        
+        response: wom.Result = await current_wom_client.competitions.get_details_csv(
+            id=competition_id, metric=metric_value_str # type: ignore
+        )
+
+        if response.is_ok:
+            csv_content: str = response.unwrap() # Get the raw CSV string
             
-            response: wom.Result = await current_wom_client.competitions.get_details_csv(
-                id=competition_id, metric=metric_value_str #type:ignore
-            )
+            df = pd.read_csv(io.StringIO(csv_content))
+            
+            if df.empty:
+                logger.warning("No data found in the CSV from WOM.")
+                return wom_leaderboards
 
-            if response.is_ok:
-                # Based on your log, response.unwrap() returns the raw CSV string.
-                csv_content: str = response.unwrap()
-                
-                # Use csv.DictReader to parse the string content
-                csv_file = io.StringIO(csv_content)
-                reader = csv.DictReader(csv_file)
-                
-                all_parsed_data_from_csv: List[Dict[str, Any]] = []
-                for row in reader:
-                    all_parsed_data_from_csv.append(row)
-                
-                logger.info(f"Successfully parsed {len(all_parsed_data_from_csv)} rows from WOM CSV.")
+            # Ensure 'Gained' column is numeric (float is safe for 'number' in frontend)
+            df[CSV_COLUMN_GAINED] = pd.to_numeric(df[CSV_COLUMN_GAINED], errors='coerce').fillna(0).astype(float)
+            
+            logger.info(f"Successfully parsed {len(df)} rows from WOM CSV using pandas.")
 
-                # Assuming the 'Gained' column is for overall XP gained in the competition
-                leaderboard_title = f"WOM - {metric_enum.name.replace('_', ' ').title()} Gained"
-                
-                leaderboard_rows = []
-                # Sort based on the 'Gained' column from the CSV
-                sorted_players_from_csv = sorted(
-                    all_parsed_data_from_csv,
-                    key=lambda row: float(row.get('Gained', 0)) if row.get('Gained') else 0,
-                    reverse=True
-                )
+            leaderboard_title = f"WOM - {metric_enum.name.replace('_', ' ').title()} Gained (CSV)"
+            
+            leaderboard_rows = []
+            
+            # Sort the DataFrame directly by the 'Gained' column before iterating
+            # This is more efficient than sorting a list of dicts later.
+            sorted_df = df.sort_values(by=CSV_COLUMN_GAINED, ascending=False)
 
-                for i, player_row in enumerate(sorted_players_from_csv):
-                    # Access data using CSV column names (case-sensitive as seen in your log!)
-                    rsn = player_row.get('Username', 'N/A')
-                    value_str = player_row.get('Gained', '0') # Get as string first
-                    
-                    # Safely convert value to float, as frontend expects 'number'
-                    try:
-                        value = float(value_str)
-                    except (ValueError, TypeError):
-                        logger.warning(f"Could not convert 'Gained' value '{value_str}' to float for player {rsn}.")
-                        value = 0.0
-                    
-                    profile_username_encoded = rsn.replace(' ', '%20')
-                    profile_link = f"https://wiseoldman.net/players/{profile_username_encoded}"
-                    
-                    player_team_name = player_row.get('Team') # Access 'Team' column from CSV
-                    player_icon_link = ""
-                    if player_team_name == "Iron Foundry":
-                        player_icon_link = foundry_link
-                    elif player_team_name == "Ironclad":
-                        player_icon_link = clad_link
+            # Iterate over rows and explicitly construct the dictionary for each
+            for i, row in enumerate(sorted_df.itertuples(index=False)): # itertuples is generally faster than iterrows
+                # Access data using attribute-like access (e.g., row.Username) or by name
+                # We'll use get() to be safe if a column might be missing, or direct access if guaranteed
+                # For `itertuples`, columns are accessed by attribute name, not dict key
+                
+                # Check for column existence and provide default if missing from the row object
+                # Use .get() method on the namedtuple-like object if it supports it, or check hasattr
+                rsn = getattr(row, CSV_COLUMN_USERNAME, 'N/A')
+                value = getattr(row, CSV_COLUMN_GAINED, 0.0) # Will be float from pandas processing
+                team_name = getattr(row, CSV_COLUMN_TEAM, None)
+                
+                profile_username_encoded = str(rsn).replace(' ', '%20')
+                profile_link = f"https://wiseoldman.net/players/{profile_username_encoded}"
+                
+                player_icon_link = ""
+                if team_name == "Iron Foundry":
+                    player_icon_link = foundry_link
+                elif team_name == "Ironclad":
+                    player_icon_link = clad_link
 
-                    leaderboard_rows.append({
-                        "index": i + 1,
-                        "rsn": rsn,
-                        "value": value,
-                        "profile_link": profile_link,
-                        "icon_link": player_icon_link
-                    })
-                
-                # Metric page link for the competition overall (might not be specific to CSV view)
-                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
-                
-                wom_leaderboards.append({
-                    "title": leaderboard_title,
-                    "metric_page": competition_page_url,
-                    "data": leaderboard_rows
+                leaderboard_rows.append({
+                    "index": i + 1,
+                    "rsn": rsn,
+                    "value": value,
+                    "profile_link": profile_link,
+                    "icon_link": player_icon_link
                 })
-            else:
-                logger.error(f"Failed to fetch {metric_value_str} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
-            await asyncio.sleep(5) # Delay between API calls
+            competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
+            
+            wom_leaderboards.append({
+                "title": leaderboard_title,
+                "metric_page": competition_page_url,
+                "data": leaderboard_rows
+            })
+        else:
+            logger.error(f"Failed to fetch {metric_value_str} competition details from WOM CSV (is_ok=False): {response.error_message}")
+        
+        await asyncio.sleep(5)
 
         return wom_leaderboards
 
