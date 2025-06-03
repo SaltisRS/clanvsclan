@@ -46,23 +46,23 @@ const formatValue = (value: number): string => {
 </script>
 
 <template>
-  <!-- Main card container: Adjusted widths for more cards per row -->
+  <!-- Main card container: Aggressively smaller max-widths for many cards per row -->
   <div
-    class="bg-dc-accent p-2 rounded-xl shadow-xl w-full
-           max-w-xs sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-sm 2xl:max-w-xs"
+    class="bg-dc-accent p-1 sm:p-2 rounded-xl shadow-xl w-full
+           max-w-[10rem] sm:max-w-[11rem] md:max-w-[12rem] lg:max-w-[13rem] xl:max-w-[14rem] 2xl:max-w-[15rem]"
   >
-    <h2 class="text-2xl font-bold text-white mb-4 text-center">
+    <h2 class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 text-center truncate">
       {{ title }}
       <a
         v-if="metricPage"
         :href="metricPage"
         target="_blank"
         rel="noopener noreferrer"
-        class="ml-2 text-blue-400 hover:text-blue-300 text-base align-middle"
+        class="ml-0.5 text-[0.6rem] sm:text-xs align-middle"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 inline-block"
+          class="h-3 w-3 sm:h-4 sm:w-4 inline-block"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -82,19 +82,19 @@ const formatValue = (value: number): string => {
           <tr>
             <th
               scope="col"
-              class="px-3 py-2 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tl-lg"
+              class="px-1 py-0.5 text-left text-[0.55rem] sm:text-[0.6rem] font-medium text-white uppercase tracking-wider rounded-tl-lg"
             >
               Rank
             </th>
             <th
               scope="col"
-              class="px-3 py-2 text-left text-xs font-medium text-white uppercase tracking-wider"
+              class="px-1 py-0.5 text-left text-[0.55rem] sm:text-[0.6rem] font-medium text-white uppercase tracking-wider"
             >
               Player
             </th>
             <th
               scope="col"
-              class="px-3 py-2 text-left text-xs font-medium text-white uppercase tracking-wider rounded-tr-lg"
+              class="px-1 py-0.5 text-left text-[0.55rem] sm:text-[0.6rem] font-medium text-white uppercase tracking-wider rounded-tr-lg"
             >
               Value
             </th>
@@ -106,10 +106,10 @@ const formatValue = (value: number): string => {
             :key="row.index"
             class="hover:bg-gray-700 transition-colors duration-200"
           >
-            <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-white">
+            <td class="px-1 py-0.5 whitespace-nowrap text-[0.6rem] sm:text-[0.7rem] font-medium text-white">
               {{ row.index }}
             </td>
-            <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-200">
+            <td class="px-1 py-0.5 whitespace-nowrap text-[0.6rem] sm:text-[0.7rem] text-gray-200">
               <a
                 :href="row.profile_link"
                 target="_blank"
@@ -120,12 +120,12 @@ const formatValue = (value: number): string => {
                   v-if="row.icon_link"
                   :src="row.icon_link"
                   :alt="`${row.rsn} icon`"
-                  class="w-6 h-6 rounded-full mr-2 object-cover"
+                  class="w-3 h-3 sm:w-4 sm:h-4 rounded-full mr-0.5 sm:mr-1 object-cover"
                 />
-                {{ row.rsn }}
+                <span class="truncate">{{ row.rsn }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 ml-1 opacity-75"
+                  class="h-2.5 w-2.5 sm:h-3 ml-0.5 opacity-75 flex-shrink-0"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -138,7 +138,7 @@ const formatValue = (value: number): string => {
                 </svg>
               </a>
             </td>
-            <td class="px-3 py-2 whitespace-nowrap text-sm text-white">
+            <td class="px-1 py-0.5 whitespace-nowrap text-[0.6rem] sm:text-[0.7rem] text-white">
               {{ formatValue(row.value) }}
             </td>
           </tr>
@@ -146,11 +146,11 @@ const formatValue = (value: number): string => {
       </table>
     </div>
 
-    <div v-if="hasMoreEntries" class="mt-4 text-center">
+    <div v-if="hasMoreEntries" class="mt-1 sm:mt-2 text-center">
       <button
         @click="toggleExpand"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg
-               focus:outline-none focus:shadow-outline transition-colors duration-200"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-0.5 px-1 sm:py-1 sm:px-2 rounded-lg
+               focus:outline-none focus:shadow-outline transition-colors duration-200 text-xs sm:text-sm"
       >
         {{ isExpanded ? "Show Less" : `Show All (${props.data.length} entries)` }}
       </button>
