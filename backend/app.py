@@ -8,11 +8,9 @@ import wom
 from wom import Metric
 import asyncio
 from contextlib import asynccontextmanager
-from cachetools import TTLCache
+from cachetools import LRUCache
 import pandas as pd
 import io
-
-
 
 
 load_dotenv()
@@ -24,7 +22,7 @@ COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
 ACTUAL_HEADERS = ["Rank", "Username", "Team", "Start", "End", "Gained", "Last Updated"]
 
-leaderboards_cache = TTLCache(maxsize=1, ttl=600)
+leaderboards_cache = LRUCache(maxsize=1)
 client = MongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 async_client = AsyncMongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 db = client[DATABASE_NAME]
@@ -34,24 +32,25 @@ players = db["Players"]
 foundry_link = "https://i.imgur.com/IQuSdoi.png"
 clad_link = "https://i.imgur.com/a0DB45h.png"
 
-def async_cached(cache):
-    def decorator(func):
-        async def wrapper(): # Changed from *args, **kwargs to no arguments for get_combined_leaderboards
-            # key = (args, frozenset(kwargs.items())) # Removed this problematic line
-            key = (func.__name__,) # Simple key for a no-argument function
 
-            if key in cache:
-                logger.info(f"Cache hit for {func.__name__}")
-                return cache[key]
+async def refresh_leaderboards_cache(app: FastAPI):
+    REFRESH_INTERVAL_SECONDS = 5 * 60 # 5 minutes
+
+    while True:
+        logger.info(f"Background task: Attempting to refresh leaderboard data.")
+        try:
+            wom_data = await _get_wom_leaderboards_data_helper()
+            combined_leaderboards_dict = {"Data": wom_data}
             
-            logger.info(f"Cache miss for {func.__name__}. Executing...")
-            result = await func() # Call func with no arguments
-            
-            cache[key] = result
-            logger.info(f"Result for {func.__name__} cached.")
-            return result
-        return wrapper
-    return decorator
+
+            leaderboards_cache['combined_leaderboards'] = combined_leaderboards_dict
+            logger.info(f"Background task: Leaderboard data updated in cache.")
+
+        except Exception as e:
+            logger.error(f"Background task: Failed to refresh leaderboard data: {e}", exc_info=True)
+
+        await asyncio.sleep(REFRESH_INTERVAL_SECONDS)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -61,10 +60,22 @@ async def lifespan(app: FastAPI):
         app.state.wom_client = wom.Client(api_key=os.getenv("WOM_API"), user_agent="@saltis.") # Initialize WOM client
         await app.state.wom_client.start()
         logger.info("WOM Client started successfully via Lifespan.")
+        
+        app.state.background_task = asyncio.create_task(refresh_leaderboards_cache(app))
+        logger.info("Background leaderboard refresh task started.")
     except RuntimeError as e:
         logger.warning(f"WOM Client already started or encountered an issue during lifespan startup: {e}")
     except Exception as e:
         logger.error(f"Failed to start WOM Client during lifespan startup: {e}")
+    logger.info("Initial cache population for leaderboards.")
+    try:
+        wom_data = await _get_wom_leaderboards_data_helper()
+        leaderboards_cache['combined_leaderboards'] = {"Data": wom_data}
+        logger.info("Initial leaderboard cache populated successfully.")
+    except Exception as e:
+        logger.error(f"Failed to perform initial leaderboard cache population: {e}", exc_info=True)    
+        
+        
     yield
 
     logger.info("FastAPI application shutdown initiated.")
@@ -84,7 +95,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     logger.info("Fetching Wiseoldman competition CSV data using wom_client and parsing with pandas.")
     competition_id = 90513
     
-    metrics = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value, Metric.ClueScrollsAll.value]
+    metrics = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value, Metric.ClueScrollsAll.value, Metric.TombsOfAmascutExpert.value, Metric.ChambersOfXeric.value, Metric.TheatreOfBlood.value, Metric.TheCorruptedGauntlet.value]
 
 
     wom_leaderboards: List[Dict] = []
@@ -147,7 +158,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
             else:
                 logger.error(f"Failed to fetch {metric} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
-            await asyncio.sleep(5)
+            await asyncio.sleep(10)
 
         return wom_leaderboards
 
@@ -171,28 +182,21 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
     return None
 
 @app.get("/leaderboards")
-@async_cached(leaderboards_cache)
-async def get_combined_leaderboards():
+async def get_leaderboard():
     """
     Combines leaderboard data from various sources (e.g., Wiseoldman, MongoDB)
     and returns it in the format expected by the frontend.
     """
     logger.info("Starting to combine leaderboard data from multiple sources.")
-    combined_leaderboards: List[Dict] = []
-
-    try:
-        wom_data = await _get_wom_leaderboards_data_helper()
-        combined_leaderboards.extend(wom_data)
-        logger.info(f"Finished combining leaderboards. Total: {len(combined_leaderboards)}.")
-        return {"Data": combined_leaderboards}
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"An unexpected error occurred in get_combined_leaderboards: {e}", exc_info=True)
+    if 'combined_leaderboards' in leaderboards_cache:
+        cached_data = leaderboards_cache['combined_leaderboards']
+        logger.info("Returning cached leaderboard data.")
+        return cached_data
+    else:
+        logger.warning("Leaderboard data not yet available in cache. Initial fetch might be in progress or failed.")
         raise HTTPException(
-            status_code=500,
-            detail=f"Failed to compile all leaderboard data: {e}"
+            status_code=503,
+            detail="Leaderboard data not yet available. Please try again shortly. (Initial fetch might be in progress or failed.)"
         )
     
 @app.get("/ironfoundry")
