@@ -5,10 +5,10 @@ from loguru import logger
 import os
 from dotenv import load_dotenv
 import wom
-from wom import CompetitionDetail
+from wom import Metric
 import asyncio
 from contextlib import asynccontextmanager
-from cachetools import TTLCache, cached
+from cachetools import TTLCache
 
 
 
@@ -84,7 +84,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     """
     logger.info("Fetching Wiseoldman competition data for leaderboards.")
     competition_id = 90513
-    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb]
+    metrics = [Metric.Overall, Metric.Ehp, Metric.Ehb] # Use Metric enum directly from wom
     
     wom_leaderboards: List[Dict] = []
 
@@ -98,38 +98,39 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
             )
 
             if response.is_ok:
-                # Get the CompetitionDetails object
-                competition_details = response.unwrap() # No explicit type hint, let Python infer
+                # 1. Get the CompetitionDetails object
+                competition_details_obj = response.unwrap()
                 
-                leaderboard_title = f"{metric.name.replace('_', ' ').title()} Gained"
+                # 2. Immediately convert the entire CompetitionDetails object to a dictionary
+                competition_details_dict = competition_details_obj.to_dict() # <--- CRITICAL: Ensures full serialization
+
+                # Now work with the dictionary version of the data
+                leaderboard_title = f"WOM - {metric.name.replace('_', ' ').title()} Gained"
                 
                 leaderboard_rows = []
-                sorted_participants = sorted(
-                    competition_details.participants,
-                    key=lambda p: p.progress.gained,
+                participants_list_from_dict = competition_details_dict.get('participants', [])
+                
+                sorted_players = sorted(
+                    participants_list_from_dict,
+                    key=lambda p: p.get('progress', {}).get('gained', 0), # Access keys in dicts
                     reverse=True
                 )
 
-                for i, participant_obj in enumerate(sorted_participants):
-
-                    participant_dict = participant_obj.to_dict() 
-                    
-                    player_data = participant_dict.get('player', {})
-                    progress_data = participant_dict.get('progress', {})
+                for i, participant_data in enumerate(sorted_players):
+                    player_data = participant_data.get('player', {})
+                    progress_data = participant_data.get('progress', {})
 
                     rsn = player_data.get('display_name') or player_data.get('username', 'N/A')
                     
-                    value_raw = progress_data.get('gained', 0)
-                    try:
-                        value = int(value_raw)
-                    except (ValueError, TypeError):
-                        logger.warning(f"Could not convert 'gained' value '{value_raw}' to int for player {rsn}.")
-                        value = 0
+                    # RETURNING TO ORIGINAL INTENT: 'value' should be 'number' (int or float)
+                    # The 'gained' is XP, usually int, but Ehp/Ehb are floats.
+                    # Frontend expects 'number', so no forced int() conversion needed if it's a float.
+                    value = progress_data.get('gained', 0) # Retrieve as is (int or float)
                     
                     profile_username = player_data.get('username')
                     profile_link = f"https://wiseoldman.net/players/{profile_username}" if profile_username else "#"
                     
-                    participant_team_name = participant_dict.get('team_name')
+                    participant_team_name = participant_data.get('team_name')
                     player_icon_link = ""
                     if participant_team_name == "Iron Foundry":
                         player_icon_link = foundry_link
@@ -139,7 +140,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                     leaderboard_rows.append({
                         "index": i + 1,
                         "rsn": rsn,
-                        "value": value,
+                        "value": value, # This will be int or float, which maps to TS 'number'
                         "profile_link": profile_link,
                         "icon_link": player_icon_link
                     })
