@@ -46,10 +46,10 @@ const formatValue = (value: number): string => {
 </script>
 
 <template>
-  <!-- Main card container: Aggressively smaller max-widths for many cards per row -->
+  <!-- Main card container: Made cards a smidge wider -->
   <div
     class="bg-dc-accent p-1 sm:p-2 rounded-xl shadow-xl w-full
-           max-w-[10rem] sm:max-w-[11rem] md:max-w-[12rem] lg:max-w-[13rem] xl:max-w-[14rem] 2xl:max-w-[15rem]"
+           max-w-[13rem] sm:max-w-[15rem] md:max-w-[17rem] lg:max-w-[19rem] xl:max-w-[21rem] 2xl:max-w-[23rem]"
   >
     <h2 class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 text-center truncate">
       {{ title }}
@@ -125,7 +125,7 @@ const formatValue = (value: number): string => {
                 <span class="truncate">{{ row.rsn }}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-2.5 w-2.5 sm:h-3 ml-0.5 opacity-75 flex-shrink-0"
+                  class="h-2.5 sm:h-3 w-3 ml-0.5 opacity-75 flex-shrink-0"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
