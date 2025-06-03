@@ -25,20 +25,9 @@ const props = defineProps({
   },
 });
 
-const isExpanded = ref(false);
-const defaultLimit = 25;
-
-const displayedData = computed(() => {
-  return isExpanded.value ? props.data : props.data.slice(0, defaultLimit);
-});
-
-const hasMoreEntries = computed(() => {
-  return props.data.length > defaultLimit;
-});
-
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value;
-};
+// We no longer need isExpanded, defaultLimit, displayedData, hasMoreEntries, toggleExpand
+// as the scrolling is handled by CSS for a fixed height.
+// The whole `data` prop will always be rendered, but clipped by the scrollable container.
 
 const formatValue = (value: number): string => {
   return value.toLocaleString();
@@ -46,10 +35,11 @@ const formatValue = (value: number): string => {
 </script>
 
 <template>
-  <!-- Main card container: Made cards a smidge wider -->
+  <!-- Main card container: Fixed compact widths -->
   <div
     class="bg-dc-accent p-1 sm:p-2 rounded-xl shadow-xl w-full
-           max-w-[13rem] sm:max-w-[15rem] md:max-w-[17rem] lg:max-w-[19rem] xl:max-w-[21rem] 2xl:max-w-[23rem]"
+           max-w-[13rem] sm:max-w-[15rem] md:max-w-[17rem] lg:max-w-[19rem] xl:max-w-[21rem] 2xl:max-w-[23rem]
+           flex flex-col"
   >
     <h2 class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 text-center truncate">
       {{ title }}
@@ -76,7 +66,7 @@ const formatValue = (value: number): string => {
       </a>
     </h2>
 
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto flex-grow"> <!-- flex-grow to ensure it takes available space -->
       <table class="min-w-full divide-y divide-gray-700">
         <thead class="bg-blurple">
           <tr>
@@ -100,10 +90,10 @@ const formatValue = (value: number): string => {
             </th>
           </tr>
         </thead>
-        <tbody class="bg-dc-accent divide-y divide-gray-700">
+        <!-- Container for scrollable body -->
+        <tbody class="bg-dc-accent divide-y divide-gray-700 block max-h-64 sm:max-h-80 overflow-y-auto">
           <tr
-            v-for="row in displayedData"
-            :key="row.index"
+            v-for="row in data" :key="row.index"
             class="hover:bg-gray-700 transition-colors duration-200"
           >
             <td class="px-1 py-0.5 whitespace-nowrap text-[0.6rem] sm:text-[0.7rem] font-medium text-white">
@@ -146,14 +136,6 @@ const formatValue = (value: number): string => {
       </table>
     </div>
 
-    <div v-if="hasMoreEntries" class="mt-1 sm:mt-2 text-center">
-      <button
-        @click="toggleExpand"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-0.5 px-1 sm:py-1 sm:px-2 rounded-lg
-               focus:outline-none focus:shadow-outline transition-colors duration-200 text-xs sm:text-sm"
-      >
-        {{ isExpanded ? "Show Less" : `Show All (${props.data.length} entries)` }}
-      </button>
-    </div>
+
   </div>
 </template>
