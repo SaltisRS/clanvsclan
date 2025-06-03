@@ -23,7 +23,7 @@ async def get_wom_metrics():
     for metric in metrics:
         response: wom.Result = await wom_client.competitions.get_details(id=competition_id, metric=metric)
         if response.is_ok:
-            result = response.to_dict()
+            result = response.unwrap()
             logger.info(result)
         await asyncio.sleep(10)
         

@@ -5,8 +5,10 @@ from loguru import logger
 import os
 from dotenv import load_dotenv
 import wom
+from wom import CompetitionDetail
 import asyncio
 from contextlib import asynccontextmanager
+from cachetools import TTLCache, cached
 
 
 
@@ -18,7 +20,7 @@ COLLECTION_NAME_1 = "ironfoundry"
 COLLECTION_NAME_2 = "ironclad"
 COLLECTION_NAME_3 = "Templates"
 
-
+leaderboards_cache = TTLCache(maxsize=1, ttl=300)
 client = MongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 async_client = AsyncMongoClient(MONGO_URI, maxPoolSize=None, maxIdleTimeMS=60000 * 5, maxConnecting=10)
 db = client[DATABASE_NAME]
@@ -56,10 +58,11 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     """
     Fetches competition data from Wiseoldman and formats it into
     the frontend's expected leaderboard structure.
+    Uses response.unwrap() directly.
     """
     logger.info("Fetching Wiseoldman competition data for leaderboards.")
     competition_id = 90513
-    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb]
+    metrics = [wom.Metric.Overall, wom.Metric.Ehp, wom.Metric.Ehb, wom.Metric.ClueScrollsAll]
     
     wom_leaderboards: List[Dict] = []
 
@@ -73,35 +76,43 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
             )
 
             if response.is_ok:
-                result_data = response.to_dict()
+                competition_details: CompetitionDetail = response.unwrap()
+                
                 
                 leaderboard_title = f"{metric.name.replace('_', ' ').title()}"
                 
                 leaderboard_rows = []
                 sorted_players = sorted(
-                    result_data.get('participants', []),
-                    key=lambda p: p.get('progress', {}).get('gained', 0),
+                    competition_details.participants,
+                    key=lambda p: p.progress.gained,
                     reverse=True
                 )
 
                 for i, participant in enumerate(sorted_players):
-                    player_data = participant.get('player', {})
-                    progress_data = participant.get('progress', {})
-
-                    rsn = player_data.get('displayName') or player_data.get('username', 'N/A')
-                    value = progress_data.get('gained', 0)
+                    rsn = participant.player.display_name or participant.player.username
                     
-                    profile_username = player_data.get('username')
+                    try:
+                        value = int(participant.progress.gained)
+                    except (ValueError, TypeError):
+                        logger.warning(f"Could not convert 'gained' value '{participant.progress.gained}' to int for player {rsn}.")
+                        value = 0
+                    
+                    profile_username = participant.player.username
                     profile_link = f"https://wiseoldman.net/players/{profile_username}" if profile_username else "#"
                     
-                    icon_link = foundry_link if result_data.get("teamName") == "Iron Foundry" else clad_link
+
+                    player_icon_link = ""
+                    if participant.team_name == "Iron Foundry":
+                        player_icon_link = foundry_link
+                    elif participant.team_name == "Ironclad":
+                        player_icon_link = clad_link
 
                     leaderboard_rows.append({
                         "index": i + 1,
                         "rsn": rsn,
                         "value": value,
                         "profile_link": profile_link,
-                        "icon_link": icon_link
+                        "icon_link": player_icon_link
                     })
                 
                 competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}?preview={metric.name.lower()}"
@@ -112,7 +123,7 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
                     "data": leaderboard_rows
                 })
             else:
-                logger.error(f"Failed to fetch {metric.name} competition details from WOM: {response.error_message}")
+                logger.error(f"Failed to fetch {metric.name} competition details from WOM (is_ok=False): {response.error_message}")
             
             await asyncio.sleep(5)
 
@@ -135,6 +146,7 @@ def find_milestone_doc_sync(template_doc: Dict[str, Any], category: str, metric_
     return None
 
 @app.get("/leaderboards")
+@cached(leaderboards_cache)
 async def get_combined_leaderboards():
     """
     Combines leaderboard data from various sources (e.g., Wiseoldman, MongoDB)
