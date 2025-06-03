@@ -40,19 +40,19 @@ const columnWidths = {
   <div
     class="bg-dc-accent p-1 sm:p-2 rounded-xl shadow-xl w-full max-w-[13rem] sm:max-w-[15rem] md:max-w-[17rem] lg:max-w-[19rem] xl:max-w-[21rem] 2xl:max-w-[23rem] flex flex-col"
   >
-    v-if="metricPage" :href="metricPage"
-    <a
-      target="_blank"
-      rel="noopener noreferrer"
-      class="ml-0.5 text-[0.6rem] sm:text-xs align-middle"
-    >
-      <h2
-        class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 text-center truncate"
+<h2 class="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl font-bold text-white mb-1 sm:mb-2 text-center">
+      <a
+        v-if="metricPage"
+        :href="metricPage"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="block text-white hover:text-blue-400 hover:underline transition-colors duration-200 truncate"
+        title="View on Wise Old Man"
       >
-        {{ title }}
+        <span class="truncate">{{ title }}</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-3 w-3 sm:h-4 sm:w-4 inline-block"
+          class="h-3 sm:h-4 w-4 ml-0.5 inline-block align-text-bottom flex-shrink-0"
           viewBox="0 0 20 20"
           fill="currentColor"
         >
@@ -63,8 +63,9 @@ const columnWidths = {
             d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"
           />
         </svg>
-      </h2>
-    </a>
+      </a>
+      <span v-else class="truncate">{{ title }}</span>
+    </h2>
 
     <div class="flex-grow">
       <table class="min-w-full divide-y divide-gray-700 table-fixed">
