@@ -78,93 +78,76 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 async def _get_wom_leaderboards_data_helper() -> List[Dict]:
-    """
-    Fetches competition CSV data using wom_client.competitions.get_details_csv(),
-    parses it with pandas, and formats it into the frontend's expected leaderboard structure.
-    This version directly incorporates the working pandas script's pattern.
-    """
     CSV_COLUMN_USERNAME = 'Username'
     CSV_COLUMN_TEAM = 'Team'
     CSV_COLUMN_GAINED = 'Gained'
     logger.info("Fetching Wiseoldman competition CSV data using wom_client and parsing with pandas.")
     competition_id = 90513
     
-    metric_enum = Metric.Overall
-    metric_value_str = metric_enum.value 
+    metrics = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value, Metric.ClueScrollsAll.value]
+
 
     wom_leaderboards: List[Dict] = []
 
     try:
         current_wom_client: wom.Client = app.state.wom_client
-
-        logger.info(f"Fetching data for metric: {metric_value_str} from WOM CSV endpoint.")
-        
-        response: wom.Result = await current_wom_client.competitions.get_details_csv(
-            id=competition_id, metric=metric_value_str # type: ignore
-        )
-
-        if response.is_ok:
-            csv_content: str = response.unwrap() # Get the raw CSV string
+        for metric in metrics:
+            logger.info(f"Fetching data for metric: {metric} from WOM CSV endpoint.")
             
-            df = pd.read_csv(io.StringIO(csv_content))
-            
-            if df.empty:
-                logger.warning("No data found in the CSV from WOM.")
-                return wom_leaderboards
+            response: wom.Result = await current_wom_client.competitions.get_details_csv(
+                id=competition_id, metric=metric # type: ignore
+            )
 
-            # Ensure 'Gained' column is numeric (float is safe for 'number' in frontend)
-            df[CSV_COLUMN_GAINED] = pd.to_numeric(df[CSV_COLUMN_GAINED], errors='coerce').fillna(0).astype(float)
-            
-            logger.info(f"Successfully parsed {len(df)} rows from WOM CSV using pandas.")
-
-            leaderboard_title = f"WOM - {metric_enum.name.replace('_', ' ').title()} Gained (CSV)"
-            
-            leaderboard_rows = []
-            
-            # Sort the DataFrame directly by the 'Gained' column before iterating
-            # This is more efficient than sorting a list of dicts later.
-            sorted_df = df.sort_values(by=CSV_COLUMN_GAINED, ascending=False)
-
-            # Iterate over rows and explicitly construct the dictionary for each
-            for i, row in enumerate(sorted_df.itertuples(index=False)): # itertuples is generally faster than iterrows
-                # Access data using attribute-like access (e.g., row.Username) or by name
-                # We'll use get() to be safe if a column might be missing, or direct access if guaranteed
-                # For `itertuples`, columns are accessed by attribute name, not dict key
+            if response.is_ok:
+                csv_content: str = response.unwrap()
                 
-                # Check for column existence and provide default if missing from the row object
-                # Use .get() method on the namedtuple-like object if it supports it, or check hasattr
-                rsn = getattr(row, CSV_COLUMN_USERNAME, 'N/A')
-                value = getattr(row, CSV_COLUMN_GAINED, 0.0) # Will be float from pandas processing
-                team_name = getattr(row, CSV_COLUMN_TEAM, None)
+                df = pd.read_csv(io.StringIO(csv_content))
                 
-                profile_username_encoded = str(rsn).replace(' ', '%20')
-                profile_link = f"https://wiseoldman.net/players/{profile_username_encoded}"
+                df[CSV_COLUMN_GAINED] = pd.to_numeric(df[CSV_COLUMN_GAINED], errors='coerce').fillna(0).astype(float)
                 
-                player_icon_link = ""
-                if team_name == "Iron Foundry":
-                    player_icon_link = foundry_link
-                elif team_name == "Ironclad":
-                    player_icon_link = clad_link
+                logger.info(f"Successfully parsed {len(df)} rows from WOM CSV using pandas.")
 
-                leaderboard_rows.append({
-                    "index": i + 1,
-                    "rsn": rsn,
-                    "value": value,
-                    "profile_link": profile_link,
-                    "icon_link": player_icon_link
+                leaderboard_title = f"{metric.replace('_', ' ').title()}"
+                
+                leaderboard_rows = []
+                
+
+                sorted_df = df.sort_values(by=CSV_COLUMN_GAINED, ascending=False)
+
+
+                for i, row in enumerate(sorted_df.itertuples(index=False)): 
+                    rsn = getattr(row, CSV_COLUMN_USERNAME, 'N/A')
+                    value = getattr(row, CSV_COLUMN_GAINED, 0.0)
+                    team_name = getattr(row, CSV_COLUMN_TEAM, None)
+                    
+                    profile_username_encoded = str(rsn).replace(' ', '%20')
+                    profile_link = f"https://wiseoldman.net/players/{profile_username_encoded}"
+                    
+                    player_icon_link = ""
+                    if team_name == "Iron Foundry":
+                        player_icon_link = foundry_link
+                    elif team_name == "Ironclad":
+                        player_icon_link = clad_link
+
+                    leaderboard_rows.append({
+                        "index": i + 1,
+                        "rsn": rsn,
+                        "value": value,
+                        "profile_link": profile_link,
+                        "icon_link": player_icon_link
+                    })
+                
+                competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
+                
+                wom_leaderboards.append({
+                    "title": leaderboard_title,
+                    "metric_page": competition_page_url,
+                    "data": leaderboard_rows
                 })
+            else:
+                logger.error(f"Failed to fetch {metric} competition details from WOM CSV (is_ok=False): {response.error_message}")
             
-            competition_page_url = f"https://wiseoldman.net/competitions/{competition_id}"
-            
-            wom_leaderboards.append({
-                "title": leaderboard_title,
-                "metric_page": competition_page_url,
-                "data": leaderboard_rows
-            })
-        else:
-            logger.error(f"Failed to fetch {metric_value_str} competition details from WOM CSV (is_ok=False): {response.error_message}")
-        
-        await asyncio.sleep(5)
+            await asyncio.sleep(5)
 
         return wom_leaderboards
 
