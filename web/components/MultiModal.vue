@@ -10,7 +10,7 @@
                 <div class="text-sm">Miscellaneous has some special Frenzy's that are explicitly shown in this list.</div>
             </div>
           <div v-for="(multiplier, index) in multipliers" :key="index" class="border-b w-full border-dc-accent pb-4 mb-4 last:border-b-0 last:mb-0">
-            <div class="font-bold text-white">{{ multiplier.name }}</div>
+            <div class="font-bold text-white">{{index + ". " + multiplier.name }}</div>
             <div class="text-md text-gray-300 mb-2">{{ multiplier.description }}</div>
             <div class="text-md text-white">Factor: {{ multiplier.factor }}x</div>
             <div class="text-md text-white">Unlocked:
