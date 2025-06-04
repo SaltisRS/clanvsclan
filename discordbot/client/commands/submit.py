@@ -157,8 +157,7 @@ async def get_clan_from_roles(interaction: discord.Interaction):
     return None
 
 
-    
-async def find_item_in_template_doc(template_doc: Dict[str, Any], tier_name: str, source_name: str, item_name: str) -> Optional[Dict[str, Any]]:
+async def _template_find_helper(template_doc: Dict[str, Any], tier_name: str, source_name: str, item_name: str) -> Optional[Dict[str, Any]]:
     """Finds an item's data within a loaded template document."""
     if not template_doc:
         return None
@@ -176,56 +175,8 @@ async def find_item_in_template_doc(template_doc: Dict[str, Any], tier_name: str
                     return {"item": item_data, "source": source_data, "tier": tier_data, "tier_name": tier_name}
     return None
 
-def calculate_points_gained_from_this_submission(
-    item_template_data: Dict[str, Any],
-    old_obtained_count: int, # obtained count BEFORE this submission
-    new_obtained_count: int  # obtained count AFTER this submission (old_obtained_count + 1)
-) -> float:
-    """
-    Calculates points gained from THIS specific submission,
-    considering unique, half-unique, and one-time duplicate set points,
-    without relying on database flags for awarded points.
-    """
-    points_gained_now = 0.0
-    base_points = float(item_template_data.get("points", 0))
-    duplicate_item_points = float(item_template_data.get("duplicate_points", 0))
-    unique_required = int(item_template_data.get("required", 1))
-    # How many additional items are needed for the first duplicate set after unique
-    duplicate_items_for_set = int(item_template_data.get("duplicate_required", 1))
 
-    if unique_required <= 0: unique_required = 1
-    if duplicate_items_for_set <= 0: duplicate_items_for_set = 1
-
-    half_unique_threshold = math.ceil(unique_required / 2)
-    unique_threshold = unique_required
-    first_duplicate_set_threshold = unique_required + duplicate_items_for_set
-
-    # Check for Half Unique Points
-    # Awarded if this submission crosses the half_unique_threshold but not yet the unique_threshold
-    if old_obtained_count < half_unique_threshold and new_obtained_count >= half_unique_threshold:
-        points_gained_now += base_points / 2
-        logger.debug(f"Awarding half unique points for {item_template_data['name']}")
-
-    # Check for Full Unique Points
-    # Awarded if this submission crosses the unique_threshold
-    if old_obtained_count < unique_threshold and new_obtained_count >= unique_threshold:
-        # If half points were just awarded in this same transaction, only add the remaining half
-        if new_obtained_count >= half_unique_threshold and old_obtained_count < half_unique_threshold : # Check if half was just crossed
-            points_gained_now += base_points / 2 # Add the other half
-        else: # Otherwise, if half was crossed previously or not applicable, award full points
-            points_gained_now += base_points
-        logger.debug(f"Awarding full unique points for {item_template_data['name']}")
-
-
-    # Check for First Duplicate Set Points
-    # Awarded if this submission crosses the first_duplicate_set_threshold
-    if old_obtained_count < first_duplicate_set_threshold and new_obtained_count >= first_duplicate_set_threshold:
-        points_gained_now += duplicate_item_points
-        logger.debug(f"Awarding first duplicate set points for {item_template_data['name']}")
-
-    return points_gained_now
-
-async def check_and_unlock_clan_multipliers_template(template_doc: Dict[str, Any], template_doc_before_submission: Dict[str, Any]):
+async def _template_unlock_multi(template_doc: Dict[str, Any], template_doc_before_submission: Dict[str, Any]):
     """
     Checks if any clan multipliers should be unlocked based on the template's
     item obtained counts and updates the template document if so.
@@ -279,8 +230,21 @@ async def check_and_unlock_clan_multipliers_template(template_doc: Dict[str, Any
 
     return newly_unlocked_multipliers
 
+def _player_calculate_helper(item_data: Dict[str, Any]) -> float:
+    """
+    Calculates points for an item by awarding its base_points for EACH instance obtained.
+    Ignores unique/duplicate thresholds; assumes base_points is per-instance.
+    """
+    total_item_points = 0.0
+    current_obtained = int(item_data.get("obtained", 0))
+    base_points = float(item_data.get("points", 0))
 
-def get_total_points_for_item_no_flags(item_data: Dict[str, Any]) -> float:
+    # Points are awarded for each instance obtained
+    total_item_points = current_obtained * base_points
+
+    return total_item_points
+
+def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     """
     Calculates the total points an item should contribute based on its current 'obtained' count,
     without relying on database flags.
@@ -380,7 +344,7 @@ class SubmissionView(discord.ui.View):
         return new_obtained_count
 
 
-    def calculate_total_template_points(self, template_doc: Dict[str, Any]) -> float:
+    def _template_calculate_points(self, template_doc: Dict[str, Any]) -> float:
         """
         Calculates the total potential points for the template based on
         current obtained counts and unlocked multipliers.
@@ -403,7 +367,7 @@ class SubmissionView(discord.ui.View):
 
                 for i_data in s_data.get("items", []):
                     # Calculate base item points first
-                    item_total_points_base = get_total_points_for_item_no_flags(i_data)
+                    item_total_points_base = _template_calculate_helper(i_data)
                     if template_doc["associated_team"] == "ironclad":
                         item_total_points_base *= 1.12
 
@@ -421,15 +385,78 @@ class SubmissionView(discord.ui.View):
         logger.info(f"Template: Recalculated total_gained to {total_template_points:.2f} for clan '{template_doc.get('associated_team')}'.")
         return total_template_points
 
+    async def _player_calulate_from_items(self,
+    player_document: Dict[str, Any],
+    template_document: Dict[str, Any]
+) -> float:
+        """
+        Calculates a player's total points based on their obtained items,
+        applying applicable UNLOCKED clan multipliers and source-based multipliers.
 
-    async def _update_player_data(self, player_document: Dict[str, Any], points_gained_this_submission: float, new_obtained_count_template: int):
-        """Updates the player's total points and their obtained items record."""
-        player_document["total_gained"] = float(player_document.get("total_gained", 0.0)) + points_gained_this_submission
-        logger.info(f"Player {self.submitter_id}: Updated total_gained to {player_document['total_gained']}.")
+        Args:
+            player_document: The player's document from the database.
+            template_document: The clan's template document from the database.
 
+        Returns:
+            The calculated total points for the player.
+        """
+        if not player_document or not template_document:
+            logger.error("Player or template document is missing for player total points calculation.")
+            return 0.0
+
+        player_total_points = 0.0
+        player_clan = player_document.get("clan")
+        player_obtained_items = player_document.get("obtained_items", {})
+
+        clan_multipliers = template_document.get("multipliers", [])
+        unlocked_clan_multipliers = [
+            m for m in clan_multipliers if m.get("unlocked", False)
+        ]
+        logger.debug(f"Unlocked clan multipliers for {player_clan}: {[m['name'] for m in unlocked_clan_multipliers]}")
+
+
+        for item_key, obtained_count_player in player_obtained_items.items():
+            if not isinstance(item_key, str) or not isinstance(obtained_count_player, int) or obtained_count_player <= 0:
+                logger.warning(f"Malformed obtained_item entry for player {player_document.get('discord_id')}: {item_key}: {obtained_count_player}. Skipping.")
+                continue
+
+            parts = item_key.split('.')
+            if len(parts) != 3:
+                logger.warning(f"Invalid item_key format '{item_key}' for player {player_document.get('discord_id')}. Skipping.")
+                continue
+            tier_name, source_name, item_name = parts
+
+            item_info = await _template_find_helper(template_document, tier_name, source_name, item_name)
+            if not item_info or "item" not in item_info:
+                logger.warning(f"Item template data not found for item key '{item_key}' in template for clan '{player_clan}'. Skipping.")
+                continue
+            item_template_data = item_info["item"]
+
+
+            temp_item_data_for_calculation = item_template_data.copy()
+            temp_item_data_for_calculation["obtained"] = obtained_count_player
+
+
+            item_base_contribution = _player_calculate_helper(temp_item_data_for_calculation)
+
+            effective_unlocked_multiplier_factor = 1.0
+            for multiplier_data in unlocked_clan_multipliers:
+                if does_multiplier_affect_source(multiplier_data, source_name):
+                    factor = float(multiplier_data.get("factor", 1.0))
+                    effective_unlocked_multiplier_factor *= factor
+                    logger.debug(f"Applying unlocked multiplier '{multiplier_data.get('name')}' ({factor}x) to {item_key}")
+
+            item_total_contribution = item_base_contribution * effective_unlocked_multiplier_factor
+
+            player_total_points += item_total_contribution
+            logger.debug(f"Item '{item_key}' contributed {item_total_contribution:.2f} points. Total so far: {player_total_points:.2f}")
+
+        return player_total_points
+
+    async def _player_obtained_count(self, player_document: Dict[str, Any], points_gained_this_submission: float, new_obtained_count_template: int):
         player_obtained_items = player_document.get("obtained_items", {})
         item_key = f"{self.tier_name}.{self.source_name}.{self.item_name}"
-        player_obtained_items[item_key] = player_obtained_items.get(item_key, 0) + 1 # Increment player's count for this item
+        player_obtained_items[item_key] = player_obtained_items.get(item_key, 0) + 1 
         player_document["obtained_items"] = player_obtained_items
         logger.debug(f"Player {self.submitter_id}: Updated obtained_items for '{item_key}' to count {player_obtained_items[item_key]}.")
 
@@ -437,12 +464,99 @@ class SubmissionView(discord.ui.View):
         if "submissions" not in player_document: player_document["submissions"] = []
         player_document["submissions"].append({
             "item": self.item_name, "source": self.source_name, "tier": self.tier_name,
-            "status": "accepted", "accepted_by": self.original_interaction_id, # Or interaction.user.id if interaction is passed
+            "status": "accepted", "accepted_by": self.original_interaction_id,
             "timestamp": discord.utils.utcnow(), "points_awarded": points_gained_this_submission
         })
 
 
-    async def _send_acceptance_feedback(self, interaction: discord.Interaction, button: discord.ui.Button, points_gained: float, player_total_points: float):
+    async def _player_recalculate_all(self):
+        """
+        Recalculates the total_gained points for ALL players in the database
+        based on their obtained_items and the latest UNLOCKED clan multipliers.
+        Updates each player's document in the database.
+
+        This function is intended for periodic execution, not on every submission.
+        """
+        logger.info("Starting recalculation of all player points and database update.")
+
+        template_docs = {}
+        try:
+            if_template_doc = await if_coll.find_one({})
+            if if_template_doc:
+                template_docs["ironfoundry"] = if_template_doc
+            else:
+                logger.warning("Ironfoundry template document not found.")
+
+            ic_template_doc = await ic_coll.find_one({})
+            if ic_template_doc:
+                template_docs["ironclad"] = ic_template_doc
+            else:
+                logger.warning("Ironclad template document not found.")
+
+        except Exception as e:
+            logger.error(f"Error fetching template documents for global recalculation: {e}", exc_info=True)
+            return 
+
+        if not template_docs:
+            logger.warning("No template documents loaded. Skipping global player points recalculation.")
+            return
+
+
+        all_players_cursor = player_coll.find({})
+        all_players = await all_players_cursor.to_list(length=None)
+        logger.info(f"Fetched {len(all_players)} players for global recalculation.")
+
+        players_updated_count = 0
+        errors_count = 0
+
+        for player_doc in all_players:
+            player_id = player_doc.get("_id")
+            discord_id = player_doc.get("discord_id")
+            player_clan = player_doc.get("clan")
+
+            if not player_clan or player_clan not in template_docs:
+                logger.warning(f"Player {discord_id} has invalid/unknown clan '{player_clan}'. Skipping point recalculation for this player.")
+                errors_count += 1
+                continue
+
+            current_template = template_docs[player_clan]
+
+            try:
+                new_player_total_gained_unrounded = await self._player_calulate_from_items(
+                    player_doc,
+                    current_template
+                )
+
+                new_player_total_gained = round(new_player_total_gained_unrounded, 2)
+                
+                if not player_doc["total_gained"]:
+                    player_doc["total_gained"] = 0.0
+
+                old_player_total_gained = float(player_doc.get("total_gained", 0.0))
+
+                if new_player_total_gained != old_player_total_gained:
+                    player_doc["total_gained"] = new_player_total_gained
+
+                    update_result = await player_coll.replace_one({"_id": player_id}, player_doc)
+
+                    if update_result.modified_count > 0:
+                        logger.debug(f"Player {discord_id} total_gained updated from {old_player_total_gained:.2f} to {new_player_total_gained:.2f}.")
+                        players_updated_count += 1
+                    else:
+                        logger.warning(f"Player {discord_id} total_gained acknowledged but modified_count was 0. Value might have been same.")
+                else:
+                    logger.debug(f"Player {discord_id} total_gained unchanged: {new_player_total_gained:.2f}.")
+
+            except Exception as e:
+                logger.error(f"Error recalculating or updating points for player {discord_id} ({player_id}): {e}", exc_info=True)
+                errors_count += 1
+
+        logger.info(f"Finished global player points recalculation.")
+        logger.info(f"Players checked: {len(all_players)}, Players updated: {players_updated_count}, Errors: {errors_count}")
+
+
+
+    async def _submit_construct_message(self, interaction: discord.Interaction, button: discord.ui.Button, points_gained: float, player_total_points: float):
         """Sends feedback messages and disables buttons."""
         button.disabled = True
         button.label = "Accepted"
@@ -452,16 +566,13 @@ class SubmissionView(discord.ui.View):
         await interaction.message.edit(view=self) # type: ignore
 
         await interaction.followup.send(
-            f"Submission for '{self.item_name}' by <@{self.submitter_id}> accepted by {interaction.user.mention}.\n"
-            f"Points Gained from this submission: {points_gained:.2f}\n"
-            f"Submitter's New Total Points: {player_total_points:.2f}\n"
-            f"Sometimes a visual bug occurs that causes 0 points to be displayed, this still applies properly to website!",
+            f"Submission for '{self.item_name}' by <@{self.submitter_id}> accepted by {interaction.user.mention}.",
             ephemeral=True
         )
         submitter_user = interaction.client.get_user(self.submitter_id)
         if submitter_user:
             try:
-                await submitter_user.send(f"Your submission for '{self.item_name}' has been accepted! You gained {points_gained:.2f} points.")
+                await submitter_user.send(f"Your submission for '{self.item_name}' has been accepted!")
             except discord.Forbidden:
                 logger.warning(f"Could not DM submitter {self.submitter_id}.")
 
@@ -479,7 +590,7 @@ class SubmissionView(discord.ui.View):
         player_document, template_doc, template_collection = docs
 
         # 2. Find Item in Template
-        item_info = await find_item_in_template_doc(template_doc, self.tier_name, self.source_name, self.item_name)
+        item_info = await _template_find_helper(template_doc, self.tier_name, self.source_name, self.item_name)
         if not item_info:
             await interaction.followup.send(f"Error: Item '{self.item_name}' no longer found in template.", ephemeral=True)
             return
@@ -506,43 +617,29 @@ class SubmissionView(discord.ui.View):
         # 4. Update Item Obtained Count in the TEMPLATE (modifies template_doc in place)
         new_obtained_count_template = self._update_item_obtained_count(item_template_data)
 
-        # --- Start: Calculate Total Template Points BEFORE this submission ---
-        # Use the copied template state *before* the item count increment.
-        total_template_points_before = self.calculate_total_template_points(template_doc_before_submission)
-        # --- End: Calculate Total Template Points BEFORE this submission ---
+        total_template_points_before = self._template_calculate_points(template_doc_before_submission)
 
-        # --- Start: Check and Unlock Clan Multipliers (based on updated template) ---
-        # Perform this check AFTER updating the item count in the template.
-        # Pass template_doc_before_submission to identify newly unlocked ones.
-        # The template_doc is modified in place by this function if unlocks occur.
-        newly_unlocked_multiplier_names = await check_and_unlock_clan_multipliers_template(template_doc, template_doc_before_submission)
+        newly_unlocked_multiplier_names = await _template_unlock_multi(template_doc, template_doc_before_submission)
 
         if newly_unlocked_multiplier_names:
              logger.info(f"Newly unlocked multipliers in this submission: {', '.join(newly_unlocked_multiplier_names)}")
-        # --- End: Check and Unlock Clan Multipliers ---
 
-        # --- Start: Recalculate Total Template Points AFTER this submission and unlock checks ---
-        # Use the now potentially modified template_doc
-        total_template_points_after = self.calculate_total_template_points(template_doc)
-        # --- End: Recalculate Total Template Points AFTER this submission and unlock checks ---
-
-        # --- Start: Calculate Points Gained from THIS Submission ---
-        # Points gained by the player is the difference in the clan's total points
+        total_template_points_after = self._template_calculate_points(template_doc)
         points_gained_this_submission = total_template_points_after - total_template_points_before
         logger.info(f"Points gained from this submission calculated based on template change: {points_gained_this_submission:.2f}")
-        # --- End: Calculate Points Gained from THIS Submission ---
 
 
-        # 7. Update Player Data
-        await self._update_player_data(player_document, points_gained_this_submission, new_obtained_count_template)
 
-        # 8. Save Changes to DB
+        # 5. Update Player Data
+        await self._player_obtained_count(player_document, points_gained_this_submission, new_obtained_count_template)
+
+        # 6. Save Changes to DB
         template_replace_result = await template_collection.replace_one({"_id": template_doc["_id"]}, template_doc)
         player_update_result = await player_coll.replace_one({"_id": player_document["_id"]}, player_document)
 
-        # 9. Send Feedback
+        # 7. Send Feedback
         if template_replace_result.acknowledged and player_update_result.acknowledged:
-            await self._send_acceptance_feedback(interaction, button, points_gained_this_submission, player_document["total_gained"])
+            await self._submit_construct_message(interaction, button, points_gained_this_submission, player_document["total_gained"])
             # Optional: Add information about newly unlocked multipliers to the feedback message
             if newly_unlocked_multiplier_names:
                  unlock_message = f"\n🎉 **Multipliers Unlocked:** {', '.join(newly_unlocked_multiplier_names)} 🎉"
@@ -557,6 +654,9 @@ class SubmissionView(discord.ui.View):
         else:
             await interaction.followup.send("Error: Failed to save updates to the database.", ephemeral=True)
             logger.error(f"DB save acknowledged status: Template={template_replace_result.acknowledged}, Player={player_update_result.acknowledged}")
+        
+        # 8. Recalculate Player points (leaderboards)
+        await self._player_recalculate_all()
 
 
     
@@ -575,21 +675,20 @@ class SubmissionView(discord.ui.View):
                 logger.warning(f"Could not DM submitter {self.submitter_id}.")
     
 async def build_submission_embed(
-    interaction: discord.Interaction, # Pass the original interaction for user info
+    interaction: discord.Interaction,
     item_data: Dict[str, Any],
     source_data: Dict[str, Any],
     tier_name: str,
     screenshot: discord.Attachment
 ) -> discord.Embed:
-    """Builds the embed for submitting an item for review."""
     embed = Embed(
         title=item_data.get("name", "Unnamed Item")
     )
-    embed.set_thumbnail(url=item_data.get('icon_url')) # Use item icon for thumbnail
+    embed.set_thumbnail(url=item_data.get('icon_url'))
     embed.set_footer(text=f"Submitted by: {interaction.user.display_name} ({interaction.user.name})") # Use display_name
     embed.add_field(name="Source", value=f"**{source_data.get('name', 'Unnamed Source')}** ({tier_name})", inline=True)
     embed.add_field(name="Points Value", value=f"**{item_data.get('points', 'N/A')}**", inline=True)
-    embed.set_image(url=screenshot.url) # Screenshot as main image
+    embed.set_image(url=screenshot.url)
     return embed
     
     
@@ -603,7 +702,6 @@ async def submit(
     item: str,
     screenshot: discord.Attachment
 ):
-    # ... (initial logging and defer as before) ...
     logger.info(f"Received submission from {interaction.user.id} ({interaction.user.name}) for Item: '{item}' (Source: '{source}', Tier: '{tier}') with screenshots.")
     await interaction.response.defer()
 
@@ -618,13 +716,12 @@ async def submit(
             await interaction.followup.send("Could not determine your clan's template. Please contact an admin.", ephemeral=True)
             return
 
-        # Fetch template once to pass to find_item_in_template_doc
         template_doc_for_find = await template_collection.find_one({})
         if not template_doc_for_find:
             await interaction.followup.send(f"Template for clan '{player_clan}' not found.", ephemeral=True)
             return
 
-        found_item_info = await find_item_in_template_doc(template_doc_for_find, tier, source, item)
+        found_item_info = await _template_find_helper(template_doc_for_find, tier, source, item)
 
         if not found_item_info:
             await interaction.followup.send(f"Item '{item}' not found in source '{source}' ({tier}) in your clan's template. Please check the spelling or contact an admin if this is an error.", ephemeral=True)
@@ -635,7 +732,7 @@ async def submit(
             submitter_id=interaction.user.id,
             original_interaction_id=interaction.id,
             clan_of_submission=player_clan,
-            tier_name=tier, # Use the tier from the command
+            tier_name=tier,
             source_name=source,
             item_name=item
         )
@@ -694,11 +791,9 @@ async def precheck(
         array_filters = None
 
         if action == "Start":
-            # Rule: Start can only be set if NO entry for this content exists.
             if existing_entry is not None:
                 feedback_message = f"A tracking entry for **{content}** already exists. Start can only be set once."
             else:
-                # Create a brand new entry with start data
                 new_entry = {
                     "name": content,
                     "start": url,
@@ -710,7 +805,6 @@ async def precheck(
                 update_successful = True
 
         elif action == "End":
-            # End requires a start entry to exist. End can be set/updated multiple times.
             if existing_entry is None or existing_entry.get("start") is None:
                  feedback_message = f"You must upload a **Start** screenshot for **{content}** before setting an End screenshot."
             else:
@@ -727,8 +821,6 @@ async def precheck(
 
         if db_update_operation:
             try:
-                # $push operation does not use array_filters
-                # $set with arrayFilters uses array_filters
                 update_result = await player_coll.update_one(
                     {"_id": player_data["_id"]},
                     db_update_operation,
@@ -779,7 +871,6 @@ async def tracking(
 ):
     logger.info(f"Received /set_count {action} from {interaction.user.id} ({interaction.user.name}) for Activity: '{activity}' with screenshot.")
 
-    # Validate activity using the map keys
     if activity not in ACTIVITY_MODAL_MAP:
          await interaction.followup.send(f"'{activity}' is not a recognized trackable activity.", ephemeral=True)
          logger.warning(f"Player {interaction.user.id} submitted unknown activity: {activity}")
