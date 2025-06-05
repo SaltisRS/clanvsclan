@@ -180,7 +180,20 @@ async def _get_wom_leaderboards_data_helper() -> List[Dict]:
     logger.info("Fetching Wiseoldman competition CSV data using wom_client and parsing with pandas.")
     competition_id = 90513
     
-    metrics = [Metric.Overall.value, Metric.Ehb.value, Metric.Ehp.value, Metric.ClueScrollsAll.value, Metric.TombsOfAmascutExpert.value, Metric.ChambersOfXeric.value, Metric.TheatreOfBlood.value, Metric.TheCorruptedGauntlet.value]
+    metrics = [Metric.Overall.value, 
+               Metric.Ehb.value, 
+               Metric.Ehp.value, 
+               Metric.ClueScrollsAll.value, 
+               Metric.TombsOfAmascutExpert.value, 
+               Metric.ChambersOfXeric.value, 
+               Metric.TheatreOfBlood.value, 
+               Metric.TheCorruptedGauntlet.value,
+               Metric.Slayer.value,
+               Metric.BarrowsChests.value,
+               Metric.GiantMole.value,
+               Metric.Yama.value,
+               Metric.CollectionsLogged.value
+               ]
 
 
     wom_leaderboards: List[Dict] = []
