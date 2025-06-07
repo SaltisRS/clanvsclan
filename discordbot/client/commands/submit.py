@@ -368,7 +368,7 @@ class SubmissionView(discord.ui.View):
                 for i_data in s_data.get("items", []):
                     item_total_points_base = _template_calculate_helper(i_data)
                     if template_doc["associated_team"] == "ironclad":
-                        item_total_points_base *= 1.1
+                        item_total_points_base *= 1.12
 
                     # Apply the effective multiplier
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
@@ -1010,8 +1010,6 @@ async def list_source_multipliers(interaction: discord.Interaction, clan: str):
                 inline=False
             )
 
-
-    embed.set_footer(text="Only UNLOCKED multipliers are applied. Base team multipliers (e.g., Ironclad 1.4x) are not shown here.")
     embed.set_author(name=interaction.guild.name if interaction.guild else "Server")
 
     await interaction.followup.send(embed=embed)
