@@ -366,10 +366,9 @@ class SubmissionView(discord.ui.View):
 
 
                 for i_data in s_data.get("items", []):
-                    # Calculate base item points first
                     item_total_points_base = _template_calculate_helper(i_data)
                     if template_doc["associated_team"] == "ironclad":
-                        item_total_points_base *= 1.12
+                        item_total_points_base *= 1.1
 
                     # Apply the effective multiplier
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
@@ -903,6 +902,119 @@ async def tracking(
     except Exception as e:
         logger.info(e)
         await interaction.response.send_message(e)
+        
+        
+@app_commands.command(name="list_source_multipliers", description="Lists effective multipliers for each source for a given clan.")
+@app_commands.describe(clan="The clan to check multipliers for (Ironfoundry or Ironclad).")
+@app_commands.choices(clan=[
+    app_commands.Choice(name="Ironfoundry", value="ironfoundry"),
+    app_commands.Choice(name="Ironclad", value="ironclad"),
+])
+async def list_source_multipliers(interaction: discord.Interaction, clan: str):
+    logger.info(f"Received /list_source_multipliers for clan '{clan}' from {interaction.user.id}")
+    await interaction.response.defer()
+
+    template_collection = get_template_collection(clan)
+    if template_collection is None:
+        logger.error(f"Could not get template collection for clan '{clan}'.")
+        await interaction.followup.send(f"Error: Could not find template data for clan '{clan}'.", ephemeral=True)
+        return
+
+    template_doc = await template_collection.find_one({})
+    if not template_doc:
+        logger.error(f"Template document not found for clan '{clan}'.")
+        await interaction.followup.send(f"Error: Template document for clan '{clan}' is missing.", ephemeral=True)
+        return
+
+    clan_multipliers = template_doc.get("multipliers", [])
+    unlocked_clan_multipliers = [
+        m for m in clan_multipliers if isinstance(m, dict) and m.get("unlocked", False)
+    ]
+    logger.debug(f"Unlocked clan multipliers for {clan}: {[m.get('name', 'Unnamed') for m in unlocked_clan_multipliers]}")
+
+
+    source_multipliers_info: Dict[str, Dict[str, Any]] = {}
+
+    tiers = template_doc.get("tiers", {})
+    if isinstance(tiers, dict):
+        for t_name, t_data in tiers.items():
+            if isinstance(t_data, dict):
+                sources = t_data.get("sources", [])
+                if isinstance(sources, list):
+                    for s_data in sources:
+                        if isinstance(s_data, dict):
+                            source_name = s_data.get("name")
+                            if source_name:
+                                effective_multiplier_factor = 1.0
+                                applied_multiplier_names = []
+
+                                for multiplier_data in unlocked_clan_multipliers:
+                                    if does_multiplier_affect_source(multiplier_data, source_name):
+                                        factor = float(multiplier_data.get("factor", 1.0))
+                                        effective_multiplier_factor *= factor
+                                        applied_multiplier_names.append(multiplier_data.get("name", "Unnamed"))
+
+                                source_multipliers_info[source_name] = {
+                                    "factor": round(effective_multiplier_factor, 2),
+                                    "applied_by": applied_multiplier_names
+                                }
+                            else:
+                                logger.warning(f"Source data in tier '{t_name}' is missing 'name'. Skipping.")
+                        else:
+                            logger.warning(f"Invalid source data in tier '{t_name}' (not a dict). Skipping.")
+                else:
+                    logger.warning(f"Sources field in tier '{t_name}' is not a list. Skipping.")
+            else:
+                logger.warning(f"Tier data for '{t_name}' is not a dict. Skipping.")
+    else:
+        logger.warning("Template 'tiers' field is not a dictionary. Cannot calculate source multipliers.")
+
+
+    embed = Embed(
+        title=f"Effective Source Multipliers for {clan.title()}",
+        description="This shows the combined multiplier applied to points gained from each source, based on currently **unlocked** clan multipliers.",
+        color=discord.Color.blue()
+    )
+
+    if not source_multipliers_info:
+        embed.add_field(name="No Sources Found", value="Could not find any sources in the template, or no multipliers calculated.", inline=False)
+    else:
+        sorted_source_names = sorted(source_multipliers_info.keys())
+        
+        current_field_value = ""
+        field_count = 0
+        
+        for source_name in sorted_source_names:
+            info = source_multipliers_info[source_name]
+            multiplier_text = f"**{info['factor']}x**"
+            if info['applied_by']:
+                multiplier_text += f" (by: {', '.join(info['applied_by'])})"
+            
+            line = f"- {source_name}: {multiplier_text}\n"
+            
+            if len(current_field_value) + len(line) > 1000:
+                embed.add_field(
+                    name=f"Source Multipliers ({field_count + 1})",
+                    value=current_field_value,
+                    inline=False
+                )
+                current_field_value = line
+                field_count += 1
+            else:
+                current_field_value += line
+        
+        if current_field_value:
+            embed.add_field(
+                name=f"Source Multipliers ({field_count + 1})" if field_count > 0 else "Source Multipliers",
+                value=current_field_value,
+                inline=False
+            )
+
+
+    embed.set_footer(text="Only UNLOCKED multipliers are applied. Base team multipliers (e.g., Ironclad 1.4x) are not shown here.")
+    embed.set_author(name=interaction.guild.name if interaction.guild else "Server")
+
+    await interaction.followup.send(embed=embed)
 
     
 def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
@@ -915,6 +1027,7 @@ def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     ic_coll = db["ironclad"]
     template_coll = db["Templates"]
     player_coll = db["Players"]
+    client.tree.add_command(list_source_multipliers, guild=client.selected_guild)
     client.tree.add_command(tracking, guild=client.selected_guild)
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
