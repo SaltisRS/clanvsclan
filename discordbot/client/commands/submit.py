@@ -1074,7 +1074,7 @@ async def status(interaction: discord.Interaction):
                 # A precheck entry is "open" if 'start' exists AND 'end' is None
                 if start_url is not None and end_url is None: # Explicitly check for start and null end
                     content_name = entry["name"]
-                    open_precheck_entries.append(f"- **{content_name}** (Start URL: {start_url[:50]}...)") # Truncate URL
+                    open_precheck_entries.append(f"- **{content_name}** (Start URL: [link]({start_url})...)") # Truncate URL
                 else:
                     # Log if it's considered completed or malformed
                     if start_url is not None and end_url is not None:
