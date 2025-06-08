@@ -1013,6 +1013,108 @@ async def list_source_multipliers(interaction: discord.Interaction, clan: str):
     embed.set_author(name=interaction.guild.name if interaction.guild else "Server")
 
     await interaction.followup.send(embed=embed)
+    
+@app_commands.command(name="status", description="Shows your currently open activity tracking and precheck listings.")
+async def status(interaction: discord.Interaction):
+    logger.info(f"Received /status from {interaction.user.id} ({interaction.user.name})")
+    await interaction.response.defer(ephemeral=True) # Defer ephemerally for privacy
+
+    player_doc = await get_player_info(interaction.user.id)
+    if not player_doc:
+        await interaction.followup.send("Could not find your player data. Please contact an admin if this persists.", ephemeral=True)
+        return
+
+    open_tracking_entries: List[str] = []
+    open_precheck_entries: List[str] = []
+
+
+    tracking_entries = player_doc.get("tracking", [])
+    if isinstance(tracking_entries, list):
+        for entry in tracking_entries:
+            if isinstance(entry, dict) and entry.get("name"):
+                start_data = entry.get("start")
+                end_data = entry.get("end")
+
+                # An entry is "open" if a 'start' exists AND the 'end' object is missing OR its screenshot field is empty
+                if start_data and \
+                   (end_data is None or (isinstance(end_data, dict) and end_data.get("screenshot") == "")):
+                    
+                    activity_name = entry["name"]
+                    start_values = start_data.get("values", {})
+                    # Add sanity check for values being dict
+                    start_display = ""
+                    if isinstance(start_values, dict) and start_values:
+                         start_display = ", ".join([f"{k}: {v}" for k, v in start_values.items()])
+                    else:
+                         start_display = "No start values recorded"
+
+
+                    open_tracking_entries.append(f"- **{activity_name}** (Started with: {start_display})")
+                else:
+                    # Log if it's considered completed or malformed
+                    if start_data and end_data and isinstance(end_data, dict) and end_data.get("screenshot"):
+                        logger.debug(f"Tracking entry '{entry.get('name')}' is completed for user {interaction.user.id}.")
+                    else:
+                        logger.debug(f"Tracking entry '{entry.get('name')}' for user {interaction.user.id} not considered open (no start or malformed).")
+            else:
+                logger.warning(f"Malformed entry found in 'tracking' array for user {interaction.user.id}: {entry}")
+    else:
+        logger.warning(f"Player {interaction.user.id} has 'tracking' field that is not a list: {tracking_entries}")
+
+
+    # --- Check /precheck entries (in the 'screenshots' array) ---
+    screenshots_entries = player_doc.get("screenshots", [])
+    if isinstance(screenshots_entries, list):
+        for entry in screenshots_entries:
+            # Ensure entry is a dictionary and has a name
+            if isinstance(entry, dict) and entry.get("name"):
+                start_url = entry.get("start")
+                end_url = entry.get("end")
+
+                # A precheck entry is "open" if 'start' exists AND 'end' is None
+                if start_url is not None and end_url is None: # Explicitly check for start and null end
+                    content_name = entry["name"]
+                    open_precheck_entries.append(f"- **{content_name}** (Start URL: {start_url[:50]}...)") # Truncate URL
+                else:
+                    # Log if it's considered completed or malformed
+                    if start_url is not None and end_url is not None:
+                        logger.debug(f"Precheck entry '{entry.get('name')}' is completed for user {interaction.user.id}.")
+                    else:
+                         logger.debug(f"Precheck entry '{entry.get('name')}' for user {interaction.user.id} not considered open (no start or malformed).")
+            else:
+                logger.warning(f"Malformed entry found in 'screenshots' array for user {interaction.user.id}: {entry}")
+    else:
+        logger.warning(f"Player {interaction.user.id} has 'screenshots' field that is not a list: {screenshots_entries}")
+
+
+    # --- Build and Send Embed ---
+    embed = Embed(
+        title=f"{interaction.user.display_name}'s Open Tracking & Precheck Listings",
+        color=discord.Color.dark_purple()
+    )
+
+    # Check if there are any open entries to display
+    if not open_tracking_entries and not open_precheck_entries:
+        embed.description = "You have no active tracking or precheck listings. Use `/tracking Start` or `/precheck Start` to begin!"
+    else:
+        if open_tracking_entries:
+            embed.add_field(
+                name="📊 Open Activity Tracking (`/tracking`):",
+                value="\n".join(open_tracking_entries),
+                inline=False
+            )
+        # Only add field if there are actual entries
+        if open_precheck_entries:
+            embed.add_field(
+                name="📸 Open Screenshot Prechecks (`/precheck`):",
+                value="\n".join(open_precheck_entries),
+                inline=False
+            )
+
+    embed.set_footer(text="To complete an entry, use /tracking End or /precheck End with the respective activity/content.")
+    embed.set_thumbnail(url=interaction.user.avatar.url if interaction.user.avatar else interaction.user.default_avatar.url)
+
+    await interaction.followup.send(embed=embed)
 
     
 def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
@@ -1029,3 +1131,4 @@ def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     client.tree.add_command(tracking, guild=client.selected_guild)
     client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
+    client.tree.add_command(status, guild=client.selected_guild)
