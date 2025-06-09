@@ -173,7 +173,7 @@ ACTUAL_HEADERS = ["Rank", "Username", "Team", "Start", "End", "Gained", "Last Up
 MILSTONES_ENDPOINT = "https://frenzy.ironfoundry.cc/milestones"
 
 DELAY_BETWEEN_METRICS = 7
-CYCLE_SLEEP_TIME = 600 # Example: 10 minutes sleep between full cycles
+CYCLE_SLEEP_TIME = 300
 
 # Mapping for internal metric categories
 METRIC_CATEGORIES: Dict[wom.Metric, Literal["cluescroll", "experience", "killcount"]] = {

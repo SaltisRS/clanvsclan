@@ -1071,12 +1071,10 @@ async def status(interaction: discord.Interaction):
                 start_url = entry.get("start")
                 end_url = entry.get("end")
 
-                # A precheck entry is "open" if 'start' exists AND 'end' is None
-                if start_url is not None and end_url is None: # Explicitly check for start and null end
+                if start_url is not None and end_url is None:
                     content_name = entry["name"]
-                    open_precheck_entries.append(f"- **{content_name}** (Start URL: [link]({start_url})...)") # Truncate URL
+                    open_precheck_entries.append(f"- **{content_name}** (Start URL: [link]({start_url}))")
                 else:
-                    # Log if it's considered completed or malformed
                     if start_url is not None and end_url is not None:
                         logger.debug(f"Precheck entry '{entry.get('name')}' is completed for user {interaction.user.id}.")
                     else:
@@ -1087,13 +1085,11 @@ async def status(interaction: discord.Interaction):
         logger.warning(f"Player {interaction.user.id} has 'screenshots' field that is not a list: {screenshots_entries}")
 
 
-    # --- Build and Send Embed ---
     embed = Embed(
         title=f"{interaction.user.display_name}'s Open Tracking & Precheck Listings",
         color=discord.Color.dark_purple()
     )
 
-    # Check if there are any open entries to display
     if not open_tracking_entries and not open_precheck_entries:
         embed.description = "You have no active tracking or precheck listings. Use `/tracking Start` or `/precheck Start` to begin!"
     else:
@@ -1106,7 +1102,7 @@ async def status(interaction: discord.Interaction):
         # Only add field if there are actual entries
         if open_precheck_entries:
             embed.add_field(
-                name="📸 Open Screenshot Prechecks (`/precheck`):",
+                name="📸 Open Prechecks (`/precheck`):",
                 value="\n".join(open_precheck_entries),
                 inline=False
             )
@@ -1128,7 +1124,7 @@ def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     template_coll = db["Templates"]
     player_coll = db["Players"]
     client.tree.add_command(list_source_multipliers, guild=client.selected_guild)
-    client.tree.add_command(tracking, guild=client.selected_guild)
-    client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
+    #client.tree.add_command(tracking, guild=client.selected_guild)
+    #client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
     client.tree.add_command(precheck, guild=client.selected_guild)
     client.tree.add_command(status, guild=client.selected_guild)
