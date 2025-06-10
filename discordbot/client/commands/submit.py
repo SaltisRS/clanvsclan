@@ -234,7 +234,6 @@ async def _template_unlock_multi(template_doc: Dict[str, Any], template_doc_befo
                      break # No need to check further requirements for this multiplier
 
              if all_requirements_met_in_template:
-                 logger.info(f"Clan multiplier '{multiplier.get('name')}' unlocked for clan '{template_doc.get('associated_team')}' based on template item counts.")
                  multiplier["unlocked"] = True # Modify the template_doc in place
                  template_modified = True
 
@@ -449,6 +448,7 @@ class SubmissionView(discord.ui.View):
                 if all_items_uniquely_obtained_in_source and not special_frenzy_applied_to_source:
                     FRENZY_DEFAULT_FACTOR = 1.25
                     effective_multiplier_factor *= FRENZY_DEFAULT_FACTOR
+                    logger.debug(effective_multiplier_factor)
                     logger.debug(f"Applied default Frenzy multiplier ({FRENZY_DEFAULT_FACTOR}x) to source '{source_name}.")
 
 
@@ -498,7 +498,7 @@ class SubmissionView(discord.ui.View):
         unlocked_clan_multipliers = [
             m for m in clan_multipliers if m.get("unlocked", False)
         ]
-        logger.debug(f"Unlocked clan multipliers for {player_clan}: {[m['name'] for m in unlocked_clan_multipliers]}")
+
 
 
         for item_key, obtained_count_player in player_obtained_items.items():
@@ -530,12 +530,10 @@ class SubmissionView(discord.ui.View):
                 if does_multiplier_affect_source(multiplier_data, source_name):
                     factor = float(multiplier_data.get("factor", 1.0))
                     effective_unlocked_multiplier_factor *= factor
-                    logger.debug(f"Applying unlocked multiplier '{multiplier_data.get('name')}' ({factor}x) to {item_key}")
 
             item_total_contribution = item_base_contribution * effective_unlocked_multiplier_factor
 
             player_total_points += item_total_contribution
-            logger.debug(f"Item '{item_key}' contributed {item_total_contribution:.2f} points. Total so far: {player_total_points:.2f}")
 
         return player_total_points
 
@@ -544,7 +542,7 @@ class SubmissionView(discord.ui.View):
         item_key = f"{self.tier_name}.{self.source_name}.{self.item_name}"
         player_obtained_items[item_key] = player_obtained_items.get(item_key, 0) + 1 
         player_document["obtained_items"] = player_obtained_items
-        logger.debug(f"Player {self.submitter_id}: Updated obtained_items for '{item_key}' to count {player_obtained_items[item_key]}.")
+
 
 
         if "submissions" not in player_document: player_document["submissions"] = []
