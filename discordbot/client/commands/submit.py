@@ -285,7 +285,7 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     if unique_required <= 0: unique_required = 1
     if duplicate_items_for_set <= 0: duplicate_items_for_set = 1
 
-    half_unique_threshold = math.ceil(unique_required / 2)
+    half_unique_threshold = unique_required / 2
     unique_threshold = unique_required
     first_duplicate_set_threshold = unique_required + duplicate_items_for_set
 
