@@ -301,6 +301,8 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
         total_item_points += duplicate_item_points
     elif duplicate_required_for_set == 2 and obtained_beyond_unique == 1:
         total_item_points += duplicate_item_points / 2
+    
+    logger.debug(total_item_points)
 
     return total_item_points
 
