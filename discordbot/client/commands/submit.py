@@ -288,17 +288,18 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     half_unique_threshold = unique_required / 2
     unique_threshold = unique_required
     first_duplicate_set_threshold = unique_required + duplicate_items_for_set
+    half_duplicate_set_threshold_value = first_duplicate_set_threshold / 2
 
-    # Points from unique obtainment
+
     if current_obtained >= unique_threshold:
         total_item_points += base_points
-    elif current_obtained >= half_unique_threshold:
+    elif current_obtained > half_unique_threshold:
         total_item_points += base_points / 2
 
 
     if current_obtained >= first_duplicate_set_threshold:
         total_item_points += duplicate_item_points
-    elif current_obtained >= first_duplicate_set_threshold / 2:
+    elif current_obtained > half_duplicate_set_threshold_value:
         total_item_points += duplicate_item_points / 2
 
     return total_item_points
