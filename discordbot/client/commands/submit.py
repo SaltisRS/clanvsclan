@@ -274,38 +274,56 @@ def _player_calculate_helper(item_data: Dict[str, Any]) -> float:
 def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     """
     Calculates the total points an item should contribute based on its current 'obtained' count,
-    without relying on database flags.
+    dynamically applying thresholds derived from the item's 'required' and 'duplicate_required' fields.
+
+    NOTE: The item_data's 'required' and 'duplicate_required' fields define the context
+          for 'half' and 'full' for that specific item's configuration (e.g., Ironfoundry vs. Ironclad).
     """
-    try:
+    try: # Keep the try-except for robustness
         total_item_points = 0.0
         current_obtained = int(item_data.get("obtained", 0))
         base_points = float(item_data.get("points", 0))
         duplicate_item_points = float(item_data.get("duplicate_points", 0))
+        
+        # Correctly initialize both variables from item_data
         unique_required = int(item_data.get("required", 1))
         duplicate_items_for_set = int(item_data.get("duplicate_required", 1))
 
+        # Safety checks (fixed typo on the duplicate variable assignment)
+        if unique_required <= 0:
+            unique_required = 1
+        # --- FIX IS HERE: changed `duplicate_required_for_set` to `duplicate_items_for_set` ---
+        if duplicate_items_for_set <= 0:
+            duplicate_items_for_set = 1
 
-        if unique_required <= 0: unique_required = 1
-        if duplicate_items_for_set <= 0: duplicate_required_for_set = 1
 
-
+        # --- Points from Unique Obtainment: ---
+        # Awards full base_points if current_obtained meets unique_required
         if current_obtained >= unique_required:
             total_item_points += base_points
+        # Awards half base_points ONLY if unique_required is 2 and obtained is 1
+        # This covers the "half unique value" rule specifically for items requiring 2 uniques.
         elif unique_required == 2 and current_obtained == 1:
             total_item_points += base_points / 2
 
-
+        # --- Points from Duplicate Obtainment: ---
+        # Calculate how many items are obtained beyond the unique requirement.
         obtained_beyond_unique = current_obtained - unique_required
 
-        if obtained_beyond_unique >= duplicate_required_for_set:
+        # Awards full duplicate_item_points if obtained_beyond_unique meets duplicate_required_for_set
+        if obtained_beyond_unique >= duplicate_items_for_set: # Use duplicate_items_for_set
             total_item_points += duplicate_item_points
-        elif duplicate_required_for_set == 2 and obtained_beyond_unique == 1:
+        # Awards half duplicate_item_points ONLY if duplicate_required_for_set is 2 and obtained_beyond_unique is 1
+        # This covers the "half dupe value" rule specifically for items requiring 2 duplicates.
+        elif duplicate_items_for_set == 2 and obtained_beyond_unique == 1: # Use duplicate_items_for_set
             total_item_points += duplicate_item_points / 2
+
     except Exception as e:
         total_item_points = 0
-        logger.debug(e)
+        # Consider using a more specific logger here, e.g., self.logger.error, or just logger.exception
+        logger.debug(e) # This will log the error if something else goes wrong
         
-    logger.debug(total_item_points)
+    logger.debug(total_item_points) # This will log the final calculated value (or 0 if error)
     return total_item_points
 
 def does_multiplier_affect_source(multiplier_data: Dict[str, Any], source_name: str) -> bool:
