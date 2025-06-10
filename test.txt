@@ -1,94 +1,113 @@
 ---
 Source: Wintertodt
   Multipliers Applied:
+    - Lara Croft - Tome Raider (1.4x)
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
+    - Default Frenzy (1.25x)
+  Base Value: 436.0
+  Multiplied Value: 1144.5 (approx)
 
 ---
 Source: Tempoross
   Multipliers Applied:
+    - Lara Croft - Tome Raider (1.4x)
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+  Base Value: 192.5
+  Multiplied Value: 404.25 (approx)
 
 ---
 Source: Guardians of the Rift
   Multipliers Applied:
     - Moletiplier (1.5x)
     - Dye Hard (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.625 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 538.25
+  Multiplied Value: 1412.91 (approx)
 
 ---
 Source: Obor
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+  Base Value: 0.0
+  Multiplied Value: 0.0
 
 ---
 Source: Bryophyta
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
+  Base Value: 0.0
+  Multiplied Value: 0.0
 
 ---
 Source: Royal Titans
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+    - Default Frenzy (1.25x)
+  Base Value: 418.5
+  Multiplied Value: 784.6875
 
 ---
 Source: Scurrius
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
+    - Default Frenzy (1.25x)
+  Base Value: 82.0
+  Multiplied Value: 153.75
 
 ---
 Source: Amoxliatl
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+    - Default Frenzy (1.25x)
+  Base Value: 76.0
+  Multiplied Value: 142.5
 
 ---
 Source: Fight Caves
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
+    - Default Frenzy (1.25x)
+  Base Value: 90.0
+  Multiplied Value: 168.75
 
 ---
 Source: Crazy Archaeologist
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+    - I Can Show You the Ward (1.25x)
+    - The Ward is Yours... (1.25x)
+    - Best of Both Wards (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 189.0
+  Multiplied Value: 830.56640625
 
 ---
 Source: Chaos Fanatic
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+    - I Can Show You the Ward (1.25x)
+    - The Ward is Yours... (1.25x)
+    - Best of Both Wards (1.5x)
+  Base Value: 187.5
+  Multiplied Value: 659.1796875
 
 ---
 Source: Scorpia
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+    - I Can Show You the Ward (1.25x)
+    - The Ward is Yours... (1.25x)
+    - Best of Both Wards (1.5x)
+  Base Value: 172.5
+  Multiplied Value: 606.4453125
 
 ---
 Source: Giant Mole
   Multipliers Applied:
     - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
+    - Default Frenzy (1.25x)
+  Base Value: 430.0
+  Multiplied Value: 806.25
 
 ---
 Source: Barrows
@@ -101,8 +120,9 @@ Source: Barrows
     - The Blighted (1.1x)
     - The Defiled (1.1x)
     - Cryptonite (1.1x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.654 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 1644.5
+  Multiplied Value: 6008.747383031255
 
 ---
 Source: Dagannoth Kings
@@ -110,413 +130,24 @@ Source: Dagannoth Kings
     - Fellowship of the Ring (1.4x)
     - The Two Towers (1.4x)
     - Return of the King (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.43 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 558.0
+  Multiplied Value: 1913.94
 
 ---
 Source: Sarachnis
   Multipliers Applied:
-    - Eye Spy (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Moons of Peril
-  Multipliers Applied:
-    - Twilight (1.2x)
-    - New Moon (1.2x)
-    - Eclipse (1.2x)
-    - Breaking Dawn (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.24
-
----
-Source: Vet'ion | Calvar'ion
-  Multipliers Applied:
-    - The Void Knight Rises (1.75x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.1875
-
----
-Source: Callisto | Artio
-  Multipliers Applied:
-    - The Void Knight Rises (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
-
----
-Source: Venenatis | Spindel
-  Multipliers Applied:
-    - The Void Knight Rises (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
-
----
-Source: King Black Dragon
-  Multipliers Applied:
-    - Enter the Dragon (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Zalcano
-  Multipliers Applied:
-    - Dwayne 'The Rock' Johnson (2.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.125
-
----
-Source: Gauntlet
-  Multipliers Applied:
-    - Crystal Meth (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
-
----
-Source: Grotesque Guardians
-  Multipliers Applied:
-    - Pumped Up Kicks (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
-
----
-Source: Abyssal Sire
-  Multipliers Applied:
-    - My Inhaler! (1.5x)
-    - The Clawwww! (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.8125
-
----
-Source: Cerberus
-  Multipliers Applied:
-    - The Deathly Hallows (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
-
----
-Source: Araxxor
-  Multipliers Applied:
-    - Let There Be Carnage (1.5x)
-    - It's Webbin' Time! (1.75x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.28125
-
----
-Source: Thermonuclear Smoke Devil
-  Multipliers Applied:
-    - Hotboxed (1.5x)
-    - Chain Reaction (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.625 (approx)
-
----
-Source: Alchemical Hydra
-  Multipliers Applied:
-    - The Secret of the Ooze (1.5x)
-    - My Chemical Romance (1.75x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.28125
-
----
-Source: Phantom Muspah
-  Multipliers Applied:
-    - The Phantom Menace (2.0x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.5
-
----
-Source: General Graardor
-  Multipliers Applied:
-    - Hilter Skilter (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: K'ril Tsutsaroth
-  Multipliers Applied:
-    - Hilter Skilter (2.5x)
-    - Grateful Dead (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 4.375
-
----
-Source: Commander Zilyana
-  Multipliers Applied:
-    - None explicitly listed (base 1.0 assumed)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.25
-
----
-Source: Kree'arra
-  Multipliers Applied:
-    - Hilter Skilter (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: Chambers of Xeric
-  Multipliers Applied:
-    - Supremacy (1.2x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.2
-
----
-Source: Tombs of Amascut
-  Multipliers Applied:
-    - Ark of the Covenant (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
-
----
-Source: Yama
-  Multipliers Applied:
-    - An Offer You Can't Refuse... (2.0x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.5
-
----
-Source: Stronghold of Security
-  Multipliers Applied:
-    - Lord of Bones (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Creature Creation
-  Multipliers Applied:
-    - Man Purse (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Warriors Guild
-  Multipliers Applied:
-    - Eye of the Beholder (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Boots
-  Multipliers Applied:
-    - Shape of Italy (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Light & Dark Mystic Sets
-  Multipliers Applied:
-    - Mystic Pizza (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Demonic Gorillas
-  Multipliers Applied:
-    - Banana Split (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: Tormented Demons
-  Multipliers Applied:
-    - Demon Slayer II (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: Ancient Cavern
-  Multipliers Applied:
-    - Rag and Bone Man III (3.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.0
-
----
-Source: Ancient Prison
-  Multipliers Applied:
-    - The Zarosian Candidate (3.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.0
-
----
-Source: Godsword Shards
-  Multipliers Applied:
-    - The Blade that was Broken (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: TzHaar
-  Multipliers Applied:
-    - Tzhaar Wars (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
----
-Source: Gnome Restaurant
-  Multipliers Applied:
-    - Kitchen Nightmares (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Rogue's Den
-  Multipliers Applied:
-    - Rogue One (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
-
----
-Source: Hunter Rumors
-  Multipliers Applied:
-    - Get to the Chompa! (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
-
----
-Source: Pyramid Plunder
-  Multipliers Applied:
-    - Return the Slab (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
-
-
-
-
-  ************ IRON FOUNDRY ***************
-
----
-Source: Wintertodt
-  Multipliers Applied:
-    - Lara Croft - Tome Raider (1.4x)
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.625 (approx)
-
----
-Source: Tempoross
-  Multipliers Applied:
-    - Lara Croft - Tome Raider (1.4x)
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.1 (inferred: 1.4 * 1.5)
-
----
-Source: Guardians of the Rift
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-    - Dye Hard (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.625 (approx)
-
----
-Source: Obor
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
-
----
-Source: Bryophyta
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
-
----
-Source: Royal Titans
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Scurrius
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Amoxliatl
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Fight Caves
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Crazy Archaeologist
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-    - I Can Show You the Ward (1.25x)
-    - The Ward is Yours... (1.25x)
-    - Best of Both Wards (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 4.39453125
-
----
-Source: Chaos Fanatic
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-    - I Can Show You the Ward (1.25x)
-    - The Ward is Yours... (1.25x)
-    - Best of Both Wards (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.515625 (inferred: 1.5 * 1.25 * 1.25 * 1.5)
-
----
-Source: Scorpia
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-    - I Can Show You the Ward (1.25x)
-    - The Ward is Yours... (1.25x)
-    - Best of Both Wards (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.515625 (inferred: 1.5 * 1.25 * 1.25 * 1.5)
-
----
-Source: Giant Mole
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.875
-
----
-Source: Barrows
-  Multipliers Applied:
-    - Moletiplier (1.5x)
-    - The Wretched (1.1x)
-    - The Infested (1.1x)
-    - The Tainted (1.1x)
-    - The Corrupted (1.1x)
-    - The Blighted (1.1x)
-    - The Defiled (1.1x)
-    - Cryptonite (1.1x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.654 (approx)
-
----
-Source: Dagannoth Kings
-  Multipliers Applied:
-    - Fellowship of the Ring (1.4x)
-    - The Two Towers (1.4x)
-    - Return of the King (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.43 (approx)
+    - None (only base listed)
+  Base Value: 70.0
+  Multiplied Value: 70.0
 
 ---
 Source: Hueycoatl
   Multipliers Applied:
     - Lara Croft - Tome Raider (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.75
+    - Default Frenzy (1.25x)
+  Base Value: 1019.0
+  Multiplied Value: 1783.25
 
 ---
 Source: Moons of Peril
@@ -525,265 +156,1166 @@ Source: Moons of Peril
     - New Moon (1.2x)
     - Eclipse (1.2x)
     - Breaking Dawn (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.24
+    - Default Frenzy (1.25x)
+  Base Value: 1548.0
+  Multiplied Value: 5015.52
 
 ---
 Source: Vet'ion | Calvar'ion
   Multipliers Applied:
     - The Void Knight Rises (1.75x)
     - An Unexpected Journey (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.0625 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 726.5
+  Multiplied Value: 2224.9062499999995
 
 ---
 Source: Callisto | Artio
   Multipliers Applied:
     - The Void Knight Rises (1.75x)
     - An Unexpected Journey (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.0625 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 778.0
+  Multiplied Value: 2382.6249999999995
 
 ---
 Source: Venenatis | Spindel
   Multipliers Applied:
     - The Void Knight Rises (1.75x)
     - An Unexpected Journey (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.0625 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 751.0
+  Multiplied Value: 2299.9374999999995
+
+---
+Source: King Black Dragon
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 39.0
+  Multiplied Value: 39.0
 
 ---
 Source: Chaos Elemental
   Multipliers Applied:
     - Cloudy with a Chance of Meatballs (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+  Base Value: 131.5
+  Multiplied Value: 197.25
+
+---
+Source: Kalphite Queen
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 92.5
+  Multiplied Value: 92.5
+
+---
+Source: Skotizo
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 72.0
+  Multiplied Value: 72.0
+
+---
+Source: Vorkath
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 550.0
+  Multiplied Value: 550.0
+
+---
+Source: Zulrah
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 703.0
+  Multiplied Value: 703.0
+
+---
+Source: Zalcano
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
 
 ---
 Source: Gauntlet
   Multipliers Applied:
     - Crystal Meth (1.5x)
     - The One Who Knocks (2.0x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.75
+    - Default Frenzy (1.25x)
+  Base Value: 1292.5
+  Multiplied Value: 4846.875
 
 ---
 Source: Grotesque Guardians
   Multipliers Applied:
     - Pumped Up Kicks (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+  Base Value: 300.0
+  Multiplied Value: 450.0
 
 ---
 Source: Abyssal Sire
   Multipliers Applied:
     - My Inhaler! (1.5x)
     - The Clawwww! (1.5x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.8125
+    - Default Frenzy (1.25x)
+  Base Value: 1196.5
+  Multiplied Value: 3365.15625
 
 ---
 Source: Kraken
   Multipliers Applied:
     - Rum's Gone (1.5x)
     - Phil McKraken (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.625 (approx)
+    - Default Frenzy (1.25x)
+  Base Value: 569.5
+  Multiplied Value: 1494.9374999999998
 
 ---
 Source: Cerberus
   Multipliers Applied:
     - The Deathly Hallows (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
+  Base Value: 612.5
+  Multiplied Value: 1071.875
 
 ---
 Source: Araxxor
   Multipliers Applied:
     - Let There Be Carnage (1.5x)
-    - It's Webbin' Time! (1.75x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 3.28125
+    - It's Webbin' Time!' (1.75x)
+    - Default Frenzy (1.25x)
+  Base Value: 1108.5
+  Multiplied Value: 3637.265625
 
 ---
 Source: Thermonuclear Smoke Devil
   Multipliers Applied:
     - Chain Reaction (1.4x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.4
+  Base Value: 285.0
+  Multiplied Value: 399.0
+
+---
+Source: Alchemical Hydra
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 734.5
+  Multiplied Value: 734.5
 
 ---
 Source: Phantom Muspah
   Multipliers Applied:
     - The Phantom Menace (2.0x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.5
+    - Default Frenzy (1.25x)
+  Base Value: 687.0
+  Multiplied Value: 1717.5
 
 ---
 Source: General Graardor
   Multipliers Applied:
     - Hilter Skilter (2.5x)
     - Slop of Compromise (1.4x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 4.375
+    - Default Frenzy (1.25x)
+  Base Value: 578.5
+  Multiplied Value: 2530.9375
 
 ---
 Source: K'ril Tsutsaroth
   Multipliers Applied:
     - Hilter Skilter (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 372.5
+  Multiplied Value: 931.25
+
+---
+Source: Commander Zilyana
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 509.0
+  Multiplied Value: 509.0
 
 ---
 Source: Kree'arra
   Multipliers Applied:
     - Hilter Skilter (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 563.0
+  Multiplied Value: 1407.5
+
+---
+Source: Duke Sucellus
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 454.5
+  Multiplied Value: 454.5
+
+---
+Source: Vardorvis
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 876.0
+  Multiplied Value: 876.0
+
+---
+Source: Leviathan
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 415.5
+  Multiplied Value: 415.5
+
+---
+Source: Whisperer
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 785.0
+  Multiplied Value: 785.0
 
 ---
 Source: Chambers of Xeric
   Multipliers Applied:
     - Identity (1.2x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.2
+  Base Value: 1721.5
+  Multiplied Value: 2065.8
+
+---
+Source: Theatre of Blood
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 234.0
+  Multiplied Value: 234.0
+
+---
+Source: Tombs of Amascut
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1985.5
+  Multiplied Value: 1985.5
 
 ---
 Source: Yama
   Multipliers Applied:
     - An Offer You Can't Refuse... (2.0x)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 2.5
+    - Default Frenzy (1.25x)
+  Base Value: 1320.0
+  Multiplied Value: 3300.0
+
+---
+Source: Nex
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Nightmare
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Corporeal Beast
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
 
 ---
 Source: Fortis Colosseum
   Multipliers Applied:
     - This Life or the Next... (1.4x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.4
+  Base Value: 874.0
+  Multiplied Value: 1223.6
 
 ---
 Source: Inferno
   Multipliers Applied:
-    - None explicitly listed (base 1.0 assumed)
-  Frenzy Multiplier Applied: 1.25x
-  Final Multiplier: 1.25
+    - Default Frenzy (1.25x)
+  Base Value: 810.0
+  Multiplied Value: 1012.5
 
 ---
 Source: Stronghold of Security
   Multipliers Applied:
     - Lord of Bones (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 12.0
+  Multiplied Value: 24.0
 
 ---
 Source: Camdozaal
   Multipliers Applied:
     - Rock Solid (1.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.5
+  Base Value: 75.0
+  Multiplied Value: 112.5
 
 ---
 Source: Creature Creation
   Multipliers Applied:
     - Man Purse (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 18.0
+  Multiplied Value: 36.0
 
 ---
 Source: Warriors Guild
   Multipliers Applied:
     - Eye of the Beholder (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 27.5
+  Multiplied Value: 55.0
 
 ---
 Source: Boots
   Multipliers Applied:
     - Shape of Italy (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 22.5
+  Multiplied Value: 45.0
 
 ---
 Source: Light & Dark Mystic Sets
   Multipliers Applied:
     - Mystic Pizza (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 28.0
+  Multiplied Value: 56.0
 
 ---
 Source: Heads
   Multipliers Applied:
     - What's in the Box?! (3.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.0
+  Base Value: 140.5
+  Multiplied Value: 421.5
 
 ---
 Source: Demonic Gorillas
   Multipliers Applied:
     - Banana Split (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 1118.0
+  Multiplied Value: 2795.0
 
 ---
 Source: Tormented Demons
   Multipliers Applied:
     - Demon Slayer II (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 735.0
+  Multiplied Value: 1837.5
 
 ---
 Source: Ancient Cavern
   Multipliers Applied:
     - Rag and Bone Man III (3.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.0
+  Base Value: 125.0
+  Multiplied Value: 375.0
+
+---
+Source: Lithkren Vault
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Slayer
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 2396.0
+  Multiplied Value: 2396.0
 
 ---
 Source: Ancient Prison
   Multipliers Applied:
     - The Zarosian Candidate (3.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 3.0
+  Base Value: 145.0
+  Multiplied Value: 435.0
+
+---
+Source: Godsword Shards
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 300.0
+  Multiplied Value: 300.0
 
 ---
 Source: TzHaar
   Multipliers Applied:
     - Tzhaar Wars (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 1000.0
+  Multiplied Value: 2500.0
+
+---
+Source: Elder Chaos Druids
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 93.0
+  Multiplied Value: 93.0
+
+---
+Source: Revenants
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 298.0
+  Multiplied Value: 298.0
+
+---
+Source: Champion's Challenge
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 823.5
+  Multiplied Value: 823.5
+
+---
+Source: Big Fish
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 305.0
+  Multiplied Value: 305.0
 
 ---
 Source: Fishing Trawler
   Multipliers Applied:
     - Gonna Need a Bigger Boat (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 155.0
+  Multiplied Value: 310.0
 
 ---
 Source: Gnome Restaurant
   Multipliers Applied:
     - Kitchen Nightmares (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 120.0
+  Multiplied Value: 240.0
 
 ---
 Source: Rogue's Den
   Multipliers Applied:
     - Rogue One (1.75x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 1.75
+  Base Value: 50.0
+  Multiplied Value: 87.5
 
 ---
 Source: Hunter Rumors
   Multipliers Applied:
     - Get to the Chompa! (2.0x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.0
+  Base Value: 374.0
+  Multiplied Value: 748.0
 
 ---
 Source: Pyramid Plunder
   Multipliers Applied:
     - Return the Slab (2.5x)
-  Frenzy Multiplier Applied: No Frenzy multiplier explicitly logged for this source.
-  Final Multiplier: 2.5
+  Base Value: 416.0
+  Multiplied Value: 1040.0
+
+---
+Source: Shades of Mort'ton
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Other
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 271.0
+  Multiplied Value: 271.0
+
+---
+Source: Pets
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 8142.5
+  Multiplied Value: 8142.5
+
+---
+Source: Beginner Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 247.5
+  Multiplied Value: 247.5
+
+---
+Source: Easy Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 448.5
+  Multiplied Value: 448.5
+
+---
+Source: Medium Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 2468.0
+  Multiplied Value: 2468.0
+
+---
+Source: Hard Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 2928.0
+  Multiplied Value: 2928.0
+
+---
+Source: Elite Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1575.0
+  Multiplied Value: 1575.0
+
+---
+Source: Master Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 335.0
+  Multiplied Value: 335.0
+
+** Iron Foundry END**
+** Ironclad BEGIN **
+
+---
+Source: Wintertodt
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 250.0
+  Multiplied Value: 468.75
+
+---
+Source: Tempoross
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Guardians of the Rift
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Dye Hard (1.4x)
+    - Default Frenzy (1.25x)
+  Base Value: 268.25
+  Multiplied Value: 704.1562499999999
+
+---
+Source: Obor
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Bryophyta
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 85.0
+  Multiplied Value: 159.375
+
+---
+Source: Royal Titans
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 256.5
+  Multiplied Value: 384.75
+
+---
+Source: Scurrius
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 58.0
+  Multiplied Value: 108.75
+
+---
+Source: Amoxliatl
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 23.0
+  Multiplied Value: 34.5
+
+---
+Source: Fight Caves
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 75.0
+  Multiplied Value: 140.625
+
+---
+Source: Crazy Archaeologist
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 30.0
+  Multiplied Value: 45.0
+
+---
+Source: Chaos Fanatic
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Scorpia
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+  Base Value: 19.0
+  Multiplied Value: 28.5
+
+---
+Source: Giant Mole
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 172.0
+  Multiplied Value: 322.5
+
+---
+Source: Barrows
+  Multipliers Applied:
+    - Moletiplier (1.5x)
+    - The Wretched (1.1x)
+    - The Infested (1.1x)
+    - The Tainted (1.1x)
+    - The Corrupted (1.1x)
+    - The Blighted (1.1x)
+    - The Defiled (1.1x)
+    - Cryptonite (1.1x)
+    - Default Frenzy (1.25x)
+  Base Value: 1219.0
+  Multiplied Value: 4454.0365216875025
+
+---
+Source: Dagannoth Kings
+  Multipliers Applied:
+    - Fellowship of the Ring (1.4x)
+    - The Two Towers (1.4x)
+    - Return of the King (1.4x)
+    - Default Frenzy (1.25x)
+  Base Value: 504.0
+  Multiplied Value: 1728.7199999999998
+
+---
+Source: Sarachnis
+  Multipliers Applied:
+    - Eye Spy (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 314.0
+  Multiplied Value: 588.75
+
+---
+Source: Hueycoatl
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 76.0
+  Multiplied Value: 76.0
+
+---
+Source: Moons of Peril
+  Multipliers Applied:
+    - Twilight (1.2x)
+    - New Moon (1.2x)
+    - Eclipse (1.2x)
+    - Breaking Dawn (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 1075.0
+  Multiplied Value: 3483.0
+
+---
+Source: Vet'ion | Calvar'ion
+  Multipliers Applied:
+    - The Void Knight Rises (1.75x)
+    - Default Frenzy (1.25x)
+  Base Value: 558.0
+  Multiplied Value: 1220.625
+
+---
+Source: Callisto | Artio
+  Multipliers Applied:
+    - The Void Knight Rises (1.75x)
+  Base Value: 610.0
+  Multiplied Value: 1067.5
+
+---
+Source: Venenatis | Spindel
+  Multipliers Applied:
+    - The Void Knight Rises (1.75x)
+  Base Value: 488.5
+  Multiplied Value: 854.875
+
+---
+Source: King Black Dragon
+  Multipliers Applied:
+    - Enter the Dragon (2.0x)
+  Base Value: 13.0
+  Multiplied Value: 26.0
+
+---
+Source: Chaos Elemental
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 13.0
+  Multiplied Value: 13.0
+
+---
+Source: Kalphite Queen
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 339.0
+  Multiplied Value: 339.0
+
+---
+Source: Skotizo
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 24.0
+  Multiplied Value: 24.0
+
+---
+Source: Vorkath
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Zulrah
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 518.0
+  Multiplied Value: 518.0
+
+---
+Source: Zalcano
+  Multipliers Applied:
+    - Dwayne 'The Rock' Johnson (2.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 423.0
+  Multiplied Value: 1321.875
+
+---
+Source: Gauntlet
+  Multipliers Applied:
+    - Crystal Meth (1.5x)
+  Base Value: 630.0
+  Multiplied Value: 945.0
+
+---
+Source: Grotesque Guardians
+  Multipliers Applied:
+    - Pumped Up Kicks (1.5x)
+  Base Value: 444.0
+  Multiplied Value: 666.0
+
+---
+Source: Abyssal Sire
+  Multipliers Applied:
+    - My Inhaler! (1.5x)
+    - The Clawwww! (1.5x)
+    - Default Frenzy (1.25x)
+  Base Value: 1025.5
+  Multiplied Value: 2884.21875
+
+---
+Source: Kraken
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 113.0
+  Multiplied Value: 113.0
+
+---
+Source: Cerberus
+  Multipliers Applied:
+    - The Deathly Hallows (1.75x)
+  Base Value: 535.0
+  Multiplied Value: 936.25
+
+---
+Source: Araxxor
+  Multipliers Applied:
+    - Let There Be Carnage (1.5x)
+    - It's Webbin' Time! (1.75x)
+    - Default Frenzy (1.25x)
+  Base Value: 892.5
+  Multiplied Value: 2928.515625
+
+---
+Source: Thermonuclear Smoke Devil
+  Multipliers Applied:
+    - Hotboxed (1.5x)
+    - Chain Reaction (1.4x)
+    - Default Frenzy (1.25x)
+  Base Value: 773.0
+  Multiplied Value: 2029.1249999999995
+
+---
+Source: Alchemical Hydra
+  Multipliers Applied:
+    - The Secret of the Ooze (1.5x)
+    - My Chemical Romance (1.75x)
+    - Default Frenzy (1.25x)
+  Base Value: 1094.0
+  Multiplied Value: 3589.6875
+
+---
+Source: Phantom Muspah
+  Multipliers Applied:
+    - The Phantom Menace (2.0x)
+    - Default Frenzy (1.25x)
+  Base Value: 338.5
+  Multiplied Value: 846.25
+
+---
+Source: General Graardor
+  Multipliers Applied:
+    - Hilter Skilter (2.5x)
+  Base Value: 293.0
+  Multiplied Value: 732.5
+
+---
+Source: K'ril Tsutsaroth
+  Multipliers Applied:
+    - Hilter Skilter (2.5x)
+    - Grateful Dead (1.4x)
+    - Default Frenzy (1.25x)
+  Base Value: 656.5
+  Multiplied Value: 2872.1875
+
+---
+Source: Commander Zilyana
+  Multipliers Applied:
+    - Default Frenzy (1.25x)
+  Base Value: 301.0
+  Multiplied Value: 376.25
+
+---
+Source: Kree'arra
+  Multipliers Applied:
+    - Hilter Skilter (2.5x)
+  Base Value: 396.0
+  Multiplied Value: 990.0
+
+---
+Source: Duke Sucellus
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 377.5
+  Multiplied Value: 377.5
+
+---
+Source: Vardorvis
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 399.0
+  Multiplied Value: 399.0
+
+---
+Source: Leviathan
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 4.0
+  Multiplied Value: 4.0
+
+---
+Source: Whisperer
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 107.0
+  Multiplied Value: 107.0
+
+---
+Source: Chambers of Xeric
+  Multipliers Applied:
+    - Supremacy (1.2x)
+  Base Value: 713.0
+  Multiplied Value: 855.6
+
+---
+Source: Theatre of Blood
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 354.0
+  Multiplied Value: 354.0
+
+---
+Source: Tombs of Amascut
+  Multipliers Applied:
+    - Ark of the Covenant (1.75x)
+  Base Value: 2066.0
+  Multiplied Value: 3615.5
+
+---
+Source: Yama
+  Multipliers Applied:
+    - An Offer You Can't Refuse... (2.0x)
+    - Default Frenzy (1.25x)
+  Base Value: 1415.0
+  Multiplied Value: 3537.5
+
+---
+Source: Nex
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 328.0
+  Multiplied Value: 328.0
+
+---
+Source: Nightmare
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Corporeal Beast
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 98.0
+  Multiplied Value: 98.0
+
+---
+Source: Fortis Colosseum
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 138.0
+  Multiplied Value: 138.0
+
+---
+Source: Inferno
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 270.0
+  Multiplied Value: 270.0
+
+---
+Source: Stronghold of Security
+  Multipliers Applied:
+    - Lord of Bones (2.0x)
+  Base Value: 5.5
+  Multiplied Value: 11.0
+
+---
+Source: Camdozaal
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 18.0
+  Multiplied Value: 18.0
+
+---
+Source: Creature Creation
+  Multipliers Applied:
+    - Man Purse (2.0x)
+  Base Value: 20.0
+  Multiplied Value: 40.0
+
+---
+Source: Warriors Guild
+  Multipliers Applied:
+    - Eye of the Beholder (2.0x)
+  Base Value: 10.0
+  Multiplied Value: 20.0
+
+---
+Source: Boots
+  Multipliers Applied:
+    - Shape of Italy (2.0x)
+  Base Value: 23.0
+  Multiplied Value: 46.0
+
+---
+Source: Light & Dark Mystic Sets
+  Multipliers Applied:
+    - Mystic Pizza (2.0x)
+  Base Value: 19.5
+  Multiplied Value: 39.0
+
+---
+Source: Heads
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 16.0
+  Multiplied Value: 16.0
+
+---
+Source: Demonic Gorillas
+  Multipliers Applied:
+    - Banana Split (2.5x)
+  Base Value: 1015.5
+  Multiplied Value: 2538.75
+
+---
+Source: Tormented Demons
+  Multipliers Applied:
+    - Demon Slayer II (2.5x)
+  Base Value: 686.0
+  Multiplied Value: 1715.0
+
+---
+Source: Ancient Cavern
+  Multipliers Applied:
+    - Rag and Bone Man III (3.0x)
+  Base Value: 125.0
+  Multiplied Value: 375.0
+
+---
+Source: Lithkren Vault
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 0.0
+  Multiplied Value: 0.0
+
+---
+Source: Slayer
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1746.5
+  Multiplied Value: 1746.5
+
+---
+Source: Ancient Prison
+  Multipliers Applied:
+    - The Zarosian Candidate (3.0x)
+  Base Value: 130.0
+  Multiplied Value: 390.0
+
+---
+Source: Godsword Shards
+  Multipliers Applied:
+    - The Blade that was Broken (2.5x)
+  Base Value: 285.0
+  Multiplied Value: 712.5
+
+---
+Source: TzHaar
+  Multipliers Applied:
+    - Tzhaar Wars (2.5x)
+  Base Value: 716.0
+  Multiplied Value: 1790.0
+
+---
+Source: Elder Chaos Druids
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 31.0
+  Multiplied Value: 31.0
+
+---
+Source: Revenants
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 109.0
+  Multiplied Value: 109.0
+
+---
+Source: Champion's Challenge
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 396.5
+  Multiplied Value: 396.5
+
+---
+Source: Big Fish
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 61.0
+  Multiplied Value: 61.0
+
+---
+Source: Fishing Trawler
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 10.0
+  Multiplied Value: 10.0
+
+---
+Source: Gnome Restaurant
+  Multipliers Applied:
+    - Kitchen Nightmares (2.0x)
+  Base Value: 127.0
+  Multiplied Value: 254.0
+
+---
+Source: Rogue's Den
+  Multipliers Applied:
+    - Rogue One (1.75x)
+  Base Value: 20.0
+  Multiplied Value: 35.0
+
+---
+Source: Hunter Rumors
+  Multipliers Applied:
+    - Get to the Chompa! (2.0x)
+  Base Value: 198.0
+  Multiplied Value: 396.0
+
+---
+Source: Pyramid Plunder
+  Multipliers Applied:
+    - Return the Slab (2.5x)
+  Base Value: 312.0
+  Multiplied Value: 780.0
+
+---
+Source: Shades of Mort'ton
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 82.5
+  Multiplied Value: 82.5
+
+---
+Source: Other
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1285.25
+  Multiplied Value: 1285.25
+
+---
+Source: Pets
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 6783.5
+  Multiplied Value: 6783.5
+
+---
+Source: Beginner Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 153.0
+  Multiplied Value: 153.0
+
+---
+Source: Easy Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 742.0
+  Multiplied Value: 742.0
+
+---
+Source: Medium Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 2143.0
+  Multiplied Value: 2143.0
+
+---
+Source: Hard Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1584.0
+  Multiplied Value: 1584.0
+
+---
+Source: Elite Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 1350.0
+  Multiplied Value: 1350.0
+
+---
+Source: Master Scrolls
+  Multipliers Applied:
+    - None (only base listed)
+  Base Value: 569.5
+  Multiplied Value: 569.5
+
+
+
+
+
+
+
+
+
+11372

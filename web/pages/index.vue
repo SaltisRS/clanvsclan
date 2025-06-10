@@ -119,7 +119,7 @@ interface ActivityOrMilestone {
   tier4: number;
   multiplier: number;
   unit: string;
-  req_factor: number; // Assuming req_factor applies to tier thresholds
+  req_factor: number;
 }
 
 const calculateEntryPoints = (entry: ActivityOrMilestone): number => {
@@ -131,30 +131,31 @@ const calculateEntryPoints = (entry: ActivityOrMilestone): number => {
   const tier4 = entry.tier4 * entry.req_factor;
   const multiplier = entry.multiplier;
 
-  let pointsEarnedFromTiers = 0;
+  let tiers_completed = 0;
 
-  // Calculate points earned from reaching each tier (cumulative)
+
   if (currentValue >= tier1) {
-    pointsEarnedFromTiers += pointStep;
+    tiers_completed++;
   }
   if (currentValue >= tier2) {
-    pointsEarnedFromTiers += pointStep;
+    tiers_completed++;
   }
   if (currentValue >= tier3) {
-    pointsEarnedFromTiers += pointStep;
+    tiers_completed++;
   }
   if (currentValue >= tier4) {
-    pointsEarnedFromTiers += pointStep;
+    tiers_completed++;
   }
 
-  let totalPoints = pointsEarnedFromTiers;
 
-  // Apply additional multiplier bonus if Tier 4 is reached
+  let base_points = pointStep * tiers_completed;
+
+
   if (currentValue >= tier4) {
-    totalPoints += multiplier * pointStep;
+    return base_points * multiplier;
+  } else {
+    return base_points;
   }
-
-  return totalPoints;
 };
 
 // Computed property to calculate total points from Activities
