@@ -26,6 +26,33 @@ ic_coll = Optional
 template_coll = Optional
 player_coll = Optional
 
+SPECIAL_FRENZY_MULTIPLIER_NAMES = {
+    "Banana Split",
+    "Demon Slayer II",
+    "Oscar Worthy",
+    "How to Smelt Your Dragon",
+    "Raining Blood",
+    "The Zarosian Candidate",
+    "Rock Solid",
+    "Shape of Italy",
+    "Mystic Pizza",
+    "Eye of the Beholder",
+    "Lord of Bones",
+    "Man Purse",
+    "Gonna Need a Bigger Boat",
+    "Kitchen Nightmares",
+    "Rogue One",
+    "Throwing Shade",
+    "Get to the Chompa!",
+    "Return the Slab",
+    "Deadliest Catch",
+    "What's in the Box?!",
+    "Rag and Bone Man III",
+    "Agent of Chaos",
+    "The Blade that was Broken",
+    "Tzhaar Wars",
+    "CANNONBALL!"
+}
 
 
 IMAGE_UPLOAD_CHOICES = [
@@ -304,7 +331,6 @@ class SubmissionView(discord.ui.View):
         return False
 
 
-    # --- Refactored Helper Methods for accept_button ---
     async def _get_submission_documents(self):
         """Fetches and validates player and template documents."""
         player_document = await get_player_info(self.submitter_id)
@@ -344,41 +370,102 @@ class SubmissionView(discord.ui.View):
         return new_obtained_count
 
 
+
+
     def _template_calculate_points(self, template_doc: Dict[str, Any]) -> float:
         """
         Calculates the total potential points for the template based on
-        current obtained counts and unlocked multipliers.
+        current obtained counts and unlocked multipliers,
+        including the "Frenzy" source multiplier logic,
+        where a source becomes Frenzied if all its items have 'obtained' > 0.
         """
         total_template_points = 0.0
-        clan_multipliers = template_doc.get("multipliers", []) # Get multipliers
+        clan_multipliers = template_doc.get("multipliers", [])
 
+        
         for t_name, t_data in template_doc.get("tiers", {}).items():
-            t_data["points_gained"] = 0.0 # Reset tier points
-            for s_data in t_data.get("sources", []):
-                s_data["source_gained"] = 0.0 # Reset source points
+            if not isinstance(t_data, dict):
+                logger.warning(f"Malformed tier data for '{t_name}'. Skipping.")
+                continue
+            t_data["points_gained"] = 0.0
+
+            sources = t_data.get("sources", [])
+            if not isinstance(sources, list):
+                logger.warning(f"Malformed sources list for tier '{t_name}'. Skipping.")
+                continue
+
+            for s_data in sources:
+                if not isinstance(s_data, dict):
+                    logger.warning(f"Malformed source data in tier '{t_name}'. Skipping.")
+                    continue
+                s_data["source_gained"] = 0.0
                 source_name = s_data.get("name")
 
-                # Determine the effective multiplier for this source
+                if not source_name:
+                    logger.warning(f"Source missing 'name' in tier '{t_name}'. Skipping.")
+                    continue
+
                 effective_multiplier_factor = 1.0
+                special_frenzy_applied_to_source = False
+
                 for multiplier in clan_multipliers:
+                    if not isinstance(multiplier, dict):
+                        logger.warning(f"Malformed multiplier data found: {multiplier}. Skipping.")
+                        continue
+
+                    multiplier_name = multiplier.get("name")
+
                     if multiplier.get("unlocked", False) and does_multiplier_affect_source(multiplier, source_name):
-                        effective_multiplier_factor *= float(multiplier.get("factor", 1.0))
+                        factor = float(multiplier.get("factor", 1.0))
+                        effective_multiplier_factor *= factor
+                        logger.debug(f"Applied multiplier '{multiplier_name}' ({factor}x) to source '{source_name}'.")
+
+                        if multiplier_name in SPECIAL_FRENZY_MULTIPLIER_NAMES:
+                            special_frenzy_applied_to_source = True
 
 
+                source_items = s_data.get("items", [])
+                if not isinstance(source_items, list):
+                    logger.warning(f"Source '{source_name}' has invalid 'items' field (not a list). Skipping Frenzy check.")
+                    source_items = []
+
+                all_items_uniquely_obtained_in_source = True
+                if not source_items:
+                    all_items_uniquely_obtained_in_source = False
+                else:
+                    for item_data in source_items:
+                        if not isinstance(item_data, dict):
+                            logger.warning(f"Malformed item data in source '{source_name}'. Skipping for Frenzy check.")
+                            all_items_uniquely_obtained_in_source = False
+                            break
+                        
+                        item_obtained_count = int(item_data.get("obtained", 0))
+
+                        if item_obtained_count <= 0:
+                            all_items_uniquely_obtained_in_source = False
+                            break
+
+
+                if all_items_uniquely_obtained_in_source and not special_frenzy_applied_to_source:
+                    FRENZY_DEFAULT_FACTOR = 1.25
+                    effective_multiplier_factor *= FRENZY_DEFAULT_FACTOR
+                    logger.debug(f"Applied default Frenzy multiplier ({FRENZY_DEFAULT_FACTOR}x) to source '{source_name}.")
+
+
+                # --- Process items within the source ---
                 for i_data in s_data.get("items", []):
-                    item_total_points_base = _template_calculate_helper(i_data)
-                    if template_doc["associated_team"] == "ironclad":
-                        item_total_points_base *= 1.12
+                    if not isinstance(i_data, dict):
+                        logger.warning(f"Malformed item data in source '{source_name}'. Skipping point calculation.")
+                        continue
 
-                    # Apply the effective multiplier
+                    item_total_points_base = _template_calculate_helper(i_data)
+
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
 
-                    # Add to source and tier totals
                     s_data["source_gained"] += item_total_points_multiplied
                 t_data["points_gained"] += s_data["source_gained"]
             total_template_points += t_data["points_gained"]
 
-        # Update the total_gained field in the template_doc
         template_doc["total_gained"] = total_template_points
 
         logger.info(f"Template: Recalculated total_gained to {total_template_points:.2f} for clan '{template_doc.get('associated_team')}'.")
@@ -1123,8 +1210,8 @@ def setup(client: discord.Client, mongo_client: AsyncMongoClient | None):
     ic_coll = db["ironclad"]
     template_coll = db["Templates"]
     player_coll = db["Players"]
-    client.tree.add_command(list_source_multipliers, guild=client.selected_guild)
+    #client.tree.add_command(list_source_multipliers, guild=client.selected_guild)
     #client.tree.add_command(tracking, guild=client.selected_guild)
-    #client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
-    client.tree.add_command(precheck, guild=client.selected_guild)
-    client.tree.add_command(status, guild=client.selected_guild)
+    client.tree.add_command(submit, guild=client.selected_guild) # type: ignore
+    #client.tree.add_command(precheck, guild=client.selected_guild)
+    #client.tree.add_command(status, guild=client.selected_guild)
