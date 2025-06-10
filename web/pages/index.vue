@@ -559,7 +559,8 @@ const hideTooltip = () => {
       <thead>
         <tr>
           <th class="p-2 w-1/5">Name</th>
-          <th class="p-2 w-4/5">Details</th>
+          <th class="p-2 w-1/5 text-center">Source Gained</th> <!-- NEW COLUMN -->
+          <th class="p-2 w-3/5">Details</th> <!-- Adjusted width -->
         </tr>
       </thead>
       <tbody v-if="activeData.tiers[selectedTier]">
@@ -578,6 +579,11 @@ const hideTooltip = () => {
               {{ source.name }}
             </span>
           </td>
+          <!-- NEW CELL FOR SOURCE GAINED -->
+          <td class="px-4 text-center">
+            {{ source.source_gained.toFixed(2) }}
+          </td>
+          <!-- Adjusted width for details cell -->
           <td class="details-cell">
             <table class="hidden w-full table-fixed">
               <thead>
@@ -616,7 +622,7 @@ const hideTooltip = () => {
       </tbody>
       <tbody v-else>
         <tr>
-          <td colspan="2" class="py-4 text-center">
+          <td colspan="3" class="py-4 text-center"> <!-- Adjusted colspan -->
             No items found for this tier.
           </td>
         </tr>
