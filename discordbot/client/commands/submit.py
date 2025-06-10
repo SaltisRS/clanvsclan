@@ -292,12 +292,14 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     # Points from unique obtainment
     if current_obtained >= unique_threshold:
         total_item_points += base_points
-    elif current_obtained >= half_unique_threshold: # Only half points if unique not fully met
+    elif current_obtained >= half_unique_threshold:
         total_item_points += base_points / 2
 
-    # Points from the first duplicate set
+
     if current_obtained >= first_duplicate_set_threshold:
         total_item_points += duplicate_item_points
+    elif current_obtained >= first_duplicate_set_threshold / 2:
+        total_item_points += duplicate_item_points / 2
 
     return total_item_points
 
@@ -448,11 +450,11 @@ class SubmissionView(discord.ui.View):
                 if all_items_uniquely_obtained_in_source and not special_frenzy_applied_to_source:
                     FRENZY_DEFAULT_FACTOR = 1.25
                     effective_multiplier_factor *= FRENZY_DEFAULT_FACTOR
-                    logger.debug(effective_multiplier_factor)
                     logger.debug(f"Applied default Frenzy multiplier ({FRENZY_DEFAULT_FACTOR}x) to source '{source_name}.")
 
 
-                # --- Process items within the source ---
+                source_before = 0
+                source_after = 0
                 for i_data in s_data.get("items", []):
                     if not isinstance(i_data, dict):
                         logger.warning(f"Malformed item data in source '{source_name}'. Skipping point calculation.")
@@ -461,14 +463,17 @@ class SubmissionView(discord.ui.View):
                     item_total_points_base = _template_calculate_helper(i_data)
 
                     item_total_points_multiplied = item_total_points_base * effective_multiplier_factor
-
+                    source_before += item_total_points_base
+                    source_after += item_total_points_multiplied
                     s_data["source_gained"] += item_total_points_multiplied
+                logger.debug(s_data["name"])
+                logger.debug(f"{source_before}: Base")
+                logger.debug(f"{source_after}: Multiplied")
                 t_data["points_gained"] += s_data["source_gained"]
             total_template_points += t_data["points_gained"]
 
         template_doc["total_gained"] = total_template_points
 
-        logger.info(f"Template: Recalculated total_gained to {total_template_points:.2f} for clan '{template_doc.get('associated_team')}'.")
         return total_template_points
 
     async def _player_calulate_from_items(self,
