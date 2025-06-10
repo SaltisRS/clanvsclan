@@ -284,8 +284,6 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
         unique_required = int(item_data.get("required", 1))
         duplicate_items_for_set = int(item_data.get("duplicate_required", 1))
 
-        if unique_required <= 0: unique_required = 1
-        if duplicate_items_for_set <= 0: duplicate_items_for_set = 1
 
         if unique_required <= 0: unique_required = 1
         if duplicate_items_for_set <= 0: duplicate_required_for_set = 1
