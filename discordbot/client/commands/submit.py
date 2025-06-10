@@ -1,3 +1,4 @@
+from decimal import DivisionByZero
 import math
 from typing import Any, Dict, List, Literal, Optional, Tuple
 import discord
@@ -275,35 +276,38 @@ def _template_calculate_helper(item_data: Dict[str, Any]) -> float:
     Calculates the total points an item should contribute based on its current 'obtained' count,
     without relying on database flags.
     """
-    total_item_points = 0.0
-    current_obtained = int(item_data.get("obtained", 0))
-    base_points = float(item_data.get("points", 0))
-    duplicate_item_points = float(item_data.get("duplicate_points", 0))
-    unique_required = int(item_data.get("required", 1))
-    duplicate_items_for_set = int(item_data.get("duplicate_required", 1))
+    try:
+        total_item_points = 0.0
+        current_obtained = int(item_data.get("obtained", 0))
+        base_points = float(item_data.get("points", 0))
+        duplicate_item_points = float(item_data.get("duplicate_points", 0))
+        unique_required = int(item_data.get("required", 1))
+        duplicate_items_for_set = int(item_data.get("duplicate_required", 1))
 
-    if unique_required <= 0: unique_required = 1
-    if duplicate_items_for_set <= 0: duplicate_items_for_set = 1
+        if unique_required <= 0: unique_required = 1
+        if duplicate_items_for_set <= 0: duplicate_items_for_set = 1
 
-    if unique_required <= 0: unique_required = 1
-    if duplicate_items_for_set <= 0: duplicate_required_for_set = 1
-
-
-    if current_obtained >= unique_required:
-        total_item_points += base_points
-    elif unique_required == 2 and current_obtained == 1:
-        total_item_points += base_points / 2
+        if unique_required <= 0: unique_required = 1
+        if duplicate_items_for_set <= 0: duplicate_required_for_set = 1
 
 
-    obtained_beyond_unique = current_obtained - unique_required
+        if current_obtained >= unique_required:
+            total_item_points += base_points
+        elif unique_required == 2 and current_obtained == 1:
+            total_item_points += base_points / 2
 
-    if obtained_beyond_unique >= duplicate_required_for_set:
-        total_item_points += duplicate_item_points
-    elif duplicate_required_for_set == 2 and obtained_beyond_unique == 1:
-        total_item_points += duplicate_item_points / 2
-    
+
+        obtained_beyond_unique = current_obtained - unique_required
+
+        if obtained_beyond_unique >= duplicate_required_for_set:
+            total_item_points += duplicate_item_points
+        elif duplicate_required_for_set == 2 and obtained_beyond_unique == 1:
+            total_item_points += duplicate_item_points / 2
+    except DivisionByZero as e:
+        total_item_points = 0
+        logger.debug("Divided by 0")
+        
     logger.debug(total_item_points)
-
     return total_item_points
 
 def does_multiplier_affect_source(multiplier_data: Dict[str, Any], source_name: str) -> bool:
