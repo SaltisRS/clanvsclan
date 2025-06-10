@@ -151,7 +151,7 @@ const calculateEntryPoints = (entry: ActivityOrMilestone): number => {
 
   // Apply additional multiplier bonus if Tier 4 is reached
   if (currentValue >= tier4) {
-    totalPoints += (multiplier - 1) * pointStep;
+    totalPoints += multiplier * pointStep;
   }
 
   return totalPoints;

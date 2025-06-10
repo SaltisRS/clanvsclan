@@ -624,18 +624,11 @@ class SubmissionView(discord.ui.View):
                     update_result = await player_coll.replace_one({"_id": player_id}, player_doc)
 
                     if update_result.modified_count > 0:
-                        logger.debug(f"Player {discord_id} total_gained updated from {old_player_total_gained:.2f} to {new_player_total_gained:.2f}.")
                         players_updated_count += 1
-                    else:
-                        logger.warning(f"Player {discord_id} total_gained acknowledged but modified_count was 0. Value might have been same.")
-                else:
-                    logger.debug(f"Player {discord_id} total_gained unchanged: {new_player_total_gained:.2f}.")
 
             except Exception as e:
                 logger.error(f"Error recalculating or updating points for player {discord_id} ({player_id}): {e}", exc_info=True)
                 errors_count += 1
-
-        logger.info(f"Finished global player points recalculation.")
         logger.info(f"Players checked: {len(all_players)}, Players updated: {players_updated_count}, Errors: {errors_count}")
 
 
