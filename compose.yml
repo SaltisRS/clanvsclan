@@ -51,9 +51,9 @@ services:
       - "traefik.tcp.routers.db.rule=HostSNI(`db.ironfoundry.cc`)"
       - "traefik.tcp.routers.db.entrypoints=mongodb"
       - "traefik.tcp.routers.db.service=db"
-      - "traefik.tcp.routers.db.tls=true"
-      - "traefik.tcp.routers.db.tls.passthrough=true"
-      - "traefik.tcp.routers.db.tls.certresolver=cloudflare"
+      #- "traefik.tcp.routers.db.tls=true"
+      #- "traefik.tcp.routers.db.tls.passthrough=true"
+      #- "traefik.tcp.routers.db.tls.certresolver=cloudflare"
       - "traefik.tcp.services.db.loadbalancer.server.port=27017"
 
 networks:
