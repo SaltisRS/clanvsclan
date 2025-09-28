@@ -48,7 +48,7 @@ services:
       - traefik-shared
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.db.rule=Host('db.ironfoundry.cc')"
+      - "traefik.http.routers.db.rule=Host(`db.ironfoundry.cc`)"
       - "traefik.http.routers.db.entrypoints=websecure"
       - "traefik.http.routers.db.tls.certresolver=cloudflare"
       - "traefik.http.services.db.loadbalancer.server.port=27017"
