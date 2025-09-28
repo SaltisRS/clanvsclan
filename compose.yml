@@ -1,61 +1,60 @@
 # docker-compose.yml
 
 services:
-  backend:
-    container_name: cvc-backend
-    build: ./backend
-    ports:
-      - 8001:8001
-    env_file:
-      - .env
-    networks:
-      - cvc-network
-      - vps
-    depends_on: # Add dependency on mongodb
-      - mongodb
+  #backend:
+    #container_name: cvc-backend
+    #build: ./backend
+    #ports:
+      #- 8001:8001
+    #env_file:
+      #- .env
+    #networks:
+      #- cvc-network
+      #- vps
+    #depends_on:
+      #- mongodb
 
-  discord:
-    container_name: cvc-discord
-    build: ./discordbot
-    env_file:
-      - .env
-    networks:
-      - cvc-network
-      - vps
-    depends_on:
-      - mongodb
+  #discord:
+    #container_name: cvc-discord
+    #build: ./discordbot
+    #env_file:
+      #- .env
+    #networks:
+      #- cvc-network
+      #- vps
+    #depends_on:
+      #- mongodb
 
-  web:
-    container_name: cvc-web
-    build: ./web
-    ports:
-      - "8000:3000"
-    networks:
-      - cvc-network
-      - vps
+  #web:
+    #container_name: cvc-web
+    #build: ./web
+    #ports:
+      #- "8000:3000"
+    #networks:
+      #- cvc-network
+      #- vps
 
 
   mongodb:
     image: mongo:latest
-    container_name: cvc-mongodb
+    container_name: mongodb
     restart: always
-    ports:
-      - "27017:27017"
     environment: 
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     volumes:
       - mongodb_data:/data/db 
     networks:
-      - cvc-network
-      - vps
+      - traefik-shared
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.db.rule=Host('db.ironfoundry.cc')"
+      - "traefik.http.routers.db.entrypoints=websecure"
+      - "traefik.http.routers.db.tls.certresolver=cloudflare"
+      - "traefik.http.services.db.loadbalancer.server.port=27017"
 
 networks:
-  cvc-network:
-    driver: bridge
-  vps:
-    name: vps
-    driver: bridge
+  traefik-shared:
     external: true
 
 volumes:
